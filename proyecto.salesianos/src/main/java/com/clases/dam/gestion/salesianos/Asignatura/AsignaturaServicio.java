@@ -6,5 +6,5 @@ public class AsignaturaServicio extends BaseServiceImpl<Asignatura,Long,Asignatu
     public AsignaturaServicio(AsignaturaRepository repo) {
         super(repo);
     }
-    
+
 }
