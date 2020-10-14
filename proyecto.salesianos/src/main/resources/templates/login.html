@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragmentos/FragmentoHead :: header_comun(~{::title},~{::link})">
     <meta charset="UTF-8">
     <title>Login</title>
@@ -28,5 +28,7 @@
                 <div class="col-4"></div>
             </div>
         </section>
+
+    <footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
 </body>
 </html>

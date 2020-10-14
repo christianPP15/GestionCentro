@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragmentos/FragmentoHead :: header_comun(~{::title},~{::link})">
+    <meta charset="UTF-8">
+    <title>Registro Jefe Estudios</title>
+    <link rel="stylesheet" href="../css/css.css" th:href="@{/css/css.css}">
+</head>
+<body>
+          <nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
+          <section id="registroJefeCampos">
+              <div class="container">
+                   <div class="row">
+                       <div class="col-3"></div>
+                        <div class="col-6 cuadroFormulario">
+                            <div class="row">
+                                <div class="col-6"><h1>Campos</h1></div>
+                                <div class="col-6"><h1 id="cambioCsv">CSV</h1></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+
+                                </div>
+                            </div>
+                        </div>
+                       <div class="col-3"></div>
+                   </div>
+              </div>
+          </section>
+          <section id="registroJefeCsv">
+              <div class="container">
+                  <div class="row">
+                      <div class="col-3"></div>
+                      <div class="col-6 cuadroFormulario">
+                          <div class="row">
+                              <div class="col-6"><h1>Campos</h1></div>
+                              <div class="col-6"><h1>CSV</h1></div>
+                          </div>
+                          <div class="row">
+                              <div class="col-12">
+
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-3"></div>
+                  </div>
+              </div>
+          </section>
+          <footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
+<script>
+$("#registroJefeCsv").hide();
+$("#cambioCsv").click(function(){
+
+});
+</script>
+</body>
+</html>

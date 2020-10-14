@@ -27,12 +27,12 @@ public class Application {
 
 
 			Usuario a = new Profesor("Luismi","Lopez",
-					"Luismi@gmail.com",passwordEncoder.encode("1234"),false);
+					"Luismi@gmail.com",passwordEncoder.encode("1234"),true,false);
 
 			servicio.save(a);
 
 			Usuario angel = new Profesor("Angel","Naranjo",
-					"admin",passwordEncoder.encode("admin"),true);
+					"admin",passwordEncoder.encode("admin"),true,true);
 
 			servicio.save(angel);
 
