@@ -7,6 +7,7 @@ import java.util.Random;
 
 @Controller
 public class ControladorInicio {
+
     @GetMapping("/login")
     public String paginaLogin(){
         return "login";
