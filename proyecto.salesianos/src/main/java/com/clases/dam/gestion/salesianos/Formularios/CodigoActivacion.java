@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 public class CodigoActivacion {
 
     private String codigo;
+    private String contra;
 }

@@ -5,6 +5,7 @@ import com.clases.dam.gestion.salesianos.Usuario.Usuario;
 import com.clases.dam.gestion.salesianos.Usuario.UsuarioServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ public class ControladorInicio {
     public String paginaLogin(){
         return "login";
     }
+
     @GetMapping({"/","/index"})
     public String inicio(@AuthenticationPrincipal Usuario usuarioLog, Model model){
         if (!usuarioLog.isPrimeraVez()){
@@ -31,28 +33,15 @@ public class ControladorInicio {
         }
     }
     @PostMapping("/submit/codigo")
-    public String confirmarCódigo(@ModelAttribute("codigo") CodigoActivacion codigo, @AuthenticationPrincipal Usuario usuarioLog){
-        if(usuarioLog.getCodigoSeguridad()==codigo.getCodigo()){
+    public String confirmarCódigo(@ModelAttribute("codigo") CodigoActivacion codigo,
+                                  @AuthenticationPrincipal Usuario usuarioLog, BCryptPasswordEncoder encode){
+        if(usuarioLog.getCodigoSeguridad().contentEquals(codigo.getCodigo())){
             usuarioLog.setPrimeraVez(true);
+            usuarioLog.setPassword(encode.encode(usuarioLog.getPassword()));
             serviUsu.edit(usuarioLog);
+
         }
         return "redirect:/index";
     }
-    private String generarCódigo(){
-        Random aleatorio = new Random();
 
-        String alfa = "ABCDEFGHIJKLMNOPQRSTVWXYZ";
-
-        String cadena = "";    //Inicializamos la Variable//
-
-        int numero;
-
-        int forma;
-        forma=(int)(aleatorio.nextDouble() * alfa.length()-1+0);
-        numero=(int)(aleatorio.nextDouble() * 99+100);
-
-        cadena=cadena+alfa.charAt(forma)+numero;
-
-        return cadena;
-    }
 }
