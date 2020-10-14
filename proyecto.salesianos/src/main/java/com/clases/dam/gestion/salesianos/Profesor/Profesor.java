@@ -32,6 +32,10 @@ public class Profesor extends Usuario {
         this.esJefeEstudio = esJefeEstudio;
     }
 
+    public Profesor(String nombre, String apellidos, String email) {
+        super(nombre, apellidos, email);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         String role = "ROLE_";

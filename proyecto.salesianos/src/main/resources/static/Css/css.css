@@ -4,7 +4,23 @@
 .footerColor{
 background-color: #FFA77A;
 }
-
+.colorLetras{
+color:#FFA77A;
+}
 .cuadroFormulario{
-border-color: black 1px solid;
+border: black 1px solid;
+}
+
+.bordesSeparadores{
+border-right: 2px solid #FFA77A;
+}
+.borderInferiores{
+border-bottom: 3px solid black;
+}
+
+.textoCentradp{
+text-align: center;
+}
+.borderInferioresActivos{
+border-bottom: 3px solid #FFA77A;
 }

@@ -25,6 +25,11 @@
                                 <a class="dropdown-item" href="/jefeEstudio/alta/JefeEstudio">Jefe De Estudios</a>
                                 <a class="dropdown-item" href="/jefeEstudio/alta/Profesor">Profesor</a>
                                 <a class="dropdown-item" href="/jefeEstudio/alta/alumnos">Alumnos</a>
+                                <form th:action="@{/logout}" method="POST" id="logoutForm">
+                                    <a href="javascript:document.getElementById('logoutForm').submit()" class="dropdown-item">
+                                        <div class="item cajaMenu"><span <span sec:authentication="name"></span></div>
+                                    </a>
+                                </form>
                             </div>
                         </div>
                     </div>
