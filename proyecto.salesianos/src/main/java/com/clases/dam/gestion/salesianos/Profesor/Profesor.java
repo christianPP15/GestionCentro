@@ -22,6 +22,11 @@ public class Profesor extends Usuario {
         this.esJefeEstudio = esJefeEstudio;
     }
 
+    public Profesor(String nombre, String apellidos, String email, String password, boolean primeraVez, boolean esJefeEstudio) {
+        super(nombre, apellidos, email, password, primeraVez);
+        this.esJefeEstudio = esJefeEstudio;
+    }
+
     public Profesor(String nombre, String apellidos, String email, String password, boolean esJefeEstudio) {
         super(nombre, apellidos, email, password);
         this.esJefeEstudio = esJefeEstudio;
