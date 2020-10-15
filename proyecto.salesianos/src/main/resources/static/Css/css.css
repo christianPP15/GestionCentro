@@ -24,3 +24,7 @@ text-align: center;
 .borderInferioresActivos{
 border-bottom: 3px solid #FFA77A;
 }
+.noEnlace{
+color :black;
+text-decoration: none;
+}

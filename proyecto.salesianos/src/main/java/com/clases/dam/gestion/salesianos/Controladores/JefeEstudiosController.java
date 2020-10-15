@@ -1,8 +1,12 @@
 package com.clases.dam.gestion.salesianos.Controladores;
 
 import com.clases.dam.gestion.salesianos.Alumno.Alumno;
+import com.clases.dam.gestion.salesianos.Curso.Curso;
+import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
 import com.clases.dam.gestion.salesianos.Profesor.Profesor;
 import com.clases.dam.gestion.salesianos.Servicios.Mail;
+import com.clases.dam.gestion.salesianos.Titulo.Titulo;
+import com.clases.dam.gestion.salesianos.Titulo.TituloServicio;
 import com.clases.dam.gestion.salesianos.Usuario.Usuario;
 import com.clases.dam.gestion.salesianos.Usuario.UsuarioServicio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.mail.MessagingException;
@@ -23,22 +28,25 @@ import java.util.Random;
 public class JefeEstudiosController {
     @Autowired
     private UsuarioServicio serviUsuario;
-
+    @Autowired
+    private TituloServicio serviTitulo;
+    @Autowired
+    private CursoServicio serviCurso;
 
     @GetMapping("/jefeEstudio/alta/JefeEstudio")
     public String crearNuevoJefeEstudios(Model model){
         model.addAttribute("usuario",new Profesor());
-        return "JefeEstudios/NuevoJefeEstudios";
+        return "JefeEstudios/Alta/NuevoJefeEstudios";
     }
     @GetMapping("/jefeEstudio/alta/Profesor")
     public String crearNuevoProfesor(Model model){
         model.addAttribute("usuario",new Profesor());
-        return "JefeEstudios/NuevoProfesor";
+        return "JefeEstudios/Alta/NuevoProfesor";
     }
     @GetMapping("/jefeEstudio/alta/alumnos")
     public String crearNuevoAlumno(Model model){
         model.addAttribute("usuario",new Alumno());
-        return "JefeEstudios/NuevoAlumno";
+        return "JefeEstudios/Alta/NuevoAlumno";
     }
 
     @PostMapping("/submit/nuevo/jefe/estudio")
@@ -99,6 +107,33 @@ public class JefeEstudiosController {
     public String nuevoJefeEstudiosCompletoCsv()  throws IOException {
 
         return "redirect:/index";
+    }
+    @GetMapping("/gestion")
+    public String gestionTítulos(Model model){
+        model.addAttribute("titulos",serviTitulo.findAll());
+        return "JefeEstudios/Gestion/titulos";
+    }
+    @GetMapping("/jefe/estudios/titulo/eliminar/{id}")
+    public String aliminarTitulo(@PathVariable ("id") Long id){
+        serviTitulo.delete(serviTitulo.findById(id).orElse(null));
+        return "redirect:/gestion";
+    }
+    @GetMapping("/jefe/estudios/titulo/nuevo")
+    public String agregarTitulo(@PathVariable ("id") Long id){
+        serviTitulo.delete(serviTitulo.findById(id).orElse(null));
+        return "redirect:/gestion";
+    }
+    @GetMapping("/jefe/estudios/cursos/{id}")
+    public String gestionCursos(@PathVariable ("id") Long id,Model model){
+        Titulo aux=serviTitulo.findById(id).get();
+        model.addAttribute("Listacursos",aux.getCursos());
+        return "JefeEstudios/Gestion/cursos";
+    }
+    @GetMapping("/jefe/estudios/curso/eliminar/{id}")
+    public String aliminarCurso(@PathVariable ("id") Long id){
+        Titulo idTitulo=serviCurso.findById(id).get().getTitulos();
+        serviCurso.delete(serviCurso.findById(id).get());
+        return "redirect:/jefe/estudios/cursos/"+idTitulo.getId();
     }
     private String generarCódigo(){
         Random aleatorio = new Random();

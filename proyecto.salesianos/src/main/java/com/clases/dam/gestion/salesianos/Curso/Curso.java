@@ -32,4 +32,8 @@ public class Curso {
         this.asignatura.remove(a);
         a.setCurso(null);
     }
+
+    public Curso(String nombreCurso) {
+        this.nombreCurso = nombreCurso;
+    }
 }

@@ -1,7 +1,11 @@
 package com.clases.dam.gestion.salesianos;
 
 import com.clases.dam.gestion.salesianos.Alumno.Alumno;
+import com.clases.dam.gestion.salesianos.Curso.Curso;
+import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
 import com.clases.dam.gestion.salesianos.Profesor.Profesor;
+import com.clases.dam.gestion.salesianos.Titulo.Titulo;
+import com.clases.dam.gestion.salesianos.Titulo.TituloServicio;
 import com.clases.dam.gestion.salesianos.Usuario.Usuario;
 import com.clases.dam.gestion.salesianos.Usuario.UsuarioServicio;
 import org.springframework.boot.CommandLineRunner;
@@ -17,7 +21,9 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 	@Bean
-	public CommandLineRunner init(UsuarioServicio servicio, BCryptPasswordEncoder passwordEncoder) {
+	public CommandLineRunner init(UsuarioServicio servicio
+			, BCryptPasswordEncoder passwordEncoder, TituloServicio tituloServicio
+			, CursoServicio cursoServicio) {
 		return args -> {
 
 			Usuario u = new Alumno("Christian","Payo","cpp",passwordEncoder.encode("1234"));
@@ -35,7 +41,20 @@ public class Application {
 					"admin",passwordEncoder.encode("admin"),true,true);
 
 			servicio.save(angel);
+			Curso primerDam=new Curso("Primero de Dam");
+			Curso segundoDam=new Curso("Segundo de Dam");
 
+			Titulo ti=new Titulo("Desarrollo aplicaciones multiplataformas");
+
+			cursoServicio.save(primerDam);
+			cursoServicio.save(segundoDam);
+			tituloServicio.save(ti);
+
+			ti.addCurso(primerDam);
+			ti.addCurso(segundoDam);
+			cursoServicio.edit(primerDam);
+			cursoServicio.edit(segundoDam);
+			tituloServicio.edit(ti);
 		};
 	}
 }
