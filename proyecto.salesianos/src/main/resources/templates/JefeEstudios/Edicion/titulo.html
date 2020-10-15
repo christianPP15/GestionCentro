@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragmentos/FragmentoHead :: header_comun(~{::title},~{::link})">
+    <meta charset="UTF-8">
+    <title>Edición títulos</title>
+    <link rel="stylesheet" href="../css/css.css" th:href="@{/css/css.css}">
+</head>
+<body>
+<nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
+
+<main id="FormularioPrimeraVez">
+    <br><br><br>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <form method="POST" action="#" th:action="@{/submit/editar/titulo/final}" th:object="${tituloNuevo}">
+                <div class="form-group">
+                    <input type="text" id="idTitulo" required autocomplete="off"
+                           th:field="*{id}" hidden="hidden">
+                    <label for="tituloCampo">Nombre:</label>
+                    <input type="text" id="tituloCampo" name="tituloCampo" placeholder="Nombre" required autofocus class="form-control" th:field="*{nombre}">
+                </div>
+                <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center"/>
+            </form>
+        </div>
+        <div class="col-4"></div>
+    </div>
+    <span th:text="${tituloAntiguo.id}" hidden id="spanId"></span>
+    <span th:text="${tituloAntiguo.nombre}" hidden id="spanNombre"></span>
+</main>
+
+<footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
+<script>
+    window.onload = insertar();
+		function insertar() {
+		    var tituloObn = $("#spanNombre").text();
+		    var id = $("#spanId").text();
+
+		    $("#tituloCampo").val(tituloObn);
+            $("#idTitulo").val(id);
+		}
+</script>
+</body>
+</html>

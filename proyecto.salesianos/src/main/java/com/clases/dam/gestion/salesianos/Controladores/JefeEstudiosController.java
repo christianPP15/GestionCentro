@@ -118,15 +118,34 @@ public class JefeEstudiosController {
         serviTitulo.delete(serviTitulo.findById(id).orElse(null));
         return "redirect:/gestion";
     }
-    @GetMapping("/jefe/estudios/titulo/nuevo")
-    public String agregarTitulo(@PathVariable ("id") Long id){
-        serviTitulo.delete(serviTitulo.findById(id).orElse(null));
+    @GetMapping("/jefe/estudios/titulo/editar/{id}")
+    public String editarTitulo(@PathVariable ("id") Long id,Model model){
+        model.addAttribute("tituloAntiguo",serviTitulo.findById(id).get());
+        model.addAttribute("tituloNuevo",new Titulo());
+        return "JefeEstudios/Edicion/titulo";
+    }
+    @PostMapping("/submit/editar/titulo/final")
+    public String editarTituloFinal(@ModelAttribute("titulo") Titulo titulo){
+        Titulo aux=serviTitulo.findById(titulo.getId()).get();
+        aux.setNombre(titulo.getNombre());
+        serviTitulo.edit(aux);
         return "redirect:/gestion";
+    }
+    @GetMapping("/jefe/estudios/titulo/nuevo")
+    public String agregarTitulo(Model model){
+        model.addAttribute("nuevoTitulo",new Titulo());
+        return "JefeEstudios/Nuevo/titulo";
+    }
+    @PostMapping("/submit/nuevo/titulo")
+    public String nuevoTitulo(@ModelAttribute("titulo") Titulo titulo){
+        serviTitulo.save(titulo);
+       return  "redirect:/gestion";
     }
     @GetMapping("/jefe/estudios/cursos/{id}")
     public String gestionCursos(@PathVariable ("id") Long id,Model model){
         Titulo aux=serviTitulo.findById(id).get();
         model.addAttribute("Listacursos",aux.getCursos());
+        model.addAttribute("Idtitulo",id);
         return "JefeEstudios/Gestion/cursos";
     }
     @GetMapping("/jefe/estudios/curso/eliminar/{id}")
@@ -135,6 +154,36 @@ public class JefeEstudiosController {
         serviCurso.delete(serviCurso.findById(id).get());
         return "redirect:/jefe/estudios/cursos/"+idTitulo.getId();
     }
+    @GetMapping("/jefe/estudios/curso/editar/{id}")
+    public String editarCurso(@PathVariable ("id") Long id,Model model){
+        model.addAttribute("cursoAntiguo",serviCurso.findById(id).get());
+        model.addAttribute("cursoNuevo",new Curso());
+        return "JefeEstudios/Edicion/cursos";
+    }
+    @PostMapping("/submit/editar/curso/final")
+    public String editarCursoFinal(@ModelAttribute("cursoNuevo") Curso curso){
+        Curso aux=serviCurso.findById(curso.getId()).get();
+        aux.setNombre(curso.getNombre());
+        serviCurso.edit(aux);
+        Titulo tituloAux=serviTitulo.findById(aux.getTitulos().getId()).get();
+        return "redirect:/jefe/estudios/cursos/"+tituloAux.getId();
+    }
+    @GetMapping("/jefe/estudios/curso/nuevo/{id}")
+    public String agregarCurso(@PathVariable ("id") Long id, Model model){
+        model.addAttribute("nuevoCurso",new Curso());
+        model.addAttribute("idTitulo",id);
+        return "JefeEstudios/Nuevo/Curso";
+    }
+    @PostMapping("/submit/nuevo/curso")
+    public String nuevoCurso(@ModelAttribute("nuevoCurso") Curso curso){
+        Curso cursoNuevo= new Curso(curso.getNombre());
+        serviCurso.save(cursoNuevo);
+        cursoNuevo.setTitulos(curso.getTitulos());
+        serviCurso.edit(cursoNuevo);
+        return  "redirect:/jefe/estudios/cursos/"+curso.getTitulos().getId();
+    }
+
+    
     private String generarCódigo(){
         Random aleatorio = new Random();
 
