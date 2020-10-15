@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Optional;
 import java.util.Random;
 
 @Controller
@@ -39,7 +40,6 @@ public class ControladorInicio {
             usuarioLog.setPrimeraVez(true);
             usuarioLog.setPassword(encode.encode(usuarioLog.getPassword()));
             serviUsu.edit(usuarioLog);
-
         }
         return "redirect:/index";
     }

@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.mail.MessagingException;
-import java.io.IOException;
+import javax.swing.*;
+import java.io.*;
 import java.security.InvalidParameterException;
 import java.util.Random;
 
@@ -28,6 +29,12 @@ public class JefeEstudiosController {
         model.addAttribute("usuario",new Profesor());
         return "JefeEstudios/NuevoJefeEstudios";
     }
+    @GetMapping("/jefeEstudio/alta/Profesor")
+    public String crearNuevoProfesor(Model model){
+        model.addAttribute("usuario",new Profesor());
+        return "JefeEstudios/NuevoProfesor";
+    }
+
     @PostMapping("/submit/nuevo/jefe/estudio")
     public String nuevoJefeEstudiosCompleto(@ModelAttribute("usuario") Profesor usuario, BCryptPasswordEncoder passwordEncoder) throws MessagingException {
         Usuario usu= new Profesor(usuario.getNombre(),usuario.getApellidos()
@@ -46,8 +53,26 @@ public class JefeEstudiosController {
         }
         return "redirect:/index";
     }
+    @PostMapping("/submit/nuevo/jefe/profesor")
+    public String nuevoProfesorCompleto(@ModelAttribute("usuario") Profesor usuario, BCryptPasswordEncoder passwordEncoder) throws MessagingException {
+        Usuario usu= new Profesor(usuario.getNombre(),usuario.getApellidos()
+                ,usuario.getEmail(),passwordEncoder.encode("1234"),generarCódigo(),false);
+        serviUsuario.save(usu);
+
+        try {
+            Mail m = new Mail("Config/configuracion.properties");
+
+            m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
+                    " ingrese este código la primera vez que acceda a la web: "+usu.getCodigoSeguridad()
+                    +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());
+
+        } catch (InvalidParameterException | MessagingException | IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return "redirect:/index";
+    }
     @PostMapping("/submit/nuevo/jefe/estudio/csv")
-    public String nuevoJefeEstudiosCompletoCsv(){
+    public String nuevoJefeEstudiosCompletoCsv()  throws IOException {
 
         return "redirect:/index";
     }
@@ -68,4 +93,5 @@ public class JefeEstudiosController {
 
         return cadena;
     }
+
 }

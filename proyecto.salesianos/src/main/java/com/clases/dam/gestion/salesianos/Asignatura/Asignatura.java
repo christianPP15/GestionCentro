@@ -23,5 +23,6 @@ public class Asignatura {
     @ManyToOne
     private Curso curso;
 
+    //Introducir horario
 
 }
