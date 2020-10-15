@@ -2,7 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragmentos/FragmentoHead :: header_comun(~{::title},~{::link})">
     <meta charset="UTF-8">
-    <title th:text="${titulo}">Código Confirmación</title>
+    <title>Edición Cursos</title>
     <link rel="stylesheet" href="../css/css.css" th:href="@{/css/css.css}">
 </head>
 <body>
@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-4"></div>
         <div class="col-4">
-            <form method="POST" action="#" th:action="@{/submit/editar/titulo/final}" th:object="${tituloNuevo}">
+            <form method="POST" action="#" th:action="@{/submit/editar/curso/final}" th:object="${cursoNuevo}">
                 <div class="form-group">
                     <input type="text" id="idTitulo" required autocomplete="off"
                            th:field="*{id}" hidden="hidden">
@@ -25,8 +25,8 @@
         </div>
         <div class="col-4"></div>
     </div>
-    <span th:text="${tituloAntiguo.id}" hidden id="spanId"></span>
-    <span th:text="${tituloAntiguo.nombre}" hidden id="spanNombre"></span>
+    <span th:text="${cursoAntiguo.id}" hidden id="spanId"></span>
+    <span th:text="${cursoAntiguo.nombre}" hidden id="spanNombre"></span>
 </main>
 
 <footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>

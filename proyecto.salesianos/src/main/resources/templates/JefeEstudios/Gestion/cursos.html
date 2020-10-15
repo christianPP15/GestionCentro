@@ -30,8 +30,12 @@
                     <tr th:each="cursos :${Listacursos}">
                         <td th:text="${cursos.nombre}"></td>
                         <td th:href="@{/jefe/estudios/cursos/{id}(id=${cursos.id})}"><img th:src="@{/img/flecha-right.png}"></td>
-                        <td><img th:src="@{/img/edit.png}"></td>
+                        <td><a th:href="@{/jefe/estudios/curso/editar/{id}(id=${cursos.id})}"><img th:src="@{/img/edit.png}"><a/></td>
                         <td><a th:href="@{/jefe/estudios/curso/eliminar/{id}(id=${cursos.id})}"><img th:src="@{/img/borrar.png}"></a></td>
+                    </tr>
+                    <tr>
+                        <td>Ingrese un nuevo curso</td>
+                        <td><a th:href="@{/jefe/estudios/curso/nuevo/{id}(id=${Idtitulo})}"><img th:src="@{/img/nuevo.png}"></a></td>
                     </tr>
                     </tbody>
                 </table>
