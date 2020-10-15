@@ -10,6 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @NoArgsConstructor@AllArgsConstructor@Builder@Data
@@ -23,6 +26,9 @@ public class Asignatura {
     @ManyToOne
     private Curso curso;
 
-    //Introducir horario
 
+
+    public Asignatura(String nombreAsignatura) {
+        this.nombreAsignatura = nombreAsignatura;
+    }
 }

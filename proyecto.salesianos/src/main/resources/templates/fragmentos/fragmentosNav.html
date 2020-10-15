@@ -33,7 +33,7 @@
                             </div>
                         </div>
                     </div>
-                    <li class="nav-item active"><a href="/gestion" class="nav-link">Gestion</a>
+                    <li class="nav-item active" sec:authorize="hasRole('ROLE_ADMIN')"><a href="/gestion" class="nav-link">Gestion</a>
                     </li>
                 </ul>
             </div>
