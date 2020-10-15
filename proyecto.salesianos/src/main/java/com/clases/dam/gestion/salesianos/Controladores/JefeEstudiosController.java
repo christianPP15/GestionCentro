@@ -1,5 +1,6 @@
 package com.clases.dam.gestion.salesianos.Controladores;
 
+import com.clases.dam.gestion.salesianos.Alumno.Alumno;
 import com.clases.dam.gestion.salesianos.Profesor.Profesor;
 import com.clases.dam.gestion.salesianos.Servicios.Mail;
 import com.clases.dam.gestion.salesianos.Usuario.Usuario;
@@ -34,6 +35,11 @@ public class JefeEstudiosController {
         model.addAttribute("usuario",new Profesor());
         return "JefeEstudios/NuevoProfesor";
     }
+    @GetMapping("/jefeEstudio/alta/alumnos")
+    public String crearNuevoAlumno(Model model){
+        model.addAttribute("usuario",new Alumno());
+        return "JefeEstudios/NuevoAlumno";
+    }
 
     @PostMapping("/submit/nuevo/jefe/estudio")
     public String nuevoJefeEstudiosCompleto(@ModelAttribute("usuario") Profesor usuario, BCryptPasswordEncoder passwordEncoder) throws MessagingException {
@@ -57,6 +63,24 @@ public class JefeEstudiosController {
     public String nuevoProfesorCompleto(@ModelAttribute("usuario") Profesor usuario, BCryptPasswordEncoder passwordEncoder) throws MessagingException {
         Usuario usu= new Profesor(usuario.getNombre(),usuario.getApellidos()
                 ,usuario.getEmail(),passwordEncoder.encode("1234"),generarCódigo(),false);
+        serviUsuario.save(usu);
+
+        try {
+            Mail m = new Mail("Config/configuracion.properties");
+
+            m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
+                    " ingrese este código la primera vez que acceda a la web: "+usu.getCodigoSeguridad()
+                    +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());
+
+        } catch (InvalidParameterException | MessagingException | IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return "redirect:/index";
+    }
+    @PostMapping("/submit/nuevo/jefe/alumno")
+    public String nuevoAlumnoCompleto(@ModelAttribute("usuario") Profesor usuario, BCryptPasswordEncoder passwordEncoder) throws MessagingException {
+        Usuario usu= new Alumno(usuario.getNombre(),usuario.getApellidos()
+                ,usuario.getEmail(),passwordEncoder.encode("1234"),generarCódigo());
         serviUsuario.save(usu);
 
         try {

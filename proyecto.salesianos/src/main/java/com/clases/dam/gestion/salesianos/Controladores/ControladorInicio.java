@@ -38,7 +38,7 @@ public class ControladorInicio {
                                   @AuthenticationPrincipal Usuario usuarioLog, BCryptPasswordEncoder encode){
         if(usuarioLog.getCodigoSeguridad().contentEquals(codigo.getCodigo())){
             usuarioLog.setPrimeraVez(true);
-            usuarioLog.setPassword(encode.encode(usuarioLog.getPassword()));
+            usuarioLog.setPassword(encode.encode(codigo.getContra()));
             serviUsu.edit(usuarioLog);
         }
         return "redirect:/index";
