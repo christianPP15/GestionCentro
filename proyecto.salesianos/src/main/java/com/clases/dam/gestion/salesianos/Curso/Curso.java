@@ -13,7 +13,7 @@ import java.util.List;
 public class Curso {
     @Id @GeneratedValue
     private long id;
-    private String nombreCurso;
+    private String nombre;
 
     @ManyToOne
     private Titulo titulos;
@@ -33,7 +33,7 @@ public class Curso {
         a.setCurso(null);
     }
 
-    public Curso(String nombreCurso) {
-        this.nombreCurso = nombreCurso;
+    public Curso(String nombre) {
+        this.nombre = nombre;
     }
 }

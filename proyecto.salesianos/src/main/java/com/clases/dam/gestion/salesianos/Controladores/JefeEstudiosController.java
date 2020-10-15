@@ -118,10 +118,30 @@ public class JefeEstudiosController {
         serviTitulo.delete(serviTitulo.findById(id).orElse(null));
         return "redirect:/gestion";
     }
-    @GetMapping("/jefe/estudios/titulo/nuevo")
-    public String agregarTitulo(@PathVariable ("id") Long id){
-        serviTitulo.delete(serviTitulo.findById(id).orElse(null));
+    @GetMapping("/jefe/estudios/titulo/editar/{id}")
+    public String editarTitulo(@PathVariable ("id") Long id,Model model){
+        model.addAttribute("Edición títulos");
+        model.addAttribute("tituloAntiguo",serviTitulo.findById(id).get());
+        model.addAttribute("tituloNuevo",new Titulo());
+        return "JefeEstudios/Edicion/titulocurso";
+    }
+    @PostMapping("/submit/editar/titulo/final")
+    public String editarTituloFinal(@ModelAttribute("titulo") Titulo titulo){
+        Titulo aux=serviTitulo.findById(titulo.getId()).get();
+        aux.setNombre(titulo.getNombre());
+        serviTitulo.edit(aux);
         return "redirect:/gestion";
+    }
+    @GetMapping("/jefe/estudios/titulo/nuevo")
+    public String agregarTitulo(Model model){
+        model.addAttribute("titulo","Nuevo título");
+        model.addAttribute("nuevoTitulo",new Titulo());
+        return "JefeEstudios/Nuevo/titulo-curso";
+    }
+    @PostMapping("/submit/nuevo/titulo")
+    public String nuevoTitulo(@ModelAttribute("titulo") Titulo titulo){
+        serviTitulo.save(titulo);
+       return  "redirect:/gestion";
     }
     @GetMapping("/jefe/estudios/cursos/{id}")
     public String gestionCursos(@PathVariable ("id") Long id,Model model){
