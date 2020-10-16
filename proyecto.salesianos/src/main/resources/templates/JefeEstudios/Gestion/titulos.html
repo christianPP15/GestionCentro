@@ -10,25 +10,27 @@
     <main id="infoTitulo">
         <div class="container">
             <div class="row">
+
                 <div class="col-2"></div>
                 <div class="col-8">
+                    <br><br>
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>Nombre</th>
                                 <th>Cursos</th>
-                                <th>Editar</th>
-                                <th>Borrar</th>
+                                <th sec:authorize="hasRole('ROLE_ADMIN')">Editar</th>
+                                <th sec:authorize="hasRole('ROLE_ADMIN')">Borrar</th>
                             </tr>
                         </thead>
                         <tbody >
                             <tr th:each="titulo :${titulos}">
                                <td th:text="${titulo.nombre}"></td>
                                 <td ><a th:href="@{/jefe/estudios/cursos/{id}(id=${titulo.id})}"><img th:src="@{/img/flecha-right.png}"></a></td>
-                                <td><a th:href="@{/jefe/estudios/titulo/editar/{id}(id=${titulo.id})}"><img th:src="@{/img/edit.png}"></a></td>
-                                <td><a th:href="@{/jefe/estudios/titulo/eliminar/{id}(id=${titulo.id})}"><img th:src="@{/img/borrar.png}"></a></td>
+                                <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/jefe/estudios/titulo/editar/{id}(id=${titulo.id})}"><img th:src="@{/img/edit.png}"></a></td>
+                                <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/jefe/estudios/titulo/eliminar/{id}(id=${titulo.id})}"><img th:src="@{/img/borrar.png}"></a></td>
                             </tr>
-                            <tr>
+                            <tr sec:authorize="hasRole('ROLE_ADMIN')">
                                 <td>Ingrese un nuevo título</td>
                                 <td><a th:href="@{/jefe/estudios/titulo/nuevo}"><img th:src="@{/img/nuevo.png}"></a></td>
                             </tr>

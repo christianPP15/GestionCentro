@@ -15,7 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-@NoArgsConstructor@AllArgsConstructor@Builder@Data
+@Data
+@NoArgsConstructor @AllArgsConstructor @Builder
 public class Asignatura {
     @Id
     @GeneratedValue

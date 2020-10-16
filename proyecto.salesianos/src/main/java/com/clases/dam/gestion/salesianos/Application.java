@@ -71,6 +71,9 @@ public class Application {
 			cursoServicio.edit(primerDam);
 			cursoServicio.edit(segundoDam);
 			tituloServicio.edit(ti);
+			primerDam.addAlumno((Alumno) u);
+			cursoServicio.edit(primerDam);
+			servicio.edit(u);
 		};
 	}
 }

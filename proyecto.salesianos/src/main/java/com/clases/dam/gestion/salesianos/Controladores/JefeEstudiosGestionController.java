@@ -1,6 +1,8 @@
 package com.clases.dam.gestion.salesianos.Controladores;
 
 import com.clases.dam.gestion.salesianos.Alumno.Alumno;
+import com.clases.dam.gestion.salesianos.Asignatura.Asignatura;
+import com.clases.dam.gestion.salesianos.Asignatura.AsignaturaServicio;
 import com.clases.dam.gestion.salesianos.Curso.Curso;
 import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
 import com.clases.dam.gestion.salesianos.Profesor.Profesor;
@@ -22,92 +24,19 @@ import javax.mail.MessagingException;
 import javax.swing.*;
 import java.io.*;
 import java.security.InvalidParameterException;
+import java.util.Optional;
 import java.util.Random;
 
 @Controller
-public class JefeEstudiosController {
+public class JefeEstudiosGestionController {
     @Autowired
     private UsuarioServicio serviUsuario;
     @Autowired
     private TituloServicio serviTitulo;
     @Autowired
     private CursoServicio serviCurso;
-
-    @GetMapping("/jefeEstudio/alta/JefeEstudio")
-    public String crearNuevoJefeEstudios(Model model){
-        model.addAttribute("usuario",new Profesor());
-        return "JefeEstudios/Alta/NuevoJefeEstudios";
-    }
-    @GetMapping("/jefeEstudio/alta/Profesor")
-    public String crearNuevoProfesor(Model model){
-        model.addAttribute("usuario",new Profesor());
-        return "JefeEstudios/Alta/NuevoProfesor";
-    }
-    @GetMapping("/jefeEstudio/alta/alumnos")
-    public String crearNuevoAlumno(Model model){
-        model.addAttribute("usuario",new Alumno());
-        return "JefeEstudios/Alta/NuevoAlumno";
-    }
-
-    @PostMapping("/submit/nuevo/jefe/estudio")
-    public String nuevoJefeEstudiosCompleto(@ModelAttribute("usuario") Profesor usuario, BCryptPasswordEncoder passwordEncoder) throws MessagingException {
-        Usuario usu= new Profesor(usuario.getNombre(),usuario.getApellidos()
-                ,usuario.getEmail(),passwordEncoder.encode("1234"),generarCódigo(),true);
-        serviUsuario.save(usu);
-
-        try {
-            Mail m = new Mail("Config/configuracion.properties");
-
-            m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
-                    " ingrese este código la primera vez que acceda a la web: "+usu.getCodigoSeguridad()
-                    +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());
-
-        } catch (InvalidParameterException | MessagingException | IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-        return "redirect:/index";
-    }
-    @PostMapping("/submit/nuevo/jefe/profesor")
-    public String nuevoProfesorCompleto(@ModelAttribute("usuario") Profesor usuario, BCryptPasswordEncoder passwordEncoder) throws MessagingException {
-        Usuario usu= new Profesor(usuario.getNombre(),usuario.getApellidos()
-                ,usuario.getEmail(),passwordEncoder.encode("1234"),generarCódigo(),false);
-        serviUsuario.save(usu);
-
-        try {
-            Mail m = new Mail("Config/configuracion.properties");
-
-            m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
-                    " ingrese este código la primera vez que acceda a la web: "+usu.getCodigoSeguridad()
-                    +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());
-
-        } catch (InvalidParameterException | MessagingException | IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-        return "redirect:/index";
-    }
-    @PostMapping("/submit/nuevo/jefe/alumno")
-    public String nuevoAlumnoCompleto(@ModelAttribute("usuario") Profesor usuario, BCryptPasswordEncoder passwordEncoder) throws MessagingException {
-        Usuario usu= new Alumno(usuario.getNombre(),usuario.getApellidos()
-                ,usuario.getEmail(),passwordEncoder.encode("1234"),generarCódigo());
-        serviUsuario.save(usu);
-
-        try {
-            Mail m = new Mail("Config/configuracion.properties");
-
-            m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
-                    " ingrese este código la primera vez que acceda a la web: "+usu.getCodigoSeguridad()
-                    +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());
-
-        } catch (InvalidParameterException | MessagingException | IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-        return "redirect:/index";
-    }
-    @PostMapping("/submit/nuevo/jefe/estudio/csv")
-    public String nuevoJefeEstudiosCompletoCsv()  throws IOException {
-
-        return "redirect:/index";
-    }
+    @Autowired
+    private AsignaturaServicio asignaturaServicio;
     @GetMapping("/gestion")
     public String gestionTítulos(Model model){
         model.addAttribute("titulos",serviTitulo.findAll());
@@ -183,23 +112,49 @@ public class JefeEstudiosController {
         return  "redirect:/jefe/estudios/cursos/"+curso.getTitulos().getId();
     }
 
-    
-    private String generarCódigo(){
-        Random aleatorio = new Random();
-
-        String alfa = "ABCDEFGHIJKLMNOPQRSTVWXYZ";
-
-        String cadena = "";    //Inicializamos la Variable//
-
-        int numero;
-
-        int forma;
-        forma=(int)(aleatorio.nextDouble() * alfa.length()-1+0);
-        numero=(int)(aleatorio.nextDouble() * 99+100);
-
-        cadena=cadena+alfa.charAt(forma)+numero;
-
-        return cadena;
+    @GetMapping("/jefe/estudios/asignatura/{id}")
+    public String gestionAsignaturas(@PathVariable ("id") Long id,Model model){
+        Curso aux=serviCurso.findById(id).get();
+        model.addAttribute("ListaAsignaturas",aux.getAsignatura());
+        model.addAttribute("IdCurso",aux.getTitulos().getId());
+        model.addAttribute("IdCursoNuevo",aux.getId());
+        return "JefeEstudios/Gestion/asignaturas";
     }
-
+    @GetMapping("/jefe/estudios/asignatura/eliminar/{id}")
+    public String eliminarAsignatura(@PathVariable ("id") Long id){
+        Asignatura aux=asignaturaServicio.findById(id).get();
+        Curso idCurso=serviCurso.findById(aux.getCurso().getId()).get();
+        asignaturaServicio.delete(asignaturaServicio.findById(id).get());
+        return "redirect:/jefe/estudios/asignatura/"+idCurso.getId();
+    }
+    @GetMapping("/jefe/estudios/asignatura/editar/{id}")
+    public String editarAsignatura(@PathVariable ("id") Long id,Model model){
+        model.addAttribute("asigAntiguo",asignaturaServicio.findById(id).get());
+        model.addAttribute("asigNuevo",new Asignatura());;
+        return "JefeEstudios/Edicion/asignatura";
+    }
+    @PostMapping("/submit/editar/asignatura/final")
+    public String editarAsignaturaFinal(@ModelAttribute("asigNuevo") Asignatura asignatura){
+        Asignatura aux=asignaturaServicio.findById(asignatura.getId()).get();
+        aux.setNombreAsignatura(asignatura.getNombreAsignatura());
+        asignaturaServicio.edit(aux);
+        Curso cursoAux=serviCurso.findById(aux.getCurso().getId()).get();
+        return "redirect:/jefe/estudios/asignatura/"+cursoAux.getId();
+    }
+    @GetMapping("/jefe/estudios/asignatura/nuevo/{id}")
+    public String agregarAsignatura(@PathVariable ("id") Long id, Model model){
+        model.addAttribute("nuevoAsig",new Asignatura());
+        model.addAttribute("idCurso",id);
+        return "JefeEstudios/Nuevo/asignatura";
+    }
+    @PostMapping("/submit/nuevo/asignatura/final")
+    public String agregarAsignaturaFinal(@ModelAttribute("nuevoAsig") Asignatura asignatura){
+        Asignatura aux=new Asignatura(asignatura.getNombreAsignatura());
+        asignaturaServicio.save(aux);
+        Curso cursoNuevo=serviCurso.findById(asignatura.getId()).orElse(null);
+        cursoNuevo.addAsignatura(aux);
+        asignaturaServicio.edit(aux);
+        serviCurso.edit(cursoNuevo);
+        return "redirect:/jefe/estudios/asignatura/"+cursoNuevo.getId();
+    }
 }

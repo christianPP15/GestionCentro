@@ -2,7 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragmentos/FragmentoHead :: header_comun(~{::title},~{::link})">
     <meta charset="UTF-8">
-    <title>Gestión cursos</title>
+    <title>Gestión asignaturas</title>
     <link rel="stylesheet" href="../css/css.css" th:href="@{/css/css.css}">
 </head>
 <body>
@@ -11,7 +11,7 @@
     <div class="container">
         <div class="row">
             <div class="col-3">
-                <a href="/gestion"> <p class="noEnlace">Volver atras</p><img th:src="@{/img/return.png}"></a>
+                <a th:href="@{/jefe/estudios/cursos/{id}(id=${IdCurso})}"> <p class="noEnlace">Volver atras</p><img th:src="@{/img/return.png}"></a>
             </div>
         </div>
         <div class="row">
@@ -23,21 +23,21 @@
                     <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>Asignaturas</th>
+                        <th>Horarios</th>
                         <th sec:authorize="hasRole('ROLE_ADMIN')">Editar</th>
                         <th sec:authorize="hasRole('ROLE_ADMIN')">Borrar</th>
                     </tr>
                     </thead>
                     <tbody >
-                    <tr th:each="cursos :${Listacursos}">
-                        <td th:text="${cursos.nombre}"></td>
-                        <td ><a th:href="@{/jefe/estudios/asignatura/{id}(id=${cursos.id})}"><img th:src="@{/img/flecha-right.png}"></a></td>
-                        <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/jefe/estudios/curso/editar/{id}(id=${cursos.id})}"><img th:src="@{/img/edit.png}"><a/></td>
-                        <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/jefe/estudios/curso/eliminar/{id}(id=${cursos.id})}"><img th:src="@{/img/borrar.png}"></a></td>
+                    <tr th:each="asignatura :${ListaAsignaturas}">
+                        <td th:text="${asignatura.nombreAsignatura}"></td>
+                        <td><a th:href="@{/jefe/estudios/cursos/{id}(id=${asignatura.id})}"><img th:src="@{/img/flecha-right.png}"></a></td>
+                        <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/jefe/estudios/asignatura/editar/{id}(id=${asignatura.id})}"><img th:src="@{/img/edit.png}"></a></td>
+                        <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/jefe/estudios/asignatura/eliminar/{id}(id=${asignatura.id})}"><img th:src="@{/img/borrar.png}"></a></td>
                     </tr>
                     <tr sec:authorize="hasRole('ROLE_ADMIN')">
                         <td>Ingrese un nuevo curso</td>
-                        <td><a th:href="@{/jefe/estudios/curso/nuevo/{id}(id=${Idtitulo})}"><img th:src="@{/img/nuevo.png}"></a></td>
+                        <td><a th:href="@{/jefe/estudios/asignatura/nuevo/{id}(id=${IdCursoNuevo})}"><img th:src="@{/img/nuevo.png}"></a></td>
                     </tr>
                     </tbody>
                 </table>

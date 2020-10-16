@@ -39,6 +39,7 @@ public class ControladorInicio {
         if(usuarioLog.getCodigoSeguridad().contentEquals(codigo.getCodigo())){
             usuarioLog.setPrimeraVez(true);
             usuarioLog.setPassword(encode.encode(codigo.getContra()));
+            usuarioLog.setCodigoSeguridad(null);
             serviUsu.edit(usuarioLog);
         }
         return "redirect:/index";
