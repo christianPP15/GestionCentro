@@ -28,6 +28,10 @@ public class Alumno extends Usuario {
         super(nombre, apellidos, email, password);
     }
 
+    public Alumno(String nombre, String apellidos, String email, String password, boolean primeraVez) {
+        super(nombre, apellidos, email, password, primeraVez);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority("ROLE_ALUMNO"));

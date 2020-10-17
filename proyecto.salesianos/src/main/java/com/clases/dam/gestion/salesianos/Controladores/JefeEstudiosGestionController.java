@@ -5,6 +5,8 @@ import com.clases.dam.gestion.salesianos.Asignatura.Asignatura;
 import com.clases.dam.gestion.salesianos.Asignatura.AsignaturaServicio;
 import com.clases.dam.gestion.salesianos.Curso.Curso;
 import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
+import com.clases.dam.gestion.salesianos.Horario.Horario;
+import com.clases.dam.gestion.salesianos.Horario.HorarioServicio;
 import com.clases.dam.gestion.salesianos.Profesor.Profesor;
 import com.clases.dam.gestion.salesianos.Servicios.Mail;
 import com.clases.dam.gestion.salesianos.Titulo.Titulo;
@@ -37,6 +39,8 @@ public class JefeEstudiosGestionController {
     private CursoServicio serviCurso;
     @Autowired
     private AsignaturaServicio asignaturaServicio;
+    @Autowired
+    private HorarioServicio horarioServicio;
     @GetMapping("/gestion")
     public String gestionTítulos(Model model){
         model.addAttribute("titulos",serviTitulo.findAll());
@@ -156,5 +160,53 @@ public class JefeEstudiosGestionController {
         asignaturaServicio.edit(aux);
         serviCurso.edit(cursoNuevo);
         return "redirect:/jefe/estudios/asignatura/"+cursoNuevo.getId();
+    }
+
+    @GetMapping("/jefe/estudios/horas/{id}")
+    public String gestionHoras(@PathVariable ("id") Long id,Model model){
+        Asignatura aux=asignaturaServicio.findById(id).get();
+        model.addAttribute("ListaHoras",aux.getHorario());
+        model.addAttribute("IdAsignatura",aux.getCurso().getId());
+        model.addAttribute("IdAsignaturaNuevo",aux.getId());
+        return "JefeEstudios/Gestion/horarios";
+    }
+    @GetMapping("/jefe/estudios/horarios/nuevo/{id}")
+    public String agregarHorario(@PathVariable ("id") Long id, Model model){
+        model.addAttribute("nuevoHorario",new Horario());
+        model.addAttribute("idAsig",id);
+        return "JefeEstudios/Nuevo/horario";
+    }
+    @PostMapping("/submit/nuevo/horario/final")
+    public String nuevoHorario(@ModelAttribute("nuevoCurso") Horario horario){
+        Horario aux=new Horario(horario.getDia(),horario.getHoraComienzo(),horario.getHoraFinalizacion());
+        horarioServicio.save(aux);
+        Asignatura asignaturaAux=asignaturaServicio.findById(horario.getId()).get();
+        asignaturaAux.addHorario(aux);
+        horarioServicio.edit(aux);
+        asignaturaServicio.edit(asignaturaAux);
+        return  "redirect:/jefe/estudios/horas/"+asignaturaAux.getId();
+    }
+    @GetMapping("/jefe/estudios/hora/eliminar/{id}")
+    public String eliminarHorario(@PathVariable ("id") Long id){
+        Horario aux=horarioServicio.findById(id).get();
+        Asignatura idAsignatura=asignaturaServicio.findById(aux.getAsignatura().getId()).get();
+        horarioServicio.delete(aux);
+        return "redirect:/jefe/estudios/horas/"+idAsignatura.getId();
+    }
+    @GetMapping("/jefe/estudios/horario/editar/{id}")
+    public String editarHorario(@PathVariable ("id") Long id,Model model){
+        model.addAttribute("horaAntiguo",horarioServicio.findById(id).get());
+        model.addAttribute("horaNuevo",new Horario());;
+        return "JefeEstudios/Edicion/horario";
+    }
+    @PostMapping("/submit/editar/horario/final")
+    public String editarHorarioFinal(@ModelAttribute("horaNuevo") Horario horario){
+        Horario aux=horarioServicio.findById(horario.getId()).get();
+        aux.setDia(horario.getDia());
+        aux.setHoraComienzo(horario.getHoraComienzo());
+        aux.setHoraFinalizacion(horario.getHoraFinalizacion());
+        horarioServicio.edit(aux);
+        Asignatura asigAux=asignaturaServicio.findById(aux.getAsignatura().getId()).get();
+        return "redirect:/jefe/estudios/horas/"+asigAux.getId();
     }
 }
