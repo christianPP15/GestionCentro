@@ -8,6 +8,7 @@ import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
 import com.clases.dam.gestion.salesianos.Horario.Horario;
 import com.clases.dam.gestion.salesianos.Horario.HorarioServicio;
 import com.clases.dam.gestion.salesianos.Profesor.Profesor;
+import com.clases.dam.gestion.salesianos.Servicios.upload.StorageService;
 import com.clases.dam.gestion.salesianos.Titulo.Titulo;
 import com.clases.dam.gestion.salesianos.Titulo.TituloServicio;
 import com.clases.dam.gestion.salesianos.Usuario.Usuario;
@@ -31,9 +32,10 @@ public class Application {
 	public CommandLineRunner init(UsuarioServicio servicio
 			, BCryptPasswordEncoder passwordEncoder, TituloServicio tituloServicio
 			, CursoServicio cursoServicio , AsignaturaServicio asignaturaServicio
-			, HorarioServicio horarioServicio) {
+			, HorarioServicio horarioServicio, StorageService storageService) {
 		return args -> {
-
+			storageService.deleteAll();
+			storageService.init();
 			Usuario u = new Alumno("Christian","Payo","cpp",passwordEncoder.encode("1234"),true);
 
 

@@ -7,7 +7,60 @@
 </head>
 <body>
 <nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
+<main>
+    <div class="container">
+        <form method="post" action="" th:action="@{/nueva/solicitud/cambio}" enctype="multipart/form-data" th:object="${NuevaConvi}">
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <br><br>
+                    <div class="form-group row">
+                        <div class="col-8">
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input name="radio" id="radio_0" type="radio" class="custom-control-input"
+                                       value="false" th:field="*{tipo}" checked th:value="false">
+                                <label for="radio_0" class="custom-control-label" >Convalidar</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input name="radio" id="radio_1" type="radio" class="custom-control-input" th:value="true" th:field="*{tipo}" value="true">
+                                <label for="radio_1" class="custom-control-label">Excepción</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4"></div>
+            </div>
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <br><br>
+                    <input type="file" accept="application/pdf" required name="file">
+                </div>
+                <div class="col-4"></div>
+            </div>
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <br><br>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Asignatura</label>
+                        </div>
+                        <select class="custom-select" id="inputGroupSelect01" th:field="*{idAsignatura}">
+                            <option value="LUN" th:value="null"  >Elegir...</option>
+                            <div th:each="asignaturas :${asignaturas}">
+                                <option  th:value="${asignaturas.id}" th:text="${asignaturas.nombreAsignatura}"></option>
+                            </div>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center"/>
+        </form>
+    </div>
 
+</main>
 <footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
 </body>
 </html>

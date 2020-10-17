@@ -21,12 +21,12 @@ public class Curso {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy="curso")
+    @OneToMany(mappedBy="curso",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Asignatura> asignatura = new ArrayList<>();
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy="curso")
+    @OneToMany(mappedBy="curso",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Alumno> alumnos = new ArrayList<>();
 
     public void addAsignatura(Asignatura a) {

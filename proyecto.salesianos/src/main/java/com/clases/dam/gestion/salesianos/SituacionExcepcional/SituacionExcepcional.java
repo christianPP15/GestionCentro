@@ -34,14 +34,29 @@ public class SituacionExcepcional {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime fechaSolicitud;
 
-    private String tipo;
+    private boolean tipo;
 
-    private File adjunto;
+    private String adjunto;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime fechaResolucion;
 
     private boolean estado;
 
+    public SituacionExcepcional(Asignatura asignatura, Alumno alumno, LocalDateTime fechaSolicitud, boolean tipo, boolean estado) {
+        this.asignatura = asignatura;
+        this.alumno = alumno;
+        this.fechaSolicitud = fechaSolicitud;
+        this.tipo = tipo;
+        this.estado = estado;
+    }
 
+    public SituacionExcepcional(SituacionExcepcionald id, Asignatura asignatura, Alumno alumno, LocalDateTime fechaSolicitud, boolean tipo, boolean estado) {
+        this.id = id;
+        this.asignatura = asignatura;
+        this.alumno = alumno;
+        this.fechaSolicitud = fechaSolicitud;
+        this.tipo = tipo;
+        this.estado = estado;
+    }
 }
