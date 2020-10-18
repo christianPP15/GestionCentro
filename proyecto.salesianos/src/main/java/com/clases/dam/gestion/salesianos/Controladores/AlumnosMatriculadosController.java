@@ -31,7 +31,7 @@ public class AlumnosMatriculadosController {
     @Autowired
     private HorarioServicio horarioServicio;
 
-    @GetMapping("/listado/alumnos/curso/{id}")
+   /* @GetMapping("/listado/alumnos/curso/{id}")
     public String gestionAlumnosCurso(@PathVariable("id") Long id, Model model){
         Map<Alumno, List<Asignatura>> alumnosMatriculados=new HashMap<>();
         for (Alumno alumno:
@@ -41,5 +41,5 @@ public class AlumnosMatriculadosController {
         model.addAttribute("listadoAlumnos",serviCurso.findById(id).get().getAlumnos());
         System.out.println(serviCurso.findById(id).get().getAlumnos());
         return "";
-    }
+    }*/
 }
