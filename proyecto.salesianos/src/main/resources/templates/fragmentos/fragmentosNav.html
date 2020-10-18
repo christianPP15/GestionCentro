@@ -35,6 +35,7 @@
                     </div>
                     <li class="nav-item active" sec:authorize="hasRole('ROLE_ADMIN')"><a href="/gestion" class="nav-link">Gestión</a></li>
                     <li class="nav-item active" sec:authorize="hasRole('ROLE_PROFESOR')"><a href="/gestion" class="nav-link">Información</a></li>
+                    <li class="nav-item active" sec:authorize="hasRole('ROLE_ALUMNO')"><a href="/solicitarCambio" class="nav-link">Solicitud</a></li>
                 </ul>
             </div>
         </nav>

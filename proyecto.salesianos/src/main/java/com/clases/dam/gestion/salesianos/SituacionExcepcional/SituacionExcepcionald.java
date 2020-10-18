@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 
@@ -15,6 +17,7 @@ import java.io.Serializable;
 public class SituacionExcepcionald implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
 
     private long asignatura_id;
 
