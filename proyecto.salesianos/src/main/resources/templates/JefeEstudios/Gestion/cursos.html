@@ -22,7 +22,7 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>Nombre</th>
+                        <th>Nombre y listado Alumnos</th>
                         <th>Asignaturas</th>
                         <th sec:authorize="hasRole('ROLE_ADMIN')">Editar</th>
                         <th sec:authorize="hasRole('ROLE_ADMIN')">Borrar</th>
@@ -30,7 +30,7 @@
                     </thead>
                     <tbody >
                     <tr th:each="cursos :${Listacursos}">
-                        <td th:text="${cursos.nombre}"></td>
+                        <td><a th:href="@{/listado/alumnos/curso/{id}(id=${cursos.id})}"><span th:text="${cursos.nombre}"></span></a></td>
                         <td ><a th:href="@{/jefe/estudios/asignatura/{id}(id=${cursos.id})}"><img th:src="@{/img/flecha-right.png}"></a></td>
                         <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/jefe/estudios/curso/editar/{id}(id=${cursos.id})}"><img th:src="@{/img/edit.png}"><a/></td>
                         <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/jefe/estudios/curso/eliminar/{id}(id=${cursos.id})}"><img th:src="@{/img/borrar.png}"></a></td>
