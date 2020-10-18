@@ -68,7 +68,11 @@ public class ConvalidacionesExcepcionesController {
 
         return "redirect:/index";
     }
-
+    @GetMapping("/aceptar/solicitudes")
+    public String solicitudesAceptacion(Model model){
+        model.addAttribute("convalidaciones",situacionExcepcionalServicio.findAll());
+        return "JefeEstudios/convalidaciones/AceptacionConvalidacion";
+    }
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
