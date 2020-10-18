@@ -11,6 +11,7 @@ import com.clases.dam.gestion.salesianos.SituacionExcepcional.SituacionExcepcion
 import com.clases.dam.gestion.salesianos.SituacionExcepcional.SituacionExcepcionald;
 import com.clases.dam.gestion.salesianos.Titulo.TituloServicio;
 import com.clases.dam.gestion.salesianos.Usuario.UsuarioServicio;
+import com.clases.dam.gestion.salesianos.proveedorId.ProveedorId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -55,8 +56,9 @@ public class ConvalidacionesExcepcionesController {
     public String convalidacionesExepcionesNuevo(@ModelAttribute("NuevaConvi") SituacionExcepcionalFormulario situacionExcepcional
             , @AuthenticationPrincipal Alumno alumno, @RequestParam("file") MultipartFile file){
         SituacionExcepcionald id=new SituacionExcepcionald(situacionExcepcional.getIdAsignatura(),alumno.getId());
+        ProveedorId proveedorId=new ProveedorId();
         SituacionExcepcional situacionExcepcional1=new SituacionExcepcional(id,asignaturaServicio.findById(situacionExcepcional.getIdAsignatura()).get()
-                ,alumno, LocalDateTime.now(),situacionExcepcional.isTipo(),false);
+                ,alumno, LocalDateTime.now(),proveedorId,situacionExcepcional.isTipo(),false);
         situacionExcepcionalServicio.save(situacionExcepcional1);
        String idAux =String.valueOf(situacionExcepcional1.getId().getAlumno_id()+situacionExcepcional1.getId().getAsignatura_id());
         if (!file.isEmpty()) {
