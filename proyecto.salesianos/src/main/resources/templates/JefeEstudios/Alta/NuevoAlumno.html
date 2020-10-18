@@ -32,6 +32,17 @@
                                 <label for="Email">Email:</label>
                                 <input type="text" id="Email" name="Email" placeholder="Email..." required  class="form-control" th:field="*{email}">
                             </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="inputGroupSelect01">Options</label>
+                                </div>
+                                <select class="custom-select" id="inputGroupSelect01" th:field="*{id}">
+                                    <option selected value="none">Cursos...</option>
+                                    <div th:each="cursos :${listaCursos}">
+                                        <option selected value="asignatura" th:value="${cursos.id}" th:text="${cursos.nombre}">Choose...</option>
+                                    </div>
+                                </select>
+                            </div>
                             <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center"/>
                         </form>
                     </div>

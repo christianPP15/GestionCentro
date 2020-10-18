@@ -1,7 +1,9 @@
 package com.clases.dam.gestion.salesianos.Controladores;
 
 import com.clases.dam.gestion.salesianos.Alumno.Alumno;
+import com.clases.dam.gestion.salesianos.Curso.Curso;
 import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
+import com.clases.dam.gestion.salesianos.Formularios.NuevoAlumnoFormulario;
 import com.clases.dam.gestion.salesianos.Profesor.Profesor;
 import com.clases.dam.gestion.salesianos.Servicios.Mail;
 import com.clases.dam.gestion.salesianos.Titulo.TituloServicio;
@@ -41,7 +43,8 @@ public class JefeEstudiosAltaController {
     }
     @GetMapping("/jefeEstudio/alta/alumnos")
     public String crearNuevoAlumno(Model model){
-        model.addAttribute("usuario",new Alumno());
+        model.addAttribute("usuario",new NuevoAlumnoFormulario());
+        model.addAttribute("listaCursos",serviCurso.findAll());
         return "JefeEstudios/Alta/NuevoAlumno";
     }
 
@@ -82,11 +85,15 @@ public class JefeEstudiosAltaController {
         return "redirect:/index";
     }
     @PostMapping("/submit/nuevo/jefe/alumno")
-    public String nuevoAlumnoCompleto(@ModelAttribute("usuario") Profesor usuario, BCryptPasswordEncoder passwordEncoder) throws MessagingException {
-        Usuario usu= new Alumno(usuario.getNombre(),usuario.getApellidos()
+    public String nuevoAlumnoCompleto(@ModelAttribute("usuario") NuevoAlumnoFormulario usuario, BCryptPasswordEncoder passwordEncoder) throws MessagingException {
+        System.out.println(usuario);
+        Alumno usu= new Alumno(usuario.getNombre(),usuario.getApellidos()
                 ,usuario.getEmail(),passwordEncoder.encode("1234"),generarCódigo());
         serviUsuario.save(usu);
-
+        Curso aux=serviCurso.findById(usuario.getId()).get();
+        aux.addAlumno(usu);
+        serviCurso.edit(aux);
+        serviUsuario.edit(usu);
         try {
             Mail m = new Mail("Config/configuracion.properties");
 
