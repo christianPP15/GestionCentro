@@ -15,7 +15,7 @@
                 <div th:each="solicitudes :${convalidaciones}">
                     <div class="cajonAceptacion">
                         <p th:text="${solicitudes.alumno.nombre}"></p><p th:text="${solicitudes.alumno.apellidos}"></p>
-                        <a th:download="${solicitudes.adjunto}" th:href="@{${solicitudes.adjunto}}"><img th:src="@{/img/descarga.png}"></a>
+                        <a  th:href="@{/descargar/info/{id}(id=${solicitudes.idAux.id})}"><img th:src="@{/img/descarga.png}"></a>
                     </div>
                 </div>
             </div>
