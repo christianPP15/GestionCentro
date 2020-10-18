@@ -48,6 +48,18 @@ public class JefeEstudiosGestionController {
     }
     @GetMapping("/jefe/estudios/titulo/eliminar/{id}")
     public String aliminarTitulo(@PathVariable ("id") Long id){
+        for (Curso curso:
+             serviTitulo.findById(id).get().getCursos()) {
+            for (Asignatura asig:
+                 curso.getAsignatura()) {
+                for (Horario hora:
+                     asig.getHorario()) {
+                    horarioServicio.delete(hora);
+                }
+                asignaturaServicio.delete(asig);
+            }
+            serviCurso.delete(curso);
+        }
         serviTitulo.delete(serviTitulo.findById(id).orElse(null));
         return "redirect:/gestion";
     }
@@ -84,6 +96,14 @@ public class JefeEstudiosGestionController {
     @GetMapping("/jefe/estudios/curso/eliminar/{id}")
     public String aliminarCurso(@PathVariable ("id") Long id){
         Titulo idTitulo=serviCurso.findById(id).get().getTitulos();
+        for (Asignatura asig:
+             serviCurso.findById(id).get().getAsignatura()) {
+            for (Horario hora:
+                 asig.getHorario()) {
+                horarioServicio.delete(hora);
+            }
+            asignaturaServicio.delete(asig);
+        }
         serviCurso.delete(serviCurso.findById(id).get());
         return "redirect:/jefe/estudios/cursos/"+idTitulo.getId();
     }
@@ -127,8 +147,14 @@ public class JefeEstudiosGestionController {
     @GetMapping("/jefe/estudios/asignatura/eliminar/{id}")
     public String eliminarAsignatura(@PathVariable ("id") Long id){
         Asignatura aux=asignaturaServicio.findById(id).get();
+        for (Horario hora:
+            aux.getHorario()) {
+            horarioServicio.delete(hora);
+        }
         Curso idCurso=serviCurso.findById(aux.getCurso().getId()).get();
-        asignaturaServicio.delete(asignaturaServicio.findById(id).get());
+        idCurso.removeAsignatura(aux);
+        serviCurso.edit(idCurso);
+        asignaturaServicio.delete(aux);
         return "redirect:/jefe/estudios/asignatura/"+idCurso.getId();
     }
     @GetMapping("/jefe/estudios/asignatura/editar/{id}")
