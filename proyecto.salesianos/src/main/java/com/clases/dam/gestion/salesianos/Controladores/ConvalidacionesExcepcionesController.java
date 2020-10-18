@@ -58,9 +58,9 @@ public class ConvalidacionesExcepcionesController {
         SituacionExcepcional situacionExcepcional1=new SituacionExcepcional(id,asignaturaServicio.findById(situacionExcepcional.getIdAsignatura()).get()
                 ,alumno, LocalDateTime.now(),situacionExcepcional.isTipo(),false);
         situacionExcepcionalServicio.save(situacionExcepcional1);
-
+       String idAux =String.valueOf(situacionExcepcional1.getId().getAlumno_id()+situacionExcepcional1.getId().getAsignatura_id());
         if (!file.isEmpty()) {
-            String avatar = storageService.store(file, situacionExcepcional1.getId().getId());
+            String avatar = storageService.store(file, Long.parseLong(idAux));
             situacionExcepcional1.setAdjunto(MvcUriComponentsBuilder
                     .fromMethodName(ConvalidacionesExcepcionesController.class, "serveFile", avatar).build().toUriString());
             situacionExcepcionalServicio.edit(situacionExcepcional1);
