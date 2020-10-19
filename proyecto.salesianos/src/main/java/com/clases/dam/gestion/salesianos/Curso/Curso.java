@@ -1,5 +1,6 @@
 package com.clases.dam.gestion.salesianos.Curso;
 
+import com.clases.dam.gestion.salesianos.Alumno.Alumno;
 import com.clases.dam.gestion.salesianos.Asignatura.Asignatura;
 import com.clases.dam.gestion.salesianos.Titulo.Titulo;
 import lombok.*;
@@ -13,15 +14,20 @@ import java.util.List;
 public class Curso {
     @Id @GeneratedValue
     private long id;
-    private String nombreCurso;
+    private String nombre;
 
     @ManyToOne
     private Titulo titulos;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy="curso")
+    @OneToMany(mappedBy="curso",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Asignatura> asignatura = new ArrayList<>();
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy="curso",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<Alumno> alumnos = new ArrayList<>();
 
     public void addAsignatura(Asignatura a) {
         this.asignatura.add(a);
@@ -31,5 +37,23 @@ public class Curso {
     public void removeAsignatura(Asignatura a) {
         this.asignatura.remove(a);
         a.setCurso(null);
+    }
+
+    public void addAlumno(Alumno a) {
+        this.alumnos.add(a);
+        a.setCurso(this);
+    }
+
+    public void removeAlumno(Asignatura a) {
+        this.asignatura.remove(a);
+        a.setCurso(null);
+    }
+    public Curso(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Curso(String nombre, List<Asignatura> asignatura) {
+        this.nombre = nombre;
+        this.asignatura = asignatura;
     }
 }

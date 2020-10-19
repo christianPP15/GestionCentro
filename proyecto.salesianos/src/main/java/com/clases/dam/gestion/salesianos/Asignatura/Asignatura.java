@@ -1,18 +1,16 @@
 package com.clases.dam.gestion.salesianos.Asignatura;
 
+import com.clases.dam.gestion.salesianos.Alumno.Alumno;
 import com.clases.dam.gestion.salesianos.Curso.Curso;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.clases.dam.gestion.salesianos.Horario.Horario;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.*;
 
 @Entity
-@NoArgsConstructor@AllArgsConstructor@Builder@Data
+@Data
+@NoArgsConstructor @AllArgsConstructor @Builder
 public class Asignatura {
     @Id
     @GeneratedValue
@@ -23,5 +21,22 @@ public class Asignatura {
     @ManyToOne
     private Curso curso;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy="asignatura")
+    private List<Horario> horario=new ArrayList<>();
 
+    public void addHorario(Horario a) {
+        this.horario.add(a);
+        a.setAsignatura(this);
+    }
+
+    public void removeHorario(Horario a) {
+        this.horario.remove(a);
+        a.setAsignatura(null);
+    }
+
+    public Asignatura(String nombreAsignatura) {
+        this.nombreAsignatura = nombreAsignatura;
+    }
 }

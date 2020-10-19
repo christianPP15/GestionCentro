@@ -1,0 +1,34 @@
+.footercentro{
+    text-align: center;
+}
+.footerColor{
+background-color: #FFA77A;
+}
+.colorLetras{
+color:#FFA77A;
+}
+.cuadroFormulario{
+border: black 1px solid;
+}
+
+.bordesSeparadores{
+border-right: 2px solid #FFA77A;
+}
+.borderInferiores{
+border-bottom: 3px solid black;
+}
+
+.textoCentradp{
+text-align: center;
+}
+.borderInferioresActivos{
+border-bottom: 3px solid #FFA77A;
+}
+.noEnlace{
+color :black;
+text-decoration: none;
+}
+.cajonAceptacion{
+    border-radius: 38px 38px 38px 38px;
+    border: 1px solid #000000;
+}

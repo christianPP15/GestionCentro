@@ -3,6 +3,7 @@ package com.clases.dam.gestion.salesianos.SituacionExcepcional;
 import com.clases.dam.gestion.salesianos.Alumno.Alumno;
 import com.clases.dam.gestion.salesianos.Asignatura.Asignatura;
 import com.clases.dam.gestion.salesianos.SolicitudAmpliacionMatricula.SolicitudAmpliacionMatriculaId;
+import com.clases.dam.gestion.salesianos.proveedorId.ProveedorId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,14 +35,42 @@ public class SituacionExcepcional {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime fechaSolicitud;
 
-    private String tipo;
+    @OneToOne
+    private ProveedorId idAux;
 
-    private File adjunto;
+    private boolean tipo;
+
+    private String adjunto;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime fechaResolucion;
 
     private boolean estado;
 
+    public SituacionExcepcional(Asignatura asignatura, Alumno alumno, LocalDateTime fechaSolicitud, boolean tipo, boolean estado) {
+        this.asignatura = asignatura;
+        this.alumno = alumno;
+        this.fechaSolicitud = fechaSolicitud;
+        this.tipo = tipo;
+        this.estado = estado;
+    }
 
+    public SituacionExcepcional(SituacionExcepcionald id, Asignatura asignatura, Alumno alumno, LocalDateTime fechaSolicitud, boolean tipo, boolean estado) {
+        this.id = id;
+        this.asignatura = asignatura;
+        this.alumno = alumno;
+        this.fechaSolicitud = fechaSolicitud;
+        this.tipo = tipo;
+        this.estado = estado;
+    }
+
+    public SituacionExcepcional(SituacionExcepcionald id, Asignatura asignatura, Alumno alumno, LocalDateTime fechaSolicitud, ProveedorId idAux, boolean tipo, boolean estado) {
+        this.id = id;
+        this.asignatura = asignatura;
+        this.alumno = alumno;
+        this.fechaSolicitud = fechaSolicitud;
+        this.idAux = idAux;
+        this.tipo = tipo;
+        this.estado = estado;
+    }
 }

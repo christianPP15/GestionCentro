@@ -4,9 +4,9 @@ import com.clases.dam.gestion.salesianos.Servicios.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TítuloServicio extends BaseServiceImpl<Titulo,Long,TituloRepository> {
+public class TituloServicio extends BaseServiceImpl<Titulo,Long,TituloRepository> {
 
-    public TítuloServicio(TituloRepository repo) {
+    public TituloServicio(TituloRepository repo) {
         super(repo);
     }
 }

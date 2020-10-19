@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragmentos/FragmentoHead :: header_comun(~{::title},~{::link})">
+    <meta charset="UTF-8">
+    <title>Gestión cursos</title>
+    <link rel="stylesheet" href="../css/css.css" th:href="@{/css/css.css}">
+</head>
+<body>
+<nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
+<main id="infoCurso">
+    <div class="container">
+        <div class="row">
+            <div class="col-3">
+                <a href="/gestion"> <p class="noEnlace">Volver atras</p><img th:src="@{/img/return.png}"></a>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-2"></div>
+            <div class="col-8">
+                <br>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Nombre y listado Alumnos</th>
+                        <th>Asignaturas</th>
+                        <th sec:authorize="hasRole('ROLE_ADMIN')">Editar</th>
+                        <th sec:authorize="hasRole('ROLE_ADMIN')">Borrar</th>
+                    </tr>
+                    </thead>
+                    <tbody >
+                    <tr th:each="cursos :${Listacursos}">
+                        <td><a th:href="@{/listado/alumnos/curso/{id}(id=${cursos.id})}"><span th:text="${cursos.nombre}"></span></a></td>
+                        <td ><a th:href="@{/jefe/estudios/asignatura/{id}(id=${cursos.id})}"><img th:src="@{/img/flecha-right.png}"></a></td>
+                        <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/jefe/estudios/curso/editar/{id}(id=${cursos.id})}"><img th:src="@{/img/edit.png}"><a/></td>
+                        <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/jefe/estudios/curso/eliminar/{id}(id=${cursos.id})}"><img th:src="@{/img/borrar.png}"></a></td>
+                    </tr>
+                    <tr sec:authorize="hasRole('ROLE_ADMIN')">
+                        <td>Ingrese un nuevo curso</td>
+                        <td><a th:href="@{/jefe/estudios/curso/nuevo/{id}(id=${Idtitulo})}"><img th:src="@{/img/nuevo.png}"></a></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-2"></div>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
+</body>
+</html>>

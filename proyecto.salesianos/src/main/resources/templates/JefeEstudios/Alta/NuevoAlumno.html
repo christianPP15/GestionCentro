@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragmentos/FragmentoHead :: header_comun(~{::title},~{::link})">
+    <meta charset="UTF-8">
+    <title>Registro Alumno</title>
+    <link rel="stylesheet" href="../css/css.css" th:href="@{/css/css.css}">
+</head>
+<body>
+<nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
+<main id="registroJefeCampos">
+    <div class="container">
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6 cuadroFormulario">
+                <div class="row">
+                    <div class="col-6 borderInferioresActivos bordesSeparadores colorLetras" id="activo1"><h1 class="h1">Campos</h1></div>
+                    <div class="col-6 borderInferiores" id="cambioCsv"><h1 class="h1">CSV</h1></div>
+                </div>
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-8">
+                        <form method="POST" action="#" th:action="@{/submit/nuevo/jefe/alumno}" th:object="${usuario}">
+                            <div class="form-group">
+                                <label for="Nombre">Nombre:</label>
+                                <input type="text" id="Nombre" name="Nombre" placeholder="Nombre..." required autofocus class="form-control" th:field="*{nombre}">
+                            </div>
+                            <div class="form-group">
+                                <label for="Apellidos">Apellidos:</label>
+                                <input type="text" id="Apellidos" name="Apellidos" placeholder="Apellidos..." required  class="form-control" th:field="*{apellidos}">
+                            </div>
+                            <div class="form-group">
+                                <label for="Email">Email:</label>
+                                <input type="text" id="Email" name="Email" placeholder="Email..." required  class="form-control" th:field="*{email}">
+                            </div>
+                            <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center"/>
+                        </form>
+                    </div>
+                    <div class="col-2"></div>
+                </div>
+            </div>
+            <div class="col-3"></div>
+        </div>
+    </div>
+</main>
+<main id="registroJefeCsv">
+    <div class="container">
+        <br><br>
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6 cuadroFormulario">
+
+                <div class="row">
+                    <div class="col-6 borderInferiores bordesSeparadores" id="cambioCampos"><h1 class="h1">Campos</h1></div>
+                    <div class="col-6 borderInferiores" id="activo2"><h1 class="h1">CSV</h1></div>
+                </div>
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-8">
+                        <form method="POST" action="#" th:action="@{/submit/nuevo/jefe/estudio/csv}">
+                            <input type="file">
+                            <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center"/>
+                        </form>
+                    </div>
+                    <div class="col-2"></div>
+                </div>
+            </div>
+            <div class="col-3"></div>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
+<script>
+$("#registroJefeCsv").hide();
+$("#cambioCsv").click(function(){
+    $("#registroJefeCsv").show();
+    $("#registroJefeCampos").hide();
+    $("#activo2").addClass("borderInferioresActivos");
+    $("#activo2").removeClass("borderInferiores");
+    $("#activo1").removeClass("borderInferioresActivos");
+    $("#activo1").addClass("borderInferiores");
+    $("#activo2").addClass("colorLetras");
+    $("#activo1").removeClass("colorLetras");
+});
+$("#cambioCampos").click(function(){
+    $("#registroJefeCsv").hide();
+    $("#registroJefeCampos").show();
+    $("#activo1").addClass("borderInferioresActivos");
+    $("#activo1").removeClass("borderInferiores");
+    $("#activo2").removeClass("borderInferioresActivos");
+    $("#activo2").addClass("borderInferiores");
+    $("#activo1").addClass("colorLetras");
+    $("#activo2").removeClass("colorLetras");
+});
+</script>
+</body>
+</html>
