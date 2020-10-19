@@ -6,6 +6,7 @@ import com.clases.dam.gestion.salesianos.Servicios.BaseServiceImpl;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,7 +16,9 @@ public class SituacionExcepcionalServicio extends BaseServiceImpl<SituacionExcep
         super(repo);
     }
 
-
+    public List<SituacionExcepcional> buscarExistenciaNoTerminadas() {
+        return this.repositorio.buscarExistenciaNoTerminadas();
+    }
 
 
     public Optional<SituacionExcepcional> buscarExistencia(Asignatura Asig, Alumno alumno) {

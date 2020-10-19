@@ -69,6 +69,9 @@ public class ConvalidacionesExcepcionesController {
     @PostMapping("/nueva/solicitud/cambio")
     public String convalidacionesExepcionesNuevo(@ModelAttribute("NuevaConvi") SituacionExcepcionalFormulario situacionExcepcional
             , @AuthenticationPrincipal Alumno alumno, @RequestParam("file") MultipartFile file){
+        if(situacionExcepcionalServicio.buscarExistencia(asignaturaServicio.findById(situacionExcepcional.getIdAsignatura()).get(),alumnoServicio.findById(alumno.getId()).get()).orElse(null)!=null){
+            situacionExcepcionalServicio.delete(situacionExcepcionalServicio.buscarExistencia(asignaturaServicio.findById(situacionExcepcional.getIdAsignatura()).get(),alumnoServicio.findById(alumno.getId()).get()).get());
+        }
         SituacionExcepcionald id=new SituacionExcepcionald(situacionExcepcional.getIdAsignatura(),alumno.getId());
         ProveedorId proveedorId=new ProveedorId();
         proveedorIdServicio.save(proveedorId);
@@ -86,7 +89,7 @@ public class ConvalidacionesExcepcionesController {
     }
     @GetMapping("/aceptar/solicitudes")
     public String solicitudesAceptacion(Model model){
-        model.addAttribute("convalidaciones",situacionExcepcionalServicio.findAll());
+        model.addAttribute("convalidaciones",situacionExcepcionalServicio.buscarExistenciaNoTerminadas());
         return "JefeEstudios/convalidaciones/AceptacionConvalidacion";
     }
     @GetMapping("/descargar/{idAlumno}/info/{idAsignatura}")
@@ -97,7 +100,9 @@ public class ConvalidacionesExcepcionesController {
     }
     @PostMapping("/descargar/completado/final")
     public String EnviarSolicitud(@ModelAttribute("informacion") InformacionRechazoAceptacion info, Model model){
+        System.out.println(info);
         SituacionExcepcional aux=situacionExcepcionalServicio.buscarExistencia(asignaturaServicio.findById(info.getIdAsignatura()).get(),alumnoServicio.findById(info.getIdUsuario()).get()).get();
+        System.out.println(aux);
         aux.setEstado(true);
         aux.setAceptada(info.isAceptado());
         aux.setFechaResolucion(LocalDateTime.now());
@@ -118,8 +123,8 @@ public class ConvalidacionesExcepcionesController {
             Mail m = new Mail("Config/configuracion.properties");
 
             m.enviarEmail("Desición sobre la solicitud"+tipo+" para la asignatura "+aux.getAsignatura().getNombreAsignatura()
-                    ,"Se le comunica que la solicitud de "+ tipo+"ha sido "
-                            +resolucion+"\nMotivo: "+info.getMensaje()
+                    ,"Se le comunica que la solicitud de "+ tipo+" ha sido "
+                            +resolucion+"\nMensaje del centro: "+info.getMensaje()
                     ,aux.getAlumno().getEmail());
 
         } catch (InvalidParameterException | MessagingException | IOException ex) {
