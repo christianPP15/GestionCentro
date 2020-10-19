@@ -10,6 +10,7 @@
 <nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
 <main id="registroJefeCampos">
     <div class="container">
+        <br>
         <div class="row">
             <div class="col-3"></div>
             <div class="col-6 cuadroFormulario">
@@ -21,19 +22,22 @@
                     <div class="col-2"></div>
                     <div class="col-8">
                         <form method="POST" action="#" th:action="@{/submit/nuevo/jefe/profesor}" th:object="${usuario}">
+                            <br>
                             <div class="form-group">
                                 <label for="Nombre">Nombre:</label>
                                 <input type="text" id="Nombre" name="Nombre" placeholder="Nombre..." required autofocus class="form-control" th:field="*{nombre}">
                             </div>
+                            <br>
                             <div class="form-group">
                                 <label for="Apellidos">Apellidos:</label>
                                 <input type="text" id="Apellidos" name="Apellidos" placeholder="Apellidos..." required  class="form-control" th:field="*{apellidos}">
                             </div>
+                            <br>
                             <div class="form-group">
                                 <label for="Email">Email:</label>
                                 <input type="text" id="Email" name="Email" placeholder="Email..." required  class="form-control" th:field="*{email}">
                             </div>
-                            <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center"/>
+                            <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center mb-4"/>
                         </form>
                     </div>
                     <div class="col-2"></div>
@@ -45,7 +49,7 @@
 </main>
 <main id="registroJefeCsv">
     <div class="container">
-        <br><br>
+        <br>
         <div class="row">
             <div class="col-3"></div>
             <div class="col-6 cuadroFormulario">
@@ -57,9 +61,11 @@
                 <div class="row">
                     <div class="col-2"></div>
                     <div class="col-8">
-                        <form method="POST" action="#" th:action="@{/submit/nuevo/jefe/estudio/csv}">
-                            <input type="file">
-                            <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center"/>
+                        <h3 class="h3">El orden de los campos es nombre,apellidos,email</h3>
+                        <form method="POST" action="#" th:action="@{/submit/nuevo/jefe/profesor/csv}" enctype="multipart/form-data">
+                            <br>
+                            <input type="file" accept="text/csv" name="file">
+                            <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center mb-4 mt-4"/>
                         </form>
                     </div>
                     <div class="col-2"></div>

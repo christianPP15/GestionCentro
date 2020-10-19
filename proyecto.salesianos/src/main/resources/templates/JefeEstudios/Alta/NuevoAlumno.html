@@ -9,6 +9,7 @@
 <nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
 <main id="registroJefeCampos">
     <div class="container">
+        <br>
         <div class="row">
             <div class="col-3"></div>
             <div class="col-6 cuadroFormulario">
@@ -19,19 +20,24 @@
                 <div class="row">
                     <div class="col-2"></div>
                     <div class="col-8">
+                        <br>
                         <form method="POST" action="#" th:action="@{/submit/nuevo/jefe/alumno}" th:object="${usuario}">
+                            <br>
                             <div class="form-group">
                                 <label for="Nombre">Nombre:</label>
                                 <input type="text" id="Nombre" name="Nombre" placeholder="Nombre..." required autofocus class="form-control" th:field="*{nombre}">
                             </div>
+                            <br>
                             <div class="form-group">
                                 <label for="Apellidos">Apellidos:</label>
                                 <input type="text" id="Apellidos" name="Apellidos" placeholder="Apellidos..." required  class="form-control" th:field="*{apellidos}">
                             </div>
+                            <br>
                             <div class="form-group">
                                 <label for="Email">Email:</label>
                                 <input type="text" id="Email" name="Email" placeholder="Email..." required  class="form-control" th:field="*{email}">
                             </div>
+                            <br>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" for="inputGroupSelect01">Cursos</label>
@@ -43,7 +49,7 @@
                                     </div>
                                 </select>
                             </div>
-                            <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center"/>
+                            <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center mb-4"/>
                         </form>
                     </div>
                     <div class="col-2"></div>
@@ -55,11 +61,10 @@
 </main>
 <main id="registroJefeCsv">
     <div class="container">
-        <br><br>
+        <br>
         <div class="row">
             <div class="col-3"></div>
             <div class="col-6 cuadroFormulario">
-
                 <div class="row">
                     <div class="col-6 borderInferiores bordesSeparadores" id="cambioCampos"><h1 class="h1">Campos</h1></div>
                     <div class="col-6 borderInferiores" id="activo2"><h1 class="h1">CSV</h1></div>
@@ -67,9 +72,23 @@
                 <div class="row">
                     <div class="col-2"></div>
                     <div class="col-8">
-                        <form method="POST" action="#" th:action="@{/submit/nuevo/jefe/estudio/csv}">
-                            <input type="file">
-                            <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center"/>
+                        <h3 class="h3">El orden de los campos es nombre,apellidos,email,
+                            Nombre Asignatura</h3>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="inputGroupSelect01">Cursos</label>
+                            </div>
+                            <select class="custom-select" >
+                                <option selected value="none">Cursos disponibles</option>
+                                <div th:each="cursos :${listaCursos}">
+                                    <option value="asignatura"  th:text="${cursos.nombre}">Choose...</option>
+                                </div>
+                            </select>
+                        </div>
+                        <form method="POST" action="#" th:action="@{/submit/nuevo/jefe/alumno/csv}" enctype="multipart/form-data">
+                            <br>
+                            <input type="file" name="file" accept="text/csv" class="mb-4">
+                            <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center mb-4"/>
                         </form>
                     </div>
                     <div class="col-2"></div>
