@@ -31,4 +31,5 @@ text-decoration: none;
 .cajonAceptacion{
     border-radius: 38px 38px 38px 38px;
     border: 1px solid #000000;
+    text-align:center;
 }
