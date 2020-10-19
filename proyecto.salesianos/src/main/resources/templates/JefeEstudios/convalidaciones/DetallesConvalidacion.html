@@ -10,22 +10,63 @@
 <main>
     <div class="container">
         <div class="row">
-            <div class="col-4"></div>
-            <div class="col-4">
-                <a th:href="@{/descargar/{idAlumno}/solicitud/{idAsignatura}(idAsignatura=${solicitudes.asignatura.id},idAlumno=${solicitudes.alumno.id})}">Descargar</a>
-
-               <embed th:src="@{${solicitudes.adjunto}}" width="600" height="500" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
+            <div class="col-3"></div>
+            <div class="col-6">
                 <div>
-                    <iframe th:src="@{${solicitudes.adjunto}}" style="width:100%;height:700px;"></iframe>
+                    <h5 class="h5">El alumno con nombre <span th:text="${solicitudes.alumno.nombre}"></span>
+                    solicita la <span th:text="${solicitudes.tipo} ? excepción : convalidación"></span>
+                        para la asignatura de <span th:text="' '+${solicitudes.asignatura.nombreAsignatura}"></span>
+                        adjuntando la siguiente documentación:
+                    </h5>
                 </div>
                 <div>
+                    <a  th:href="@{${solicitudes.adjunto}}">
+                        <h6 class="h6 noEnlace">Descargar información de la petición</h6>
+                    </a>
                 </div>
-                <a download="informacion" th:href="@{${solicitudes.adjunto}}">Prueba4</a>
             </div>
-            <div class="col-4"></div>
+            <div class="col-3"></div>
+        </div>
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <form method="post" th:object="${informacion}" th:action="@{/descargar/completado/final}">
+                    <div class="form-group">
+                        <label for="mensaje">Mensaje:</label>
+                        <input type="text" id="mensaje" name="mensaje" placeholder="Mensaje..." required autofocus class="form-control" th:field="*{mensaje}">
+                        <input type="text" id="idAlumno" name="idAlumno"  required hidden class="form-control" th:field="*{idUsuario}">
+                        <input type="text" id="idAsig" name="idAsig"  required hidden class="form-control" th:field="*{idAsignatura}">
+                    </div>
+                    <div class="form-group row">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input name="radio" id="radio_0" type="radio" class="custom-control-input"
+                                   value="false" th:field="*{aceptado}" checked th:value="false">
+                            <label for="radio_0" class="custom-control-label" >Denegar</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input name="radio" id="radio_1" type="radio" class="custom-control-input" th:value="true" th:field="*{aceptado}" value="true">
+                            <label for="radio_1" class="custom-control-label">Aceptar</label>
+                        </div>
+                    </div>
+                    <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center"/>
+                </form>
+            </div>
+            <div class="col-3"></div>
         </div>
     </div>
+    <span th:text="${solicitudes.alumno.id}" hidden id="spanId"></span>
+    <span th:text="${solicitudes.asignatura.id}" hidden id="spanNombre"></span>
 </main>
 <footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
+<script>
+     window.onload = insertar();
+		function insertar() {
+		    var tituloObn = $("#spanNombre").text();
+		    var id = $("#spanId").text();
+
+		    $("#idAlumno").val(tituloObn);
+            $("#idAsig").val(id);
+		}
+</script>
 </body>
 </html>
