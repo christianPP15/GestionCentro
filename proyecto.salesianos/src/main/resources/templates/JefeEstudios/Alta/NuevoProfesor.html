@@ -64,7 +64,7 @@
                         <h3 class="h3">El orden de los campos es nombre,apellidos,email</h3>
                         <form method="POST" action="#" th:action="@{/submit/nuevo/jefe/profesor/csv}" enctype="multipart/form-data">
                             <br>
-                            <input type="file" accept="text/csv">
+                            <input type="file" accept="text/csv" name="file">
                             <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center mb-4 mt-4"/>
                         </form>
                     </div>

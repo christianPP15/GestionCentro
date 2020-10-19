@@ -164,6 +164,31 @@ public class JefeEstudiosAltaController {
         return "redirect:/index";
     }
 
+    @PostMapping("/submit/nuevo/jefe/alumno/csv")
+    public String nuevoAlumnoCompletoCsv(@RequestParam("file") MultipartFile file, BCryptPasswordEncoder passwordEncoder)  throws IOException {
+        BufferedReader br;
+        try {
+            String line;
+            InputStream is = file.getInputStream();
+            br = new BufferedReader(new InputStreamReader(is));
+            while ((line = br.readLine()) != null) {
+                String [] values=line.split(",");
+                if(serviCurso.findFirstBynombre(values[3]).get()!=null){
+                    Usuario usu=new Alumno(values[0],values[1],values[2],passwordEncoder.encode("1234"),generarCódigo(),serviCurso.findFirstBynombre(values[3]).get());
+                    serviUsuario.save(usu);
+                    Mail m = new Mail("Config/configuracion.properties");
+
+                    m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
+                            " ingrese este código la primera vez que acceda a la web: "+usu.getCodigoSeguridad()
+                            +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());
+                }
+            }
+
+        } catch (InvalidParameterException | MessagingException | IOException e) {
+            System.err.println(e.getMessage());
+        }
+        return "redirect:/index";
+    }
     private String generarCódigo(){
         Random aleatorio = new Random();
 

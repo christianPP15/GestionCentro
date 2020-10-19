@@ -4,6 +4,7 @@ import com.clases.dam.gestion.salesianos.Servicios.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CursoServicio extends BaseServiceImpl<Curso,Long,CursoRepository> {
@@ -14,5 +15,9 @@ public class CursoServicio extends BaseServiceImpl<Curso,Long,CursoRepository> {
     @Override
     public List<Curso> findAll() {
         return this.repositorio.findAllJoin();
+    }
+
+    public Optional<Curso> findFirstBynombre(String nombre) {
+        return repositorio.findFirstBynombre(nombre);
     }
 }
