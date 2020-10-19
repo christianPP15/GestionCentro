@@ -1,10 +1,13 @@
 package com.clases.dam.gestion.salesianos.Controladores;
 
 import com.clases.dam.gestion.salesianos.Alumno.Alumno;
+import com.clases.dam.gestion.salesianos.Alumno.AlumnoServicio;
 import com.clases.dam.gestion.salesianos.Asignatura.AsignaturaServicio;
 import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
+import com.clases.dam.gestion.salesianos.Formularios.InformacionRechazoAceptacion;
 import com.clases.dam.gestion.salesianos.Formularios.SituacionExcepcionalFormulario;
 import com.clases.dam.gestion.salesianos.Horario.HorarioServicio;
+import com.clases.dam.gestion.salesianos.Servicios.Mail;
 import com.clases.dam.gestion.salesianos.Servicios.upload.StorageService;
 import com.clases.dam.gestion.salesianos.SituacionExcepcional.SituacionExcepcional;
 import com.clases.dam.gestion.salesianos.SituacionExcepcional.SituacionExcepcionalServicio;
@@ -13,8 +16,8 @@ import com.clases.dam.gestion.salesianos.Titulo.TituloServicio;
 import com.clases.dam.gestion.salesianos.Usuario.UsuarioServicio;
 import com.clases.dam.gestion.salesianos.proveedorId.ProveedorId;
 import com.clases.dam.gestion.salesianos.proveedorId.ProveedorIdServicio;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,13 +31,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 
 @Controller
@@ -56,6 +58,8 @@ public class ConvalidacionesExcepcionesController {
     private HorarioServicio horarioServicio;
     @Autowired
     private ProveedorIdServicio proveedorIdServicio;
+    @Autowired
+    private AlumnoServicio alumnoServicio;
     @GetMapping("/solicitarCambio")
     public String convalidacionesExepciones(Model model, @AuthenticationPrincipal Alumno alumno){
             model.addAttribute("NuevaConvi",new SituacionExcepcionalFormulario());
@@ -85,42 +89,53 @@ public class ConvalidacionesExcepcionesController {
         model.addAttribute("convalidaciones",situacionExcepcionalServicio.findAll());
         return "JefeEstudios/convalidaciones/AceptacionConvalidacion";
     }
-    @GetMapping("/descargar/info/{id}")
-    public void descargaPdf(HttpServletRequest request, HttpServletResponse response,@PathVariable("id") Long id){
-        String ruta = storageService.load(id+".pdf").toString();
-        System.out.println(ruta);
-        String fullPath= request.getServletContext().getRealPath(ruta);
-        filedownload(fullPath,response,"peticion.pdf");
+    @GetMapping("/descargar/{idAlumno}/info/{idAsignatura}")
+    public String detallesSolicitudes(@PathVariable("idAlumno") Long alumno,@PathVariable("idAsignatura") Long asig, Model model){
+        model.addAttribute("solicitudes",situacionExcepcionalServicio.buscarExistencia(asignaturaServicio.findById(asig).get(),alumnoServicio.findById(alumno).get()).get());
+        model.addAttribute("informacion",new InformacionRechazoAceptacion());
+        return "JefeEstudios/convalidaciones/DetallesConvalidacion";
     }
-    public void filedownload(String fullPath, HttpServletResponse response, String fileName){
-        File file= new File(fullPath);
-        final int BUFFER_SIZE =4096;
-        if(file.exists()) {
-            try {
-                FileInputStream inputStream = new FileInputStream(file);
-                String mimeType= context.getMimeType(fullPath);
-                response.setContentType(mimeType);
-                response.setHeader("content-disposition", "attachment; filename="+ fileName);
-                OutputStream outputStream = response.getOutputStream();
-                byte [] buffer = new byte [BUFFER_SIZE];
-                int bytesRead=-1;
-                while((bytesRead = inputStream.read(buffer)) != -1 ){
-                    outputStream.write(buffer,0,bytesRead);
-                }
-                inputStream.close();
-                outputStream.close();
-                file.delete();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    @PostMapping("/descargar/completado/final")
+    public String EnviarSolicitud(@ModelAttribute("informacion") InformacionRechazoAceptacion info, Model model){
+        SituacionExcepcional aux=situacionExcepcionalServicio.buscarExistencia(asignaturaServicio.findById(info.getIdAsignatura()).get(),alumnoServicio.findById(info.getIdUsuario()).get()).get();
+        aux.setEstado(true);
+        aux.setAceptada(info.isAceptado());
+        aux.setFechaResolucion(LocalDateTime.now());
+        situacionExcepcionalServicio.edit(aux);
+        String tipo;
+        if(!aux.isTipo()){
+            tipo="convalidacion";
+        }else{
+            tipo="excepción";
         }
+        String resolucion;
+        if(aux.isAceptada()){
+            resolucion="aceptada";
+        }else{
+            resolucion="rechazada";
+        }
+        try {
+            Mail m = new Mail("Config/configuracion.properties");
+
+            m.enviarEmail("Desición sobre la solicitud"+tipo+" para la asignatura "+aux.getAsignatura().getNombreAsignatura()
+                    ,"Se le comunica que la solicitud de "+ tipo+"ha sido "
+                            +resolucion+"\nMotivo: "+info.getMensaje()
+                    ,aux.getAlumno().getEmail());
+
+        } catch (InvalidParameterException | MessagingException | IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return "redirect:/aceptar/solicitudes";
     }
+
+
 
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
         Resource file = storageService.loadAsResource(filename);
-        return ResponseEntity.ok().body(file);
+        //return ResponseEntity.ok().body(file);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                " attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 }

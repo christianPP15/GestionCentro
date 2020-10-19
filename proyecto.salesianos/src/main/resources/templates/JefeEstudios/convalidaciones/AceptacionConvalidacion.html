@@ -12,11 +12,18 @@
         <div class="row">
             <div class="col-4"></div>
             <div class="col-4">
+                <br><br>
                 <div th:each="solicitudes :${convalidaciones}">
-                    <div class="cajonAceptacion">
-                        <p th:text="${solicitudes.alumno.nombre}"></p><p th:text="${solicitudes.alumno.apellidos}"></p>
-                        <a  th:href="@{/descargar/info/{id}(id=${solicitudes.idAux.id})}"><img th:src="@{/img/descarga.png}"></a>
-                    </div>
+                    <a  th:href="@{/descargar/{idAlumno}/info/{idAsignatura}(idAsignatura=${solicitudes.asignatura.id},idAlumno=${solicitudes.alumno.id})}">
+                        <div class="cajonAceptacion">
+                            <p class="pt-3 noEnlace">
+                                <span th:text="${solicitudes.alumno.nombre}+' '">
+                                </span> <span th:text="${solicitudes.alumno.apellidos}+ ' '">
+                            </span> <span th:text="${solicitudes.tipo} ? Excepción : Convalidación"></span>
+                            <span th:text="' '+${solicitudes.asignatura.nombreAsignatura}"></span>
+                            </p>
+                        </div>
+                    </a>
                 </div>
             </div>
             <div class="col-4"></div>

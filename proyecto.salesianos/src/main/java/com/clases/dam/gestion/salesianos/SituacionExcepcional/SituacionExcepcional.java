@@ -47,6 +47,8 @@ public class SituacionExcepcional {
 
     private boolean estado;
 
+    private boolean aceptada;
+
     public SituacionExcepcional(Asignatura asignatura, Alumno alumno, LocalDateTime fechaSolicitud, boolean tipo, boolean estado) {
         this.asignatura = asignatura;
         this.alumno = alumno;
