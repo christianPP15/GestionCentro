@@ -15,13 +15,19 @@ import com.clases.dam.gestion.salesianos.Titulo.TituloServicio;
 import com.clases.dam.gestion.salesianos.Usuario.UsuarioServicio;
 import com.clases.dam.gestion.salesianos.proveedorId.ProveedorId;
 import com.clases.dam.gestion.salesianos.proveedorId.ProveedorIdServicio;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;    // Apache commons IO
+import org.apache.commons.logging.LogFactory;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +43,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 
 @Controller
@@ -60,6 +67,10 @@ public class ConvalidacionesExcepcionesController {
     private ProveedorIdServicio proveedorIdServicio;
     @Autowired
     private AlumnoServicio alumnoServicio;
+    @Autowired
+    private HttpServletRequest request;
+    @Autowired
+    private HttpServletResponse response;
     @GetMapping("/solicitarCambio")
     public String convalidacionesExepciones(Model model, @AuthenticationPrincipal Alumno alumno){
             model.addAttribute("NuevaConvi",new SituacionExcepcionalFormulario());
@@ -91,8 +102,39 @@ public class ConvalidacionesExcepcionesController {
     }
     @GetMapping("/descargar/{idAlumno}/info/{idAsignatura}")
     public String detallesSolicitudes(@PathVariable("idAlumno") Long alumno,@PathVariable("idAsignatura") Long asig, Model model){
-        model.addAttribute("solicitud",situacionExcepcionalServicio.buscarExistencia(asignaturaServicio.findById(asig).get(),alumnoServicio.findById(alumno).get()).get());
+        model.addAttribute("solicitudes",situacionExcepcionalServicio.buscarExistencia(asignaturaServicio.findById(asig).get(),alumnoServicio.findById(alumno).get()).get());
         return "JefeEstudios/convalidaciones/DetallesConvalidacion";
+    }
+    @GetMapping("/descargar/{idAlumno}/solicitud/{idAsignatura}")
+    public String DescargasSolicitudes(@PathVariable("idAlumno") Long alumno,@PathVariable("idAsignatura") Long asig, Model model) throws Exception {
+        handleRequest(request,response,situacionExcepcionalServicio.buscarExistencia(asignaturaServicio.findById(asig).get(),alumnoServicio.findById(alumno).get()).get());
+        return "redirect:/descargar/"+alumno+"/info/"+asig;
+    }
+    public ModelAndView handleRequest(HttpServletRequest request,
+                                      HttpServletResponse response,SituacionExcepcional situacionExcepcional) throws Exception {
+        try {
+            // Aqui se hace a piñón fijo, pero podría obtenerse el fichero
+            // pedido por el usuario a partir de algún parámetro del request
+            // o de la URL con la que nos han llamado.
+            String nombreFichero = "informacion.pdf";
+            String unPath = storageService.load(situacionExcepcional.getAdjunto()).toUri().toString();
+
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment; filename=\""
+                    + nombreFichero+ "\"");
+
+            InputStream is = new FileInputStream(unPath+nombreFichero);
+
+            IOUtils.copy(is, response.getOutputStream());
+
+            response.flushBuffer();
+
+        } catch (IOException ex) {
+            // Sacar log de error.
+            throw ex;
+        }
+
+        return null;
     }
     /*@GetMapping("/descargar/info/{id}")
     public void descargaPdf(HttpServletRequest request, HttpServletResponse response,@PathVariable("id") Long id){
