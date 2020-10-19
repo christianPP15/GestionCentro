@@ -1,6 +1,8 @@
 package com.clases.dam.gestion.salesianos.Controladores;
 
 import com.clases.dam.gestion.salesianos.Alumno.Alumno;
+import com.clases.dam.gestion.salesianos.Alumno.AlumnoServicio;
+import com.clases.dam.gestion.salesianos.Asignatura.Asignatura;
 import com.clases.dam.gestion.salesianos.Asignatura.AsignaturaServicio;
 import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
 import com.clases.dam.gestion.salesianos.Formularios.SituacionExcepcionalFormulario;
@@ -56,6 +58,8 @@ public class ConvalidacionesExcepcionesController {
     private HorarioServicio horarioServicio;
     @Autowired
     private ProveedorIdServicio proveedorIdServicio;
+    @Autowired
+    private AlumnoServicio alumnoServicio;
     @GetMapping("/solicitarCambio")
     public String convalidacionesExepciones(Model model, @AuthenticationPrincipal Alumno alumno){
             model.addAttribute("NuevaConvi",new SituacionExcepcionalFormulario());
@@ -85,14 +89,19 @@ public class ConvalidacionesExcepcionesController {
         model.addAttribute("convalidaciones",situacionExcepcionalServicio.findAll());
         return "JefeEstudios/convalidaciones/AceptacionConvalidacion";
     }
-    @GetMapping("/descargar/info/{id}")
+    @GetMapping("/descargar/{idAlumno}/info/{idAsignatura}")
+    public String detallesSolicitudes(@PathVariable("idAlumno") Long alumno,@PathVariable("idAsignatura") Long asig, Model model){
+        model.addAttribute("solicitud",situacionExcepcionalServicio.buscarExistencia(asignaturaServicio.findById(asig).get(),alumnoServicio.findById(alumno).get()).get());
+        return "JefeEstudios/convalidaciones/DetallesConvalidacion";
+    }
+    /*@GetMapping("/descargar/info/{id}")
     public void descargaPdf(HttpServletRequest request, HttpServletResponse response,@PathVariable("id") Long id){
         String ruta = storageService.load(id+".pdf").toString();
         System.out.println(ruta);
         String fullPath= request.getServletContext().getRealPath(ruta);
         filedownload(fullPath,response,"peticion.pdf");
-    }
-    public void filedownload(String fullPath, HttpServletResponse response, String fileName){
+    }*/
+    /*public void filedownload(String fullPath, HttpServletResponse response, String fileName){
         File file= new File(fullPath);
         final int BUFFER_SIZE =4096;
         if(file.exists()) {
@@ -115,7 +124,7 @@ public class ConvalidacionesExcepcionesController {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
