@@ -19,19 +19,24 @@
                 <div class="row">
                     <div class="col-2"></div>
                     <div class="col-8">
+                        <br>
                         <form method="POST" action="#" th:action="@{/submit/nuevo/jefe/alumno}" th:object="${usuario}">
+                            <br>
                             <div class="form-group">
                                 <label for="Nombre">Nombre:</label>
                                 <input type="text" id="Nombre" name="Nombre" placeholder="Nombre..." required autofocus class="form-control" th:field="*{nombre}">
                             </div>
+                            <br>
                             <div class="form-group">
                                 <label for="Apellidos">Apellidos:</label>
                                 <input type="text" id="Apellidos" name="Apellidos" placeholder="Apellidos..." required  class="form-control" th:field="*{apellidos}">
                             </div>
+                            <br>
                             <div class="form-group">
                                 <label for="Email">Email:</label>
                                 <input type="text" id="Email" name="Email" placeholder="Email..." required  class="form-control" th:field="*{email}">
                             </div>
+                            <br>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" for="inputGroupSelect01">Cursos</label>
