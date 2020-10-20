@@ -25,6 +25,7 @@ import javax.mail.MessagingException;
 import javax.swing.*;
 import java.io.*;
 import java.security.InvalidParameterException;
+import java.time.LocalTime;
 import java.util.Optional;
 import java.util.Random;
 
@@ -304,6 +305,16 @@ public class JefeEstudiosGestionController {
                         asignaturaServicio.edit(asig);
                         serviCurso.edit(curso);
                         serviTitulo.edit(t);
+                    }
+                }else if (values.length==6){
+                    if(serviTitulo.findFirstBynombre(values[0]).orElse(null)!=null){
+                        if(serviCurso.findFirstBynombre(values[1]).orElse(null)!=null){
+                            if (asignaturaServicio.findFirstBynombreAsignatura(values[2]).orElse(null)!=null){
+                                String [] comienzoH=values[4].split(":");
+                                System.out.println(comienzoH);
+                                //Horario hora=new Horario(values[3].toUpperCase(), LocalTime.of(Integer.parseInt()))
+                            }
+                        }
                     }
                 }
             }} catch (InvalidParameterException  | IOException e) {
