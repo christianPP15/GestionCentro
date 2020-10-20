@@ -6,6 +6,7 @@ import com.clases.dam.gestion.salesianos.Asignatura.Asignatura;
 import com.clases.dam.gestion.salesianos.Asignatura.AsignaturaServicio;
 import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
 import com.clases.dam.gestion.salesianos.Horario.HorarioServicio;
+import com.clases.dam.gestion.salesianos.SituacionExcepcional.SituacionExcepcionalServicio;
 import com.clases.dam.gestion.salesianos.Titulo.TituloServicio;
 import com.clases.dam.gestion.salesianos.Usuario.UsuarioServicio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +32,23 @@ public class AlumnosMatriculadosController {
     private AlumnoServicio alumnoServicio;
     @Autowired
     private HorarioServicio horarioServicio;
-
+    @Autowired
+    private SituacionExcepcionalServicio situacionExcepcionalServicio;
     @GetMapping("/listado/alumnos/curso/{id}")
     public String gestionAlumnosCurso(@PathVariable("id") Long id, Model model){
-        /*Map<Alumno, List<Asignatura>> alumnosMatriculados=new HashMap<>();
-        for (Alumno alumno:
-             alumnoServicio.findAll()) {
-            alumnosMatriculados.put(serviCurso.findById(id).get().getAlumnos(),serviCurso.findById(id).get().getAsignatura())
-        }*/
-        model.addAttribute("listadoAlumnos",serviCurso.findById(id).get().getAlumnos());
+        Map<Alumno,String> listaAlumnosCursos=new HashMap<>();
+        for (Alumno al:
+           serviCurso.findById(id).get().getAlumnos()) {
+            for (Asignatura asig:
+                 al.getCurso().getAsignatura()) {
+                if (situacionExcepcionalServicio.buscarExistencia(asig,al).orElse(null)!=null){
+                    listaAlumnosCursos.put(al,situacionExcepcionalServicio.buscarExistencia(asig,al).get().isTipo() ? "Excepción" : "Convalidacion");
+                }else{
+                    listaAlumnosCursos.put(al,"Matriculado");
+                }
+            }
+        }
+        model.addAttribute("listadoAlumnos",listaAlumnosCursos);
         model.addAttribute("listadoAsignaturas",serviCurso.findById(id).get().getAsignatura());
         return "JefeEstudios/GestionAlumnos/alumnosCurso";
     }
