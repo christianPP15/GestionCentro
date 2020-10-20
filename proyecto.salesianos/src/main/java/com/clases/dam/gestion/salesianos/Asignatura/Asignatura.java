@@ -39,4 +39,6 @@ public class Asignatura {
     public Asignatura(String nombreAsignatura) {
         this.nombreAsignatura = nombreAsignatura;
     }
+
+
 }

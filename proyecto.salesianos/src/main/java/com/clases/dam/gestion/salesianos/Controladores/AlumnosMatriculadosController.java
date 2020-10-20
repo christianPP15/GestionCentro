@@ -3,6 +3,7 @@ package com.clases.dam.gestion.salesianos.Controladores;
 import com.clases.dam.gestion.salesianos.Alumno.Alumno;
 import com.clases.dam.gestion.salesianos.Alumno.AlumnoServicio;
 import com.clases.dam.gestion.salesianos.Asignatura.Asignatura;
+import com.clases.dam.gestion.salesianos.Asignatura.AsignaturaOrdenar;
 import com.clases.dam.gestion.salesianos.Asignatura.AsignaturaServicio;
 import com.clases.dam.gestion.salesianos.Curso.Curso;
 import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
@@ -16,9 +17,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -42,37 +42,41 @@ public class AlumnosMatriculadosController {
         //Ordenamos las asignaturas de cada alumno por orden alfabetico, y vamos mirando una a una si existe Convalidada y demás
         //Las vamos metiendo en un map que sea asignatura ordenada y resultado
         //Doble map
+        model.addAttribute("listaAsignatura",ordenarListaDeAsignaturas(serviCurso.findById(id).get()));
         model.addAttribute("listadoAlumnos",agregarAlListadoElTipo(serviCurso.findById(id).get()));
-
         return "JefeEstudios/GestionAlumnos/alumnosCurso";
     }
 
+    private List<Asignatura> ordenarListaDeAsignaturas(Curso curso) {
+        List<Asignatura> lista=curso.getAsignatura();
+        Collections.sort(lista,new AsignaturaOrdenar());
+        return lista;
+    }
 
-    public Map <Map<Asignatura,Alumno>,String> agregarAlListadoElTipo(Curso curso){
-        Map<Map<Asignatura,Alumno>,String> listadoCompuesto=new HashMap<>();
+    public Map <Alumno,List<String>> agregarAlListadoElTipo(Curso curso){
+        List<String> resultados=new ArrayList<>();
         int i=0;
-        int bucle =0;
-        for (Asignatura asignatura:
-             curso.getAsignatura()) {
-            int numeroAlumnos=asignatura.getCurso().getAlumnos().size();
-            for ( Alumno al:
-                  asignatura.getCurso().getAlumnos()) {
-                if (numeroAlumnos>i){
-                    if (bucle==0){
-                        if (situacionExcepcionalServicio.buscarExistenciaTerminada(asignatura,al).orElse(null)!=null){
-                            Map <Asignatura,Alumno> listadoSimple=new HashMap<>();
-                            listadoSimple.put(asignatura,al);
-                            listadoCompuesto.put(listadoSimple,"Convalidado");
-                        }else{
-                            Map <Asignatura,Alumno> listadoSimple=new HashMap<>();
-                            listadoSimple.put(asignatura,al);
-                            listadoCompuesto.put(listadoSimple,"Matriculado");
-                        }
-                    }
+        Map<Alumno,List<String>> listadoCompuesto=new HashMap<>();
+        List<String> listaAux=new ArrayList<>();
+        for (Alumno al:
+             curso.getAlumnos()) {
+            resultados.clear();
+            for (Asignatura asig:
+                 ordenarListaDeAsignaturas(curso)) {
+                if (situacionExcepcionalServicio.buscarExistenciaTerminada(asig,al).orElse(null)!=null){
+                    resultados.add("Convalidada");
+                }else{
+                    resultados.add("Matriculado");
                 }
-                i++;
-                bucle++;
             }
+            i=listaAux.size();
+            for (String componente:
+                 resultados) {
+                listaAux.add(componente);
+            }
+            int tamanio=listaAux.size();
+            List <String> listaComplementaria=listaAux.subList(i,tamanio);
+            listadoCompuesto.put(al,listaComplementaria);
         }
 
         return listadoCompuesto;

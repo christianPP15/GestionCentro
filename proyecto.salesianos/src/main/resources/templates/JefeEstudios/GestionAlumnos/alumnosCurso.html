@@ -15,17 +15,20 @@
                 <table class="table">
                     <thead>
                         <tr>
-                        <th></th>
-                        <div th:each="asignaturas :${listadoAlumnos}">
-                                <div th:each="alumAsig :${asignaturas.key}">
-                                    <th th:text="${alumAsig.key.nombreAsignatura}"></th>
-                                </div>
+                            <th></th>
+                        <div th:each="asignaturas :${listaAsignatura}">
+                                <th th:text="${asignaturas.nombreAsignatura}"></th>
                         </div>
                         </tr>
                     </thead>
                     <tbody>
-                        <div th:each="asignaturas :${listadoAlumnos}">
-
+                        <div th:each="alumnos :${listadoAlumnos}">
+                            <tr>
+                            <td><span th:text="${alumnos.key.nombre}"></span><span th:text="${alumnos.key.apellidos}"></span></td>
+                                <th:block th:each=" valores :${alumnos.value}">
+                                    <td th:text="${valores}"></td>
+                                </th:block>
+                            </tr>
                         </div>
                     </tbody>
                 </table>

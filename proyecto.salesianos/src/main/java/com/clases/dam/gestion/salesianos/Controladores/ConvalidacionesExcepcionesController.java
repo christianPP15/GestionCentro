@@ -100,9 +100,7 @@ public class ConvalidacionesExcepcionesController {
     }
     @PostMapping("/descargar/completado/final")
     public String EnviarSolicitud(@ModelAttribute("informacion") InformacionRechazoAceptacion info, Model model){
-        System.out.println(info);
         SituacionExcepcional aux=situacionExcepcionalServicio.buscarExistencia(asignaturaServicio.findById(info.getIdAsignatura()).get(),alumnoServicio.findById(info.getIdUsuario()).get()).get();
-        System.out.println(aux);
         aux.setEstado(true);
         aux.setAceptada(info.isAceptado());
         aux.setFechaResolucion(LocalDateTime.now());
