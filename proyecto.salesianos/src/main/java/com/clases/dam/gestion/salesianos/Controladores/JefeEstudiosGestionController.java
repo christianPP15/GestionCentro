@@ -311,10 +311,67 @@ public class JefeEstudiosGestionController {
                         if(serviCurso.findFirstBynombre(values[1]).orElse(null)!=null){
                             if (asignaturaServicio.findFirstBynombreAsignatura(values[2]).orElse(null)!=null){
                                 String [] comienzoH=values[4].split(":");
-                                System.out.println(comienzoH);
-                                //Horario hora=new Horario(values[3].toUpperCase(), LocalTime.of(Integer.parseInt()))
+                                String [] Hfina=values[5].split(":");
+                                Horario hora=new Horario(values[3].toUpperCase(), LocalTime.of(Integer.parseInt(comienzoH[0]),Integer.parseInt(comienzoH[1])),
+                                        LocalTime.of(Integer.parseInt(Hfina[0]),Integer.parseInt(Hfina[1])));
+                                Asignatura AsigAux=asignaturaServicio.findFirstBynombreAsignatura(values[2]).get();
+                                horarioServicio.save(hora);
+                                AsigAux.addHorario(hora);
+                                asignaturaServicio.edit(AsigAux);
+                                horarioServicio.edit(hora);
+                            }else{//si asignatura no existe
+                                String [] comienzoH=values[4].split(":");
+                                String [] Hfina=values[5].split(":");
+                                Horario hora=new Horario(values[3].toUpperCase(), LocalTime.of(Integer.parseInt(comienzoH[0]),Integer.parseInt(comienzoH[1])),
+                                        LocalTime.of(Integer.parseInt(Hfina[0]),Integer.parseInt(Hfina[1])));
+                                Asignatura AsigAux=new Asignatura(values[2]);
+                                Curso cursoAux=serviCurso.findFirstBynombre(values[1]).get();
+                                asignaturaServicio.save(AsigAux);
+                                horarioServicio.save(hora);
+                                AsigAux.addHorario(hora);
+                                cursoAux.addAsignatura(AsigAux);
+                                asignaturaServicio.edit(AsigAux);
+                                horarioServicio.edit(hora);
+                                serviCurso.edit(cursoAux);
                             }
+                        }else{
+                            String [] comienzoH=values[4].split(":");
+                            String [] Hfina=values[5].split(":");
+                            Horario hora=new Horario(values[3].toUpperCase(), LocalTime.of(Integer.parseInt(comienzoH[0]),Integer.parseInt(comienzoH[1])),
+                                    LocalTime.of(Integer.parseInt(Hfina[0]),Integer.parseInt(Hfina[1])));
+                            Asignatura AsigAux=new Asignatura(values[2]);
+                            Curso cursoAux=new Curso(values[1]);
+                            Titulo t=serviTitulo.findFirstBynombre(values[0]).get();
+                            serviCurso.save(cursoAux);
+                            asignaturaServicio.save(AsigAux);
+                            horarioServicio.save(hora);
+                            AsigAux.addHorario(hora);
+                            cursoAux.addAsignatura(AsigAux);
+                            t.addCurso(cursoAux);
+                            asignaturaServicio.edit(AsigAux);
+                            horarioServicio.edit(hora);
+                            serviCurso.edit(cursoAux);
+                            serviTitulo.edit(t);
                         }
+                    }else {
+                        String [] comienzoH=values[4].split(":");
+                        String [] Hfina=values[5].split(":");
+                        Horario hora=new Horario(values[3].toUpperCase(), LocalTime.of(Integer.parseInt(comienzoH[0]),Integer.parseInt(comienzoH[1])),
+                                LocalTime.of(Integer.parseInt(Hfina[0]),Integer.parseInt(Hfina[1])));
+                        Asignatura AsigAux=new Asignatura(values[2]);
+                        Curso cursoAux=new Curso(values[1]);
+                        Titulo t=new Titulo(values[0]);
+                        serviCurso.save(cursoAux);
+                        asignaturaServicio.save(AsigAux);
+                        horarioServicio.save(hora);
+                        serviTitulo.save(t);
+                        AsigAux.addHorario(hora);
+                        cursoAux.addAsignatura(AsigAux);
+                        t.addCurso(cursoAux);
+                        asignaturaServicio.edit(AsigAux);
+                        horarioServicio.edit(hora);
+                        serviCurso.edit(cursoAux);
+                        serviTitulo.edit(t);
                     }
                 }
             }} catch (InvalidParameterException  | IOException e) {
