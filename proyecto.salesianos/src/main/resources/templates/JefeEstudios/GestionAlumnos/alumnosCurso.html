@@ -10,30 +10,26 @@
 <main>
     <div class="container">
         <div class="row">
-            <div class="col-2"></div>
-            <div class="col-8">
+
+            <div class="col-12">
                 <table class="table">
                     <thead>
                         <tr>
                         <th></th>
-                        <div th:each="asignaturas :${listadoAsignaturas}">
-                            <th th:text="${asignaturas.nombreAsignatura}"></th>
+                        <div th:each="asignaturas :${listadoAlumnos}">
+                                <div th:each="alumAsig :${asignaturas.key}">
+                                    <th th:text="${alumAsig.key.nombreAsignatura}"></th>
+                                </div>
                         </div>
                         </tr>
                     </thead>
                     <tbody>
-                        <div th:each="alumno :${listadoAlumnos}">
-                            <tr>
-                            <th th:text="${alumno.key.nombre} + ' '+ ${alumno.key.apellidos}"></th>
-                            <div th:each="asignaturas :${alumno.value}">
-                                <td th:text="${asignaturas}"></td>
-                            </div>
-                            </tr>
+                        <div th:each="asignaturas :${listadoAlumnos}">
+
                         </div>
                     </tbody>
                 </table>
             </div>
-            <div class="col-2"></div>
         </div>
     </div>
 </main>

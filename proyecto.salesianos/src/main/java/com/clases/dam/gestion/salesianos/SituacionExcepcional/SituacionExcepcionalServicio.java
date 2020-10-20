@@ -24,4 +24,7 @@ public class SituacionExcepcionalServicio extends BaseServiceImpl<SituacionExcep
     public Optional<SituacionExcepcional> buscarExistencia(Asignatura Asig, Alumno alumno) {
         return this.repositorio.buscarExistencia(Asig, alumno);
     }
+    public Optional<SituacionExcepcional> buscarExistenciaTerminada(Asignatura Asig, Alumno alumno) {
+        return this.repositorio.buscarExistenciaTerminada(Asig, alumno);
+    }
 }

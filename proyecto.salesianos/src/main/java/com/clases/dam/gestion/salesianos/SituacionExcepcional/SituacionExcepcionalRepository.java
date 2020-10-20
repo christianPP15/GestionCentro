@@ -14,4 +14,6 @@ public interface SituacionExcepcionalRepository extends JpaRepository<SituacionE
     public Optional<SituacionExcepcional> buscarExistencia(@Param("ASIGNATURA") Asignatura Asig, @Param("AlUMNO") Alumno alumno);
     @Query("Select e From SituacionExcepcional e Where e.estado=false")
     public List<SituacionExcepcional> buscarExistenciaNoTerminadas();
+    @Query("Select e From SituacionExcepcional e Where e.asignatura= :ASIGNATURA and e.alumno= :AlUMNO and e.estado=false")
+    public Optional<SituacionExcepcional> buscarExistenciaTerminada(@Param("ASIGNATURA") Asignatura Asig, @Param("AlUMNO") Alumno alumno);
 }
