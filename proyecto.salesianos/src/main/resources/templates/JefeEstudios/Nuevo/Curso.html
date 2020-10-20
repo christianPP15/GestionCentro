@@ -8,32 +8,42 @@
 <body>
 <nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
 
-<main id="FormularioPrimeraVez">
-    <br><br><br>
-    <div class="row">
-        <div class="col-4"></div>
-        <div class="col-4">
-            <form method="POST" action="#" th:action="@{/submit/nuevo/curso}" th:object="${nuevoCurso}">
-                <div class="form-group">
-                    <label for="titulo">Nombre:</label>
-                    <input type="text" id="titulo" name="titulo" placeholder="Nombre" required autofocus class="form-control" th:field="*{nombre}">
-                    <input type="text" id="idTitulo" name="id" placeholder="Nombre" required hidden class="form-control" th:field="*{titulos}">
+<main id="registroJefeCampos">
+    <div class="container">
+        <br>
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6 cuadroFormulario">
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-8">
+                        <br>
+                        <form method="POST" action="#" th:action="@{/submit/nuevo/curso}" th:object="${cursoNuevo}">
+                            <br>
+                            <div class="form-group">
+                                <label for="Nombre">Nombre:</label>
+                                <input type="text" hidden id="tituloId" th:field="*{infoAux}">
+                                <input type="text" id="Nombre" name="Nombre" placeholder="Nombre..." required autofocus class="form-control" th:field="*{nombre}">
+                            </div>
+                            <br>
+                            <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center mb-4"/>
+                        </form>
+                    </div>
+                    <div class="col-2"></div>
                 </div>
-                <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center"/>
-            </form>
+            </div>
+            <div class="col-3"></div>
         </div>
-        <div class="col-4"></div>
     </div>
 </main>
-<span th:text="${idTitulo}" hidden id="spanId"></span>
 <footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
+<span hidden id="idAux" th:text="${idTitulo.nombre}"></span>
 <script>
-    window.onload = insertar();
-function insertar() {
-var id = $("#spanId").text();
-
-$("#idTitulo").val(id);
-}
+ window.onload = insertar();
+		function insertar() {
+		    var id = $("#idAux").text();
+            $("#tituloId").val(id);
+		}
 </script>
 </body>
 </html>

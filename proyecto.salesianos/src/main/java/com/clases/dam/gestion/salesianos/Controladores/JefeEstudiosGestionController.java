@@ -5,6 +5,7 @@ import com.clases.dam.gestion.salesianos.Asignatura.Asignatura;
 import com.clases.dam.gestion.salesianos.Asignatura.AsignaturaServicio;
 import com.clases.dam.gestion.salesianos.Curso.Curso;
 import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
+import com.clases.dam.gestion.salesianos.Formularios.NuevoRegistroCsvFormulario;
 import com.clases.dam.gestion.salesianos.Horario.Horario;
 import com.clases.dam.gestion.salesianos.Horario.HorarioServicio;
 import com.clases.dam.gestion.salesianos.Profesor.Profesor;
@@ -17,10 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.swing.*;
@@ -123,17 +122,19 @@ public class JefeEstudiosGestionController {
     }
     @GetMapping("/jefe/estudios/curso/nuevo/{id}")
     public String agregarCurso(@PathVariable ("id") Long id, Model model){
-        model.addAttribute("nuevoCurso",new Curso());
-        model.addAttribute("idTitulo",id);
+        model.addAttribute("cursoNuevo",new NuevoRegistroCsvFormulario());
+        model.addAttribute("idTitulo",serviTitulo.findById(id).get());
         return "JefeEstudios/Nuevo/Curso";
     }
     @PostMapping("/submit/nuevo/curso")
-    public String nuevoCurso(@ModelAttribute("nuevoCurso") Curso curso){
+    public String nuevoCurso(@ModelAttribute("cursoNuevo") NuevoRegistroCsvFormulario curso){
         Curso cursoNuevo= new Curso(curso.getNombre());
         serviCurso.save(cursoNuevo);
-        cursoNuevo.setTitulos(curso.getTitulos());
+        Titulo t=serviTitulo.findFirstBynombre(curso.getInfoAux()).get();
+        t.addCurso(cursoNuevo);
         serviCurso.edit(cursoNuevo);
-        return  "redirect:/jefe/estudios/cursos/"+curso.getTitulos().getId();
+        serviTitulo.edit(t);
+        return  "redirect:/jefe/estudios/cursos/"+cursoNuevo.getTitulos().getId();
     }
 
     @GetMapping("/jefe/estudios/asignatura/{id}")
@@ -234,5 +235,80 @@ public class JefeEstudiosGestionController {
         horarioServicio.edit(aux);
         Asignatura asigAux=asignaturaServicio.findById(aux.getAsignatura().getId()).get();
         return "redirect:/jefe/estudios/horas/"+asigAux.getId();
+    }
+    @GetMapping("/gestion/csv/agregar")
+    public String agregarDatosCsv(){
+        return "JefeEstudios/Alta/gestion";
+    }
+    @PostMapping("/gestion/csv/agregar/final")
+    public String agregarDatosCsvProcesar(@RequestParam("file") MultipartFile file){
+        BufferedReader br;
+        try {
+            String line;
+            InputStream is = file.getInputStream();
+            br = new BufferedReader(new InputStreamReader(is));
+            while ((line = br.readLine()) != null) {
+                String [] values=line.split(",");
+                if (values.length==1){
+                    if(serviTitulo.findFirstBynombre(values[0]).orElse(null)==null){
+                        Titulo t =new Titulo(values[0]);
+                        serviTitulo.save(t);
+                    }
+                }else if (values.length==2){
+                    if(serviTitulo.findFirstBynombre(values[0]).orElse(null)!=null){
+                        Curso cursoNuevo= new Curso(values[1]);
+                        serviCurso.save(cursoNuevo);
+                        Titulo t=serviTitulo.findFirstBynombre(values[0]).get();
+                        t.addCurso(cursoNuevo);
+                        serviCurso.edit(cursoNuevo);
+                        serviTitulo.edit(t);
+                    }else{
+                        Titulo t=new Titulo(values[0]);
+                        serviTitulo.save(t);
+                        Curso cursoNuevo= new Curso(values[1]);
+                        serviCurso.save(cursoNuevo);
+                        t.addCurso(cursoNuevo);
+                        serviCurso.edit(cursoNuevo);
+                        serviTitulo.edit(t);
+                    }
+                }else if(values.length==3){
+                    if(serviTitulo.findFirstBynombre(values[0]).orElse(null)!=null){
+                        if (serviCurso.findFirstBynombre(values[1]).orElse(null)!=null){
+                            Asignatura asig=new Asignatura(values[2]);
+                            asignaturaServicio.save(asig);
+                            Curso aux=serviCurso.findFirstBynombre(values[1]).get();
+                            aux.addAsignatura(asig);
+                            asignaturaServicio.edit(asig);
+                            serviCurso.edit(aux);
+                        }else{
+                            Titulo t=serviTitulo.findFirstBynombre(values[0]).get();
+                            Asignatura asig=new Asignatura(values[2]);
+                            Curso curso=new Curso(values[1]);
+                            asignaturaServicio.save(asig);
+                            serviCurso.save(curso);
+                            curso.addAsignatura(asig);
+                            t.addCurso(curso);
+                            asignaturaServicio.edit(asig);
+                            serviCurso.edit(curso);
+                            serviTitulo.edit(t);
+                        }
+                    }else{
+                        Titulo t=new Titulo(values[0]);
+                        Asignatura asig=new Asignatura(values[2]);
+                        Curso curso=new Curso(values[1]);
+                        asignaturaServicio.save(asig);
+                        serviTitulo.save(t);
+                        serviCurso.save(curso);
+                        curso.addAsignatura(asig);
+                        t.addCurso(curso);
+                        asignaturaServicio.edit(asig);
+                        serviCurso.edit(curso);
+                        serviTitulo.edit(t);
+                    }
+                }
+            }} catch (InvalidParameterException  | IOException e) {
+            System.err.println(e.getMessage());
+        }
+        return "redirect:/gestion";
     }
 }
