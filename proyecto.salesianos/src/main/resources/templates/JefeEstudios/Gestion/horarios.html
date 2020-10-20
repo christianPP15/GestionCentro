@@ -23,17 +23,43 @@
                     <thead>
                     <tr>
                         <th>Dias de la Semana</th>
-                        <th>Hora Comienzo</th>
-                        <th>Hora Finalización</th>
+                        <th>Hora comienzo</th>
+                        <th>Hora finalización</th>
                         <th sec:authorize="hasRole('ROLE_ADMIN')">Editar</th>
                         <th sec:authorize="hasRole('ROLE_ADMIN')">Borrar</th>
                     </tr>
                     </thead>
                     <tbody >
                     <tr th:each="horas :${ListaHoras}">
-                        <td th:text="${horas.dia}"></td>
-                        <td th:text="${horas.horaComienzo}"></td>
-                        <td th:text="${horas.horaFinalizacion}"></td>
+                        <td th:if="${horas.dia}==1" >Lunes</td>
+                        <td th:if="${horas.dia}==2" >Martes</td>
+                        <td th:if="${horas.dia}==3" >Miércoles</td>
+                        <td th:if="${horas.dia}==4" >Jueves</td>
+                        <td th:if="${horas.dia}==5" >Viernes</td>
+                        <th:block th:if="${horas.tramo}==1">
+                            <td>08:00</td>
+                            <td>09:00</td>
+                        </th:block>
+                        <th:block th:if="${horas.tramo}==2">
+                            <td>09:00</td>
+                            <td>10:00</td>
+                        </th:block>
+                        <th:block th:if="${horas.tramo}==3">
+                            <td>10:00</td>
+                            <td>11:00</td>
+                        </th:block>
+                        <th:block th:if="${horas.tramo}==4">
+                            <td>11:30</td>
+                            <td>12:30</td>
+                        </th:block>
+                        <th:block th:if="${horas.tramo}==5">
+                            <td>12:30</td>
+                            <td>13:30</td>
+                        </th:block>
+                        <th:block th:if="${horas.tramo}==6">
+                            <td>13:30</td>
+                            <td>14:30</td>
+                        </th:block>
                         <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/jefe/estudios/horario/editar/{id}(id=${horas.id})}"><img th:src="@{/img/edit.png}"></a></td>
                         <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/jefe/estudios/hora/eliminar/{id}(id=${horas.id})}"><img th:src="@{/img/borrar.png}"></a></td>
                     </tr>

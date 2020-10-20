@@ -1,5 +1,6 @@
 package com.clases.dam.gestion.salesianos.Asignatura;
 
+import com.clases.dam.gestion.salesianos.Curso.Curso;
 import com.clases.dam.gestion.salesianos.Servicios.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,8 @@ public class AsignaturaServicio extends BaseServiceImpl<Asignatura,Long,Asignatu
         super(repo);
     }
 
-    public Optional<Asignatura> findFirstBynombreAsignatura(String nombre) {
-        return repositorio.findFirstBynombreAsignatura(nombre);
+    public Optional<Asignatura> findFirstBynombre(String nombre, Curso curso) {
+        return repositorio.findFirstBynombre(nombre,curso);
     }
+
 }

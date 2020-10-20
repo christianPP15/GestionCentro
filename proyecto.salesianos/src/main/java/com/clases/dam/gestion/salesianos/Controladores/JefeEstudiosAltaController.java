@@ -173,8 +173,8 @@ public class JefeEstudiosAltaController {
             br = new BufferedReader(new InputStreamReader(is));
             while ((line = br.readLine()) != null) {
                 String [] values=line.split(",");
-                if(serviCurso.findFirstBynombre(values[3]).get()!=null){
-                    Usuario usu=new Alumno(values[0],values[1],values[2],passwordEncoder.encode("1234"),generarCódigo(),serviCurso.findFirstBynombre(values[3]).get());
+                if(serviCurso.findFirstBynombre(values[3],serviTitulo.findFirstBynombre(values[0]).get()).get()!=null){
+                    Usuario usu=new Alumno(values[0],values[1],values[2],passwordEncoder.encode("1234"),generarCódigo(),serviCurso.findFirstBynombre(values[3],serviTitulo.findFirstBynombre(values[0]).get()).get());
                     serviUsuario.save(usu);
                     Mail m = new Mail("Config/configuracion.properties");
 

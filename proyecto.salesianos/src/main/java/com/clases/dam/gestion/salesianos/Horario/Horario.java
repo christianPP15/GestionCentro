@@ -16,29 +16,32 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Horario {
+public class Horario implements Comparable<Horario>{
     @Id
     @GeneratedValue
     private Long id;
 
-    private String dia;
+    private int dia;
 
-    private LocalTime horaComienzo;
+    private int tramo;
 
-    private LocalTime horaFinalizacion;
     @ManyToOne
     private Asignatura asignatura;
 
-    public Horario(String dia, LocalTime horaComienzo,LocalTime horaFinalizacion) {
+    public Horario(int dia, int tramo) {
         this.dia = dia;
-        this.horaComienzo = horaComienzo;
-        this.horaFinalizacion = horaFinalizacion;
+        this.tramo = tramo;
     }
 
-    public Horario(String dia, LocalTime horaComienzo, Asignatura asignatura,LocalTime horaFinalizacion) {
-        this.dia = dia;
-        this.horaComienzo = horaComienzo;
-        this.asignatura = asignatura;
-        this.horaFinalizacion = horaFinalizacion;
+    @Override
+    public int compareTo(Horario o) {
+        int numP=1,numN=1;
+        if(this.getTramo()<o.getTramo()){
+            return numP;
+        }else {
+            return numN;
+        }
     }
+
+
 }

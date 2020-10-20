@@ -24,9 +24,9 @@
                     <tbody>
                         <div th:each="alumno :${listadoAlumnos}">
                             <tr>
-                            <th th:text="${alumno.nombre} + ' '+ ${alumno.apellidos}"></th>
-                            <div th:each="asignaturas :${listadoAsignaturas}">
-                                <td></td>
+                            <th th:text="${alumno.key.nombre} + ' '+ ${alumno.key.apellidos}"></th>
+                            <div th:each="asignaturas :${alumno.value}">
+                                <td th:text="${asignaturas}"></td>
                             </div>
                             </tr>
                         </div>

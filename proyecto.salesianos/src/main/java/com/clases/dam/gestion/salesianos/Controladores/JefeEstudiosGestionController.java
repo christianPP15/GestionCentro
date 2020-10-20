@@ -206,7 +206,7 @@ public class JefeEstudiosGestionController {
     }
     @PostMapping("/submit/nuevo/horario/final")
     public String nuevoHorario(@ModelAttribute("nuevoCurso") Horario horario){
-        Horario aux=new Horario(horario.getDia(),horario.getHoraComienzo(),horario.getHoraFinalizacion());
+        Horario aux=new Horario(horario.getDia(),horario.getTramo());
         horarioServicio.save(aux);
         Asignatura asignaturaAux=asignaturaServicio.findById(horario.getId()).get();
         asignaturaAux.addHorario(aux);
@@ -231,8 +231,7 @@ public class JefeEstudiosGestionController {
     public String editarHorarioFinal(@ModelAttribute("horaNuevo") Horario horario){
         Horario aux=horarioServicio.findById(horario.getId()).get();
         aux.setDia(horario.getDia());
-        aux.setHoraComienzo(horario.getHoraComienzo());
-        aux.setHoraFinalizacion(horario.getHoraFinalizacion());
+        aux.setTramo(horario.getTramo());
         horarioServicio.edit(aux);
         Asignatura asigAux=asignaturaServicio.findById(aux.getAsignatura().getId()).get();
         return "redirect:/jefe/estudios/horas/"+asigAux.getId();
@@ -274,10 +273,10 @@ public class JefeEstudiosGestionController {
                     }
                 }else if(values.length==3){
                     if(serviTitulo.findFirstBynombre(values[0]).orElse(null)!=null){
-                        if (serviCurso.findFirstBynombre(values[1]).orElse(null)!=null){
+                        if (serviCurso.findFirstBynombre(values[1],serviTitulo.findFirstBynombre(values[0]).get()).orElse(null)!=null){
                             Asignatura asig=new Asignatura(values[2]);
                             asignaturaServicio.save(asig);
-                            Curso aux=serviCurso.findFirstBynombre(values[1]).get();
+                            Curso aux=serviCurso.findFirstBynombre(values[1],serviTitulo.findFirstBynombre(values[0]).get()).get();
                             aux.addAsignatura(asig);
                             asignaturaServicio.edit(asig);
                             serviCurso.edit(aux);
@@ -306,26 +305,20 @@ public class JefeEstudiosGestionController {
                         serviCurso.edit(curso);
                         serviTitulo.edit(t);
                     }
-                }else if (values.length==6){
+                }else if (values.length==5){
                     if(serviTitulo.findFirstBynombre(values[0]).orElse(null)!=null){
-                        if(serviCurso.findFirstBynombre(values[1]).orElse(null)!=null){
-                            if (asignaturaServicio.findFirstBynombreAsignatura(values[2]).orElse(null)!=null){
-                                String [] comienzoH=values[4].split(":");
-                                String [] Hfina=values[5].split(":");
-                                Horario hora=new Horario(values[3].toUpperCase(), LocalTime.of(Integer.parseInt(comienzoH[0]),Integer.parseInt(comienzoH[1])),
-                                        LocalTime.of(Integer.parseInt(Hfina[0]),Integer.parseInt(Hfina[1])));
-                                Asignatura AsigAux=asignaturaServicio.findFirstBynombreAsignatura(values[2]).get();
+                        if(serviCurso.findFirstBynombre(values[1],serviTitulo.findFirstBynombre(values[0]).get()).orElse(null)!=null){
+                            if (asignaturaServicio.findFirstBynombre(values[2],serviCurso.findFirstBynombre(values[1],serviTitulo.findFirstBynombre(values[0]).get()).get()).orElse(null)!=null){
+                                Horario hora=new Horario(Integer.parseInt(values[3]),Integer.parseInt(values[4]));
+                                Asignatura AsigAux=asignaturaServicio.findFirstBynombre(values[2],serviCurso.findFirstBynombre(values[1],serviTitulo.findFirstBynombre(values[0]).get()).get()).get();
                                 horarioServicio.save(hora);
                                 AsigAux.addHorario(hora);
                                 asignaturaServicio.edit(AsigAux);
                                 horarioServicio.edit(hora);
                             }else{//si asignatura no existe
-                                String [] comienzoH=values[4].split(":");
-                                String [] Hfina=values[5].split(":");
-                                Horario hora=new Horario(values[3].toUpperCase(), LocalTime.of(Integer.parseInt(comienzoH[0]),Integer.parseInt(comienzoH[1])),
-                                        LocalTime.of(Integer.parseInt(Hfina[0]),Integer.parseInt(Hfina[1])));
+                                Horario hora=new Horario(Integer.parseInt(values[3]),Integer.parseInt(values[4]));
                                 Asignatura AsigAux=new Asignatura(values[2]);
-                                Curso cursoAux=serviCurso.findFirstBynombre(values[1]).get();
+                                Curso cursoAux=serviCurso.findFirstBynombre(values[1],serviTitulo.findFirstBynombre(values[0]).get()).get();
                                 asignaturaServicio.save(AsigAux);
                                 horarioServicio.save(hora);
                                 AsigAux.addHorario(hora);
@@ -335,10 +328,7 @@ public class JefeEstudiosGestionController {
                                 serviCurso.edit(cursoAux);
                             }
                         }else{
-                            String [] comienzoH=values[4].split(":");
-                            String [] Hfina=values[5].split(":");
-                            Horario hora=new Horario(values[3].toUpperCase(), LocalTime.of(Integer.parseInt(comienzoH[0]),Integer.parseInt(comienzoH[1])),
-                                    LocalTime.of(Integer.parseInt(Hfina[0]),Integer.parseInt(Hfina[1])));
+                            Horario hora=new Horario(Integer.parseInt(values[3]),Integer.parseInt(values[4]));
                             Asignatura AsigAux=new Asignatura(values[2]);
                             Curso cursoAux=new Curso(values[1]);
                             Titulo t=serviTitulo.findFirstBynombre(values[0]).get();
@@ -354,10 +344,7 @@ public class JefeEstudiosGestionController {
                             serviTitulo.edit(t);
                         }
                     }else {
-                        String [] comienzoH=values[4].split(":");
-                        String [] Hfina=values[5].split(":");
-                        Horario hora=new Horario(values[3].toUpperCase(), LocalTime.of(Integer.parseInt(comienzoH[0]),Integer.parseInt(comienzoH[1])),
-                                LocalTime.of(Integer.parseInt(Hfina[0]),Integer.parseInt(Hfina[1])));
+                        Horario hora=new Horario(Integer.parseInt(values[3]),Integer.parseInt(values[4]));
                         Asignatura AsigAux=new Asignatura(values[2]);
                         Curso cursoAux=new Curso(values[1]);
                         Titulo t=new Titulo(values[0]);
