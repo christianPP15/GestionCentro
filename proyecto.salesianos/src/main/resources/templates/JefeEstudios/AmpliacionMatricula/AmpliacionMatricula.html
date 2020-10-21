@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragmentos/FragmentoHead :: header_comun(~{::title},~{::link})">
+    <meta charset="UTF-8">
+    <title>Ampliación de Matrícula</title>
+    <link rel="stylesheet" href="../css/css.css" th:href="@{/css/css.css}">
+</head>
+<body>
+<nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
+
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Asignatura</th>
+                        <th>Solicitar matriculación</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="asignaturas   :${asignaturasSegundo}">
+                        <tr>
+                            <td th:text="${asignaturas.key.nombreAsignatura}"></td>
+                            <td>
+                                <th:block th:if="${asignaturas.value}== 'Cancelar'">
+                                    <span th:text="${asignaturas.value}"></span>
+                                </th:block>
+                                <th:block th:if="${asignaturas.value}== 'Matriculado'">
+                                    <a th:href="@{/convalidar/{idAsig}/completo/{idAlum}(idAsig=${asignaturas.key.id},idAlum=${alumno.id})}"><span th:text="${asignaturas.value}" class="noEnlace"></span></a>
+                                </th:block>
+                                <th:block th:if="${asignaturas.value}== 'Matricular'">
+                                    <a th:href="@{/convalidar/{idAsig}/completo/{idAlum}(idAsig=${asignaturas.key.id},idAlum=${alumno.id})}"><span th:text="${asignaturas.value}" class="noEnlace"></span></a>
+                                </th:block>
+                            </td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-4"></div>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
+</body>
+</html>

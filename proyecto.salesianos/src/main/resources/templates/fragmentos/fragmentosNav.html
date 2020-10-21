@@ -40,6 +40,7 @@
                     <li class="nav-item active" sec:authorize="hasRole('ROLE_ADMIN')"><a href="/aceptar/solicitudes" class="nav-link">Solicitudes</a></li>
                     <li class="nav-item active" sec:authorize="hasRole('ROLE_PROFESOR')"><a href="/gestion" class="nav-link">Información</a></li>
                     <li class="nav-item active" sec:authorize="hasRole('ROLE_ALUMNO')"><a href="/solicitarCambio" class="nav-link">Solicitud</a></li>
+                    <li class="nav-item active" sec:authorize="hasRole('ROLE_ALUMNO')"><a href="/solicitarAmpliacionMatricula" class="nav-link">Ampliar Matrícula</a></li>
                     <li sec:authorize="hasRole('ROLE_ALUMNO')">
                         <form th:action="@{/logout}" method="POST" id="logoutForm">
                             <a href="javascript:document.getElementById('logoutForm').submit()">

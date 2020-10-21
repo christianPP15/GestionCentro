@@ -9,6 +9,7 @@ import com.clases.dam.gestion.salesianos.Curso.Curso;
 import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
 import com.clases.dam.gestion.salesianos.Horario.HorarioServicio;
 import com.clases.dam.gestion.salesianos.SituacionExcepcional.SituacionExcepcionalServicio;
+import com.clases.dam.gestion.salesianos.SolicitudAmpliacionMatricula.SolicitudAmpliacionMatriculaServicio;
 import com.clases.dam.gestion.salesianos.Titulo.TituloServicio;
 import com.clases.dam.gestion.salesianos.Usuario.UsuarioServicio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,8 @@ public class AlumnosMatriculadosController {
     private HorarioServicio horarioServicio;
     @Autowired
     private SituacionExcepcionalServicio situacionExcepcionalServicio;
+    @Autowired
+    private SolicitudAmpliacionMatriculaServicio solicitudAmpliacionMatriculaServicio;
     @GetMapping("/listado/alumnos/curso/{id}")
     public String gestionAlumnosCurso(@PathVariable("id") Long id, Model model){
         //Ordenamos las asignaturas de cada alumno por orden alfabetico, y vamos mirando una a una si existe Convalidada y demás
@@ -68,7 +71,9 @@ public class AlumnosMatriculadosController {
                     resultados.add("Convalidada");
                 }else if (situacionExcepcionalServicio.buscarExistenciaTerminadaExcepcion(asig,al).orElse(null)!=null){
                     resultados.add("Excepción");
-                } else{
+                }else if(al.getAsignaturas().contains(asig)){
+                    resultados.add("Aprob. del curso anterior");
+                }else{
                     resultados.add("Matriculado");
                 }
             }

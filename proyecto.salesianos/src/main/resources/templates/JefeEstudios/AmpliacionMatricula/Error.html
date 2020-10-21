@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragmentos/FragmentoHead :: header_comun(~{::title},~{::link})">
+    <meta charset="UTF-8">
+    <title>Ampliación de Matrícula</title>
+    <link rel="stylesheet" href="../css/css.css" th:href="@{/css/css.css}">
+</head>
+<body>
+<nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
+<main>
+    <div class="container">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <p class="h3">Esta sección esta reservada para los alumnos de primero</p>
+        </div>
+        <div class="col-4"></div>
+    </div>
+</main>
+<footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
+</body>
+</html>
