@@ -90,20 +90,40 @@ public class AlumnosMatriculadosController {
         //Hacer mediante enlaces
         Alumno al=alumnoServicio.findById(id).get();
         model.addAttribute("Alumno",al);
-        //model.addAttribute("asignaturas",al.getCurso().getAsignatura());
+        model.addAttribute("asignaturas",recorrerListaConResultados(al));
         return "JefeEstudios/GestionAlumnos/AsignaturasAprobada";
     }
     @GetMapping("/marcar/asignatura/{idAsig}/aprobada/{idAlum}")
     public String gestionDeUnAlumnoAprobarSuspender
             (@PathVariable("idAsig") Long idAsig,@PathVariable("idAlum") Long idAlum){
+        Alumno al=alumnoServicio.findById(idAlum).get();
         for (Asignatura asig:
-             alumnoServicio.findById(idAlum).get().getCurso().getAsignatura()) {
+             al.getCurso().getAsignatura()) {
             if(asig.getId()==idAsig){
-                asig.setAprobada(!asig.isAprobada());
-                alumnoServicio.edit( alumnoServicio.findById(idAlum).get());
-                asignaturaServicio.edit(asig);
+                if (al.getAsignaturas().contains(asig)){
+                    al.removeAsignatura(asig);
+                    asignaturaServicio.edit(asig);
+                    alumnoServicio.edit(al);
+                }else {
+                    al.addAsignatura(asig);
+                    asignaturaServicio.edit(asig);
+                    alumnoServicio.edit(al);
+                }
             }
         }
         return "redirect:/gestion/alumno/asignaturas/"+idAlum;
+    }
+
+    private Map<Asignatura,String> recorrerListaConResultados(Alumno al){
+        Map<Asignatura,String> estado=new HashMap<>();
+        for (Asignatura asig:
+             al.getCurso().getAsignatura()) {
+            if (al.getAsignaturas().contains(asig)){
+                estado.put(asig,"Aprobada");
+            }else{
+                estado.put(asig,"Matriculado");
+            }
+        }
+        return estado;
     }
 }

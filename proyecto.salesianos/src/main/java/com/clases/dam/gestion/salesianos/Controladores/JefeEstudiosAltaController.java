@@ -1,6 +1,7 @@
 package com.clases.dam.gestion.salesianos.Controladores;
 
 import com.clases.dam.gestion.salesianos.Alumno.Alumno;
+import com.clases.dam.gestion.salesianos.Asignatura.Asignatura;
 import com.clases.dam.gestion.salesianos.Curso.Curso;
 import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
 import com.clases.dam.gestion.salesianos.Formularios.NuevoAlumnoFormulario;

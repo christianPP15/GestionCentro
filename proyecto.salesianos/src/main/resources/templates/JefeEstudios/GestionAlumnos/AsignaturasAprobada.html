@@ -26,11 +26,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each=" asignatura : ${Alumno.curso.asignatura}">
-                           <td th:text="${asignatura.nombreAsignatura}"></td>
+                        <tr th:each=" asignatura : ${asignaturas}">
+                           <td th:text="${asignatura.key.nombreAsignatura}"></td>
                             <td>
-                                <a th:href="@{/marcar/asignatura/{idAsig}/aprobada/{idAlum} (idAsig=${asignatura.id},idAlum=${Alumno.id})}">
-                                    <span th:text="${asignatura.aprobada} ? 'Aprobada' : 'Matriculado' "></span>
+                                <a th:href="@{/marcar/asignatura/{idAsig}/aprobada/{idAlum} (idAsig=${asignatura.key.id},idAlum=${Alumno.id})}">
+                                    <span th:text="${asignatura.value}"></span>
                                 </a>
                             </td>
                         </tr>

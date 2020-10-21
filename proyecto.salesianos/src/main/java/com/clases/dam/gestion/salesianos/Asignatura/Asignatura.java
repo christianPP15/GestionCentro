@@ -21,7 +21,11 @@ public class Asignatura {
     @ManyToOne
     private Curso curso;
 
-    private boolean aprobada=false;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(mappedBy="asignaturas")
+    private List<Alumno> alumnos = new ArrayList<>();
+
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy="asignatura")
