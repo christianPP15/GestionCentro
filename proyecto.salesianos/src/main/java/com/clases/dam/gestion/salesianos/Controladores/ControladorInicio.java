@@ -28,7 +28,7 @@ public class ControladorInicio {
     public String inicio(@AuthenticationPrincipal Usuario usuarioLog, Model model){
         if (!usuarioLog.isPrimeraVez()){
             model.addAttribute("codigo",new CodigoActivacion());
-            return "PrimeraVez";
+            return "PrimeraVezAlumno";
         }else {
             return "index";
         }
@@ -42,7 +42,7 @@ public class ControladorInicio {
             usuarioLog.setCodigoSeguridad(null);
             serviUsu.edit(usuarioLog);
         }
-        return "redirect:/index";
+            return "redirect:/index";
     }
 
 }

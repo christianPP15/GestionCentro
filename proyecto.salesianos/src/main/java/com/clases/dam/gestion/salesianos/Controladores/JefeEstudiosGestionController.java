@@ -5,6 +5,7 @@ import com.clases.dam.gestion.salesianos.Asignatura.Asignatura;
 import com.clases.dam.gestion.salesianos.Asignatura.AsignaturaServicio;
 import com.clases.dam.gestion.salesianos.Curso.Curso;
 import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
+import com.clases.dam.gestion.salesianos.Formularios.NuevoRegistroCsvFormulario;
 import com.clases.dam.gestion.salesianos.Horario.Horario;
 import com.clases.dam.gestion.salesianos.Horario.HorarioServicio;
 import com.clases.dam.gestion.salesianos.Profesor.Profesor;
@@ -17,15 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.swing.*;
 import java.io.*;
 import java.security.InvalidParameterException;
+import java.time.LocalTime;
 import java.util.Optional;
 import java.util.Random;
 
@@ -48,6 +48,18 @@ public class JefeEstudiosGestionController {
     }
     @GetMapping("/jefe/estudios/titulo/eliminar/{id}")
     public String aliminarTitulo(@PathVariable ("id") Long id){
+        for (Curso curso:
+             serviTitulo.findById(id).get().getCursos()) {
+            for (Asignatura asig:
+                 curso.getAsignatura()) {
+                for (Horario hora:
+                     asig.getHorario()) {
+                    horarioServicio.delete(hora);
+                }
+                asignaturaServicio.delete(asig);
+            }
+            serviCurso.delete(curso);
+        }
         serviTitulo.delete(serviTitulo.findById(id).orElse(null));
         return "redirect:/gestion";
     }
@@ -84,6 +96,14 @@ public class JefeEstudiosGestionController {
     @GetMapping("/jefe/estudios/curso/eliminar/{id}")
     public String aliminarCurso(@PathVariable ("id") Long id){
         Titulo idTitulo=serviCurso.findById(id).get().getTitulos();
+        for (Asignatura asig:
+             serviCurso.findById(id).get().getAsignatura()) {
+            for (Horario hora:
+                 asig.getHorario()) {
+                horarioServicio.delete(hora);
+            }
+            asignaturaServicio.delete(asig);
+        }
         serviCurso.delete(serviCurso.findById(id).get());
         return "redirect:/jefe/estudios/cursos/"+idTitulo.getId();
     }
@@ -103,17 +123,19 @@ public class JefeEstudiosGestionController {
     }
     @GetMapping("/jefe/estudios/curso/nuevo/{id}")
     public String agregarCurso(@PathVariable ("id") Long id, Model model){
-        model.addAttribute("nuevoCurso",new Curso());
-        model.addAttribute("idTitulo",id);
+        model.addAttribute("cursoNuevo",new NuevoRegistroCsvFormulario());
+        model.addAttribute("idTitulo",serviTitulo.findById(id).get());
         return "JefeEstudios/Nuevo/Curso";
     }
     @PostMapping("/submit/nuevo/curso")
-    public String nuevoCurso(@ModelAttribute("nuevoCurso") Curso curso){
+    public String nuevoCurso(@ModelAttribute("cursoNuevo") NuevoRegistroCsvFormulario curso){
         Curso cursoNuevo= new Curso(curso.getNombre());
         serviCurso.save(cursoNuevo);
-        cursoNuevo.setTitulos(curso.getTitulos());
+        Titulo t=serviTitulo.findFirstBynombre(curso.getInfoAux()).get();
+        t.addCurso(cursoNuevo);
         serviCurso.edit(cursoNuevo);
-        return  "redirect:/jefe/estudios/cursos/"+curso.getTitulos().getId();
+        serviTitulo.edit(t);
+        return  "redirect:/jefe/estudios/cursos/"+cursoNuevo.getTitulos().getId();
     }
 
     @GetMapping("/jefe/estudios/asignatura/{id}")
@@ -127,8 +149,14 @@ public class JefeEstudiosGestionController {
     @GetMapping("/jefe/estudios/asignatura/eliminar/{id}")
     public String eliminarAsignatura(@PathVariable ("id") Long id){
         Asignatura aux=asignaturaServicio.findById(id).get();
+        for (Horario hora:
+            aux.getHorario()) {
+            horarioServicio.delete(hora);
+        }
         Curso idCurso=serviCurso.findById(aux.getCurso().getId()).get();
-        asignaturaServicio.delete(asignaturaServicio.findById(id).get());
+        idCurso.removeAsignatura(aux);
+        serviCurso.edit(idCurso);
+        asignaturaServicio.delete(aux);
         return "redirect:/jefe/estudios/asignatura/"+idCurso.getId();
     }
     @GetMapping("/jefe/estudios/asignatura/editar/{id}")
@@ -178,7 +206,7 @@ public class JefeEstudiosGestionController {
     }
     @PostMapping("/submit/nuevo/horario/final")
     public String nuevoHorario(@ModelAttribute("nuevoCurso") Horario horario){
-        Horario aux=new Horario(horario.getDia(),horario.getHoraComienzo(),horario.getHoraFinalizacion());
+        Horario aux=new Horario(horario.getDia(),horario.getTramo());
         horarioServicio.save(aux);
         Asignatura asignaturaAux=asignaturaServicio.findById(horario.getId()).get();
         asignaturaAux.addHorario(aux);
@@ -203,10 +231,139 @@ public class JefeEstudiosGestionController {
     public String editarHorarioFinal(@ModelAttribute("horaNuevo") Horario horario){
         Horario aux=horarioServicio.findById(horario.getId()).get();
         aux.setDia(horario.getDia());
-        aux.setHoraComienzo(horario.getHoraComienzo());
-        aux.setHoraFinalizacion(horario.getHoraFinalizacion());
+        aux.setTramo(horario.getTramo());
         horarioServicio.edit(aux);
         Asignatura asigAux=asignaturaServicio.findById(aux.getAsignatura().getId()).get();
         return "redirect:/jefe/estudios/horas/"+asigAux.getId();
+    }
+    @GetMapping("/gestion/csv/agregar")
+    public String agregarDatosCsv(){
+        return "JefeEstudios/Alta/gestion";
+    }
+    @PostMapping("/gestion/csv/agregar/final")
+    public String agregarDatosCsvProcesar(@RequestParam("file") MultipartFile file){
+        BufferedReader br;
+        try {
+            String line;
+            InputStream is = file.getInputStream();
+            br = new BufferedReader(new InputStreamReader(is));
+            while ((line = br.readLine()) != null) {
+                String [] values=line.split(",");
+                if (values.length==1){
+                    if(serviTitulo.findFirstBynombre(values[0]).orElse(null)==null){
+                        Titulo t =new Titulo(values[0]);
+                        serviTitulo.save(t);
+                    }
+                }else if (values.length==2){
+                    if(serviTitulo.findFirstBynombre(values[0]).orElse(null)!=null){
+                        Curso cursoNuevo= new Curso(values[1]);
+                        serviCurso.save(cursoNuevo);
+                        Titulo t=serviTitulo.findFirstBynombre(values[0]).get();
+                        t.addCurso(cursoNuevo);
+                        serviCurso.edit(cursoNuevo);
+                        serviTitulo.edit(t);
+                    }else{
+                        Titulo t=new Titulo(values[0]);
+                        serviTitulo.save(t);
+                        Curso cursoNuevo= new Curso(values[1]);
+                        serviCurso.save(cursoNuevo);
+                        t.addCurso(cursoNuevo);
+                        serviCurso.edit(cursoNuevo);
+                        serviTitulo.edit(t);
+                    }
+                }else if(values.length==3){
+                    if(serviTitulo.findFirstBynombre(values[0]).orElse(null)!=null){
+                        if (serviCurso.findFirstBynombre(values[1],serviTitulo.findFirstBynombre(values[0]).get()).orElse(null)!=null){
+                            Asignatura asig=new Asignatura(values[2]);
+                            asignaturaServicio.save(asig);
+                            Curso aux=serviCurso.findFirstBynombre(values[1],serviTitulo.findFirstBynombre(values[0]).get()).get();
+                            aux.addAsignatura(asig);
+                            asignaturaServicio.edit(asig);
+                            serviCurso.edit(aux);
+                        }else{
+                            Titulo t=serviTitulo.findFirstBynombre(values[0]).get();
+                            Asignatura asig=new Asignatura(values[2]);
+                            Curso curso=new Curso(values[1]);
+                            asignaturaServicio.save(asig);
+                            serviCurso.save(curso);
+                            curso.addAsignatura(asig);
+                            t.addCurso(curso);
+                            asignaturaServicio.edit(asig);
+                            serviCurso.edit(curso);
+                            serviTitulo.edit(t);
+                        }
+                    }else{
+                        Titulo t=new Titulo(values[0]);
+                        Asignatura asig=new Asignatura(values[2]);
+                        Curso curso=new Curso(values[1]);
+                        asignaturaServicio.save(asig);
+                        serviTitulo.save(t);
+                        serviCurso.save(curso);
+                        curso.addAsignatura(asig);
+                        t.addCurso(curso);
+                        asignaturaServicio.edit(asig);
+                        serviCurso.edit(curso);
+                        serviTitulo.edit(t);
+                    }
+                }else if (values.length==5){
+                    if(serviTitulo.findFirstBynombre(values[0]).orElse(null)!=null){
+                        if(serviCurso.findFirstBynombre(values[1],serviTitulo.findFirstBynombre(values[0]).get()).orElse(null)!=null){
+                            if (asignaturaServicio.findFirstBynombre(values[2],serviCurso.findFirstBynombre(values[1],serviTitulo.findFirstBynombre(values[0]).get()).get()).orElse(null)!=null){
+                                Horario hora=new Horario(Integer.parseInt(values[3]),Integer.parseInt(values[4]));
+                                Asignatura AsigAux=asignaturaServicio.findFirstBynombre(values[2],serviCurso.findFirstBynombre(values[1],serviTitulo.findFirstBynombre(values[0]).get()).get()).get();
+                                horarioServicio.save(hora);
+                                AsigAux.addHorario(hora);
+                                asignaturaServicio.edit(AsigAux);
+                                horarioServicio.edit(hora);
+                            }else{//si asignatura no existe
+                                Horario hora=new Horario(Integer.parseInt(values[3]),Integer.parseInt(values[4]));
+                                Asignatura AsigAux=new Asignatura(values[2]);
+                                Curso cursoAux=serviCurso.findFirstBynombre(values[1],serviTitulo.findFirstBynombre(values[0]).get()).get();
+                                asignaturaServicio.save(AsigAux);
+                                horarioServicio.save(hora);
+                                AsigAux.addHorario(hora);
+                                cursoAux.addAsignatura(AsigAux);
+                                asignaturaServicio.edit(AsigAux);
+                                horarioServicio.edit(hora);
+                                serviCurso.edit(cursoAux);
+                            }
+                        }else{
+                            Horario hora=new Horario(Integer.parseInt(values[3]),Integer.parseInt(values[4]));
+                            Asignatura AsigAux=new Asignatura(values[2]);
+                            Curso cursoAux=new Curso(values[1]);
+                            Titulo t=serviTitulo.findFirstBynombre(values[0]).get();
+                            serviCurso.save(cursoAux);
+                            asignaturaServicio.save(AsigAux);
+                            horarioServicio.save(hora);
+                            AsigAux.addHorario(hora);
+                            cursoAux.addAsignatura(AsigAux);
+                            t.addCurso(cursoAux);
+                            asignaturaServicio.edit(AsigAux);
+                            horarioServicio.edit(hora);
+                            serviCurso.edit(cursoAux);
+                            serviTitulo.edit(t);
+                        }
+                    }else {
+                        Horario hora=new Horario(Integer.parseInt(values[3]),Integer.parseInt(values[4]));
+                        Asignatura AsigAux=new Asignatura(values[2]);
+                        Curso cursoAux=new Curso(values[1]);
+                        Titulo t=new Titulo(values[0]);
+                        serviCurso.save(cursoAux);
+                        asignaturaServicio.save(AsigAux);
+                        horarioServicio.save(hora);
+                        serviTitulo.save(t);
+                        AsigAux.addHorario(hora);
+                        cursoAux.addAsignatura(AsigAux);
+                        t.addCurso(cursoAux);
+                        asignaturaServicio.edit(AsigAux);
+                        horarioServicio.edit(hora);
+                        serviCurso.edit(cursoAux);
+                        serviTitulo.edit(t);
+                    }
+                }
+            }} catch (InvalidParameterException  | IOException e) {
+            System.err.println(e.getMessage());
+        }
+        return "redirect:/gestion";
     }
 }

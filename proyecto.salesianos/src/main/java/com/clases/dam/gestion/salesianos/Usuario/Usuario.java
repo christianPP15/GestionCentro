@@ -28,6 +28,8 @@ public abstract class Usuario implements UserDetails {
     @Column(unique = true)
     private String email;
     private String password;
+
+    //private boolean esAlta;
     private boolean primeraVez=false;
     private String codigoSeguridad;
 

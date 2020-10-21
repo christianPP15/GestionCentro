@@ -51,15 +51,15 @@ public class Application {
 					"admin",passwordEncoder.encode("admin"),true,true);
 
 			servicio.save(angel);
-			Horario hora1 =new Horario("LUN", LocalTime.of(8,0),LocalTime.of(9,0));
-			Horario hora2 =new Horario("MIE",LocalTime.of(9,0),LocalTime.of(10,0));
-			Horario hora3 =new Horario("VIE",LocalTime.of(8,0),LocalTime.of(9,0));
-			Horario hora4 =new Horario("MAR",LocalTime.of(9,0),LocalTime.of(10,0));
-			Horario hora5 =new Horario("MAR",LocalTime.of(10,0),LocalTime.of(11,0));
-			Horario hora6 =new Horario("JUE",LocalTime.of(10,0),LocalTime.of(11,0));
-			Horario hora7 =new Horario("LUN",LocalTime.of(13,30),LocalTime.of(14,30));
-			Horario hora8 =new Horario("MAR",LocalTime.of(8,0),LocalTime.of(9,0));
-			Horario hora9 =new Horario("VIE",LocalTime.of(13,30),LocalTime.of(14,30));
+			/*Horario hora1 =new Horario(1, 1);
+			Horario hora2 =new Horario(3,2);
+			Horario hora3 =new Horario(5,1);
+			Horario hora4 =new Horario(2,2);
+			Horario hora5 =new Horario(3,3);
+			Horario hora6 =new Horario(4,3);
+			Horario hora7 =new Horario(1,6);
+			Horario hora8 =new Horario(2,1);
+			Horario hora9 =new Horario(5,6);
 			horarioServicio.save(hora1);horarioServicio.save(hora2);horarioServicio.save(hora3);horarioServicio.save(hora4);
 			horarioServicio.save(hora5);horarioServicio.save(hora6);horarioServicio.save(hora7);horarioServicio.save(hora8);
 			horarioServicio.save(hora9);
@@ -98,7 +98,7 @@ public class Application {
 			tituloServicio.edit(ti);
 			primerDam.addAlumno((Alumno) u);
 			cursoServicio.edit(primerDam);
-			servicio.edit(u);
+			servicio.edit(u);*/
 		};
 	}
 }

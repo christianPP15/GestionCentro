@@ -22,21 +22,28 @@
                             <label class="input-group-text" for="inputGroupSelect01">Dia de la Semana</label>
                         </div>
                         <select class="custom-select" id="inputGroupSelect01" th:field="*{dia}">
-                            <option value="LUN" th:value="LUN">Lunes</option>
-                            <option value="MAR" th:value="MAR">Martes</option>
-                            <option value="MIE" th:value="MIE">Miercoles</option>
-                            <option value="JUE" th:value="JUE">Jueves</option>
-                            <option value="VIE" th:value="VIE">Viernes</option>
+                            <option value="1" selected th:value="1">Lunes</option>
+                            <option value="2" th:value="2">Martes</option>
+                            <option value="3" th:value="3">Miercoles</option>
+                            <option value="4" th:value="4">Jueves</option>
+                            <option value="5" th:value="5">Viernes</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="time" >Hora de comienzo</label>
-                    <input type="time" name="time" id="time" th:field="*{horaComienzo}">
-                </div>
-                <div class="form-group">
-                    <label for="timeFinal" >Hora de finalización</label>
-                    <input type="time" name="timeFinal" id="timeFinal" th:field="*{horaFinalizacion}">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Tramo horario</label>
+                        </div>
+                        <select class="custom-select" id="inputGroupSelect0" th:field="*{tramo}">
+                            <option value="LUN" selected th:value="1">08:00-09:00</option>
+                            <option value="MAR" th:value="2">09:00-10:00</option>
+                            <option value="MIE" th:value="3">10:00-11:00</option>
+                            <option value="JUE" th:value="4">11:30-12:30</option>
+                            <option value="VIE" th:value="5">12:30-13:30</option>
+                            <option value="VIE" th:value="6">13:30-14:30</option>
+                        </select>
+                    </div>
                 </div>
                 <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center"/>
             </form>
@@ -45,8 +52,6 @@
     </div>
     <span th:text="${horaAntiguo.id}" hidden id="spanId"></span>
     <span th:text="${horaAntiguo.dia}" hidden id="spandia"></span>
-    <span th:text="${horaAntiguo.horaComienzo}" hidden id="comienzo"></span>
-    <span th:text="${horaAntiguo.horaFinalizacion}" hidden id="final"></span>
 </main>
 
 <footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>

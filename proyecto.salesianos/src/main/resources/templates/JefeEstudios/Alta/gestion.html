@@ -2,29 +2,28 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragmentos/FragmentoHead :: header_comun(~{::title},~{::link})">
     <meta charset="UTF-8">
-    <title>Nuevo título</title>
+    <title>Nuevo registro mediante CSV</title>
     <link rel="stylesheet" href="../css/css.css" th:href="@{/css/css.css}">
 </head>
 <body>
 <nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
 
-<main id="registroJefeCampos">
+<main id="registroJefeCsv">
     <div class="container">
         <br>
         <div class="row">
             <div class="col-3"></div>
             <div class="col-6 cuadroFormulario">
                 <div class="row">
+                    <div class="col-12 borderInferiores" id="activo2"><h1 class="h1">CSV</h1></div>
+                </div>
+                <div class="row">
                     <div class="col-2"></div>
                     <div class="col-8">
-                        <br>
-                        <form method="POST" action="#" th:action="@{/submit/nuevo/titulo}" th:object="${nuevoTitulo}">
+                        <h3 class="h3">Solo debe incluir el campo nombre</h3>
+                        <form method="POST" action="#" th:action="@{/gestion/csv/agregar/final}" enctype="multipart/form-data">
                             <br>
-                            <div class="form-group">
-                                <label for="Nombre">Nombre:</label>
-                                <input type="text" id="Nombre" name="Nombre" placeholder="Nombre..." required autofocus class="form-control" th:field="*{nombre}">
-                            </div>
-                            <br>
+                            <input type="file" name="file" accept="text/csv" class="mb-4">
                             <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center mb-4"/>
                         </form>
                     </div>
@@ -36,7 +35,5 @@
     </div>
 </main>
 <footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
-<script>
-</script>
 </body>
 </html>
