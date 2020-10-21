@@ -26,7 +26,7 @@
                             <tr>
                             <td><span th:text="${alumnos.key.nombre}"></span><span th:text="${alumnos.key.apellidos}"></span></td>
                                 <th:block th:each=" valores :${alumnos.value}">
-                                    <td th:text="${valores}"></td>
+                                    <td th:text="${valores}" class="textoCentradp"></td>
                                 </th:block>
                             </tr>
                         </div>

@@ -55,7 +55,8 @@ public class AlumnosMatriculadosController {
 
     public Map <Alumno,List<String>> agregarAlListadoElTipo(Curso curso){
         List<String> resultados=new ArrayList<>();
-        int i=0;
+        int iNuevo=0;
+        int contador=0;
         Map<Alumno,List<String>> listadoCompuesto=new HashMap<>();
         List<String> listaAux=new ArrayList<>();
         for (Alumno al:
@@ -63,22 +64,25 @@ public class AlumnosMatriculadosController {
             resultados.clear();
             for (Asignatura asig:
                  ordenarListaDeAsignaturas(curso)) {
-                if (situacionExcepcionalServicio.buscarExistenciaTerminada(asig,al).orElse(null)!=null){
+                if (situacionExcepcionalServicio.buscarExistenciaTerminadaConvalidacion(asig,al).orElse(null)!=null){
                     resultados.add("Convalidada");
-                }else{
+                }else if (situacionExcepcionalServicio.buscarExistenciaTerminadaExcepcion(asig,al).orElse(null)!=null){
+                    resultados.add("Excepción");
+                } else{
                     resultados.add("Matriculado");
                 }
             }
-            i=listaAux.size();
+            iNuevo=resultados.size();
             for (String componente:
                  resultados) {
                 listaAux.add(componente);
             }
-            int tamanio=listaAux.size();
-            List <String> listaComplementaria=listaAux.subList(i,tamanio);
-            listadoCompuesto.put(al,listaComplementaria);
         }
-
+        for (Alumno al:
+             curso.getAlumnos()) {
+            listadoCompuesto.put(al,listaAux.subList(contador,contador+iNuevo));
+            contador+=iNuevo;
+        }
         return listadoCompuesto;
     }
 }
