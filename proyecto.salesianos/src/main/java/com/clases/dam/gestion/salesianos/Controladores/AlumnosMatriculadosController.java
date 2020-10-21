@@ -85,4 +85,25 @@ public class AlumnosMatriculadosController {
         }
         return listadoCompuesto;
     }
+    @GetMapping("/gestion/alumno/asignaturas/{id}")
+    public String gestionDeUnAlumno(@PathVariable("id") Long id,Model model){
+        //Hacer mediante enlaces
+        Alumno al=alumnoServicio.findById(id).get();
+        model.addAttribute("Alumno",al);
+        //model.addAttribute("asignaturas",al.getCurso().getAsignatura());
+        return "JefeEstudios/GestionAlumnos/AsignaturasAprobada";
+    }
+    @GetMapping("/marcar/asignatura/{idAsig}/aprobada/{idAlum}")
+    public String gestionDeUnAlumnoAprobarSuspender
+            (@PathVariable("idAsig") Long idAsig,@PathVariable("idAlum") Long idAlum){
+        for (Asignatura asig:
+             alumnoServicio.findById(idAlum).get().getCurso().getAsignatura()) {
+            if(asig.getId()==idAsig){
+                asig.setAprobada(!asig.isAprobada());
+                alumnoServicio.edit( alumnoServicio.findById(idAlum).get());
+                asignaturaServicio.edit(asig);
+            }
+        }
+        return "redirect:/gestion/alumno/asignaturas/"+idAlum;
+    }
 }

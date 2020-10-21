@@ -178,13 +178,13 @@ public class JefeEstudiosAltaController {
                     serviUsuario.save(usu);
                    Mail m = new Mail("Config/configuracion.properties");
 
-                    m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
+                   /* m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
                             " ingrese este código la primera vez que acceda a la web: "+usu.getCodigoSeguridad()
-                            +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());
+                            +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());*/
                 }
             }
 
-        } catch (InvalidParameterException | IOException | MessagingException e) {
+        } catch (InvalidParameterException | IOException  e) {
             System.err.println(e.getMessage());
         }
         return "redirect:/index";
