@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface SolicitudAmpliacionMatriculaRepository extends JpaRepository<SolicitudAmpliacionMatricula,Long> {
@@ -19,4 +20,6 @@ public interface SolicitudAmpliacionMatriculaRepository extends JpaRepository<So
 
     @Query("Select e From SolicitudAmpliacionMatricula e Where e.asignatura= :ASIGNATURA and e.alumno= :AlUMNO and e.estado=false")
     public Optional<SolicitudAmpliacionMatricula> buscarExistenciaPendientes(@Param("ASIGNATURA") Asignatura Asig, @Param("AlUMNO") Alumno alumno);
+    @Query("Select e From SolicitudAmpliacionMatricula e Where e.estado=false")
+    public List<SolicitudAmpliacionMatricula> buscarExistenciasNoTerminadas();
 }

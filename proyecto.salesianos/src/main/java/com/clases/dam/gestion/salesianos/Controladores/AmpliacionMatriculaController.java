@@ -5,6 +5,7 @@ import com.clases.dam.gestion.salesianos.Alumno.AlumnoServicio;
 import com.clases.dam.gestion.salesianos.Asignatura.Asignatura;
 import com.clases.dam.gestion.salesianos.Asignatura.AsignaturaServicio;
 import com.clases.dam.gestion.salesianos.Curso.Curso;
+import com.clases.dam.gestion.salesianos.SituacionExcepcional.SituacionExcepcional;
 import com.clases.dam.gestion.salesianos.SolicitudAmpliacionMatricula.SolicitudAmpliacionMatricula;
 import com.clases.dam.gestion.salesianos.SolicitudAmpliacionMatricula.SolicitudAmpliacionMatriculaId;
 import com.clases.dam.gestion.salesianos.SolicitudAmpliacionMatricula.SolicitudAmpliacionMatriculaServicio;
@@ -74,5 +75,31 @@ public class AmpliacionMatriculaController {
             }
         }
         return info;
+    }
+    @GetMapping("/aceptar/solicitudes/ampliacion/matricula")
+    public String solicitudesAceptacion(Model model){
+        model.addAttribute("convalidaciones",solicitudAmpliacionMatriculaServicio.buscarExistenciasNoTerminadas());
+        return "JefeEstudios/AmpliacionMatricula/AceptacionAmpliacion";
+    }
+
+    @GetMapping("/aceptar/{idAlum}/convalidacion/{idAsig}")
+    public String aceptarAmpliacion(@PathVariable("idAlum") Long idAlum,@PathVariable("idAsig") Long idAsig){
+        SolicitudAmpliacionMatricula solicitudAmpliacionMatricula=solicitudAmpliacionMatriculaServicio
+                .buscarExistencia(asignaturaServicio.findById(idAsig).get(),alumnoServicio.findById(idAlum).get()).get();
+        solicitudAmpliacionMatricula.setFechaResolucion(LocalDate.now());
+        solicitudAmpliacionMatricula.setEstado(true);
+        solicitudAmpliacionMatricula.setAceptada(true);
+        solicitudAmpliacionMatriculaServicio.edit(solicitudAmpliacionMatricula);
+        return "redirect:/aceptar/solicitudes/ampliacion/matricula";
+    }
+    @GetMapping("/denegar/{idAlum}/convalidacion/{idAsig}")
+    public String denegarAmpliacion(@PathVariable("idAlum") Long idAlum,@PathVariable("idAsig") Long idAsig){
+        SolicitudAmpliacionMatricula solicitudAmpliacionMatricula=solicitudAmpliacionMatriculaServicio
+                .buscarExistencia(asignaturaServicio.findById(idAsig).get(),alumnoServicio.findById(idAlum).get()).get();
+        solicitudAmpliacionMatricula.setFechaResolucion(LocalDate.now());
+        solicitudAmpliacionMatricula.setEstado(true);
+        solicitudAmpliacionMatricula.setAceptada(false);
+        solicitudAmpliacionMatriculaServicio.edit(solicitudAmpliacionMatricula);
+        return "redirect:/aceptar/solicitudes/ampliacion/matricula";
     }
 }

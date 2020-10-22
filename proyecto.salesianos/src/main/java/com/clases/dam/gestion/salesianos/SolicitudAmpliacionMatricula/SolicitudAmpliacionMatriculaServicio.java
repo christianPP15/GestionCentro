@@ -7,6 +7,7 @@ import com.clases.dam.gestion.salesianos.SituacionExcepcional.SituacionExcepcion
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,5 +31,10 @@ public class SolicitudAmpliacionMatriculaServicio extends
     @Query("Select e From SolicitudAmpliacionMatricula e Where e.asignatura= :ASIGNATURA and e.alumno= :AlUMNO e.estado=false")
     public Optional<SolicitudAmpliacionMatricula> buscarExistenciaPendientes(Asignatura Asig, Alumno alumno) {
         return repositorio.buscarExistenciaPendientes(Asig, alumno);
+    }
+
+    @Query("Select e From SolicitudAmpliacionMatricula e Where e.estado=false")
+    public List<SolicitudAmpliacionMatricula> buscarExistenciasNoTerminadas() {
+        return repositorio.buscarExistenciasNoTerminadas();
     }
 }
