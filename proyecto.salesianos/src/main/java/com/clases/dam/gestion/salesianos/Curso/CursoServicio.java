@@ -2,6 +2,7 @@ package com.clases.dam.gestion.salesianos.Curso;
 
 import com.clases.dam.gestion.salesianos.Servicios.BaseServiceImpl;
 import com.clases.dam.gestion.salesianos.Titulo.Titulo;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,5 +25,10 @@ public class CursoServicio extends BaseServiceImpl<Curso,Long,CursoRepository> {
 
     public List<Curso> encontrarCursosActivos(Titulo titulo){
         return repositorio.encontrarCursosActivos(titulo);
+    }
+
+
+    public List<Curso> encontrarCursosActivosSinDependerDeTitulo() {
+        return repositorio.encontrarCursosActivosSinDependerDeTitulo();
     }
 }

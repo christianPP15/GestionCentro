@@ -6,10 +6,10 @@
     <link rel="stylesheet" href="../css/css.css" th:href="@{/css/css.css}">
 </head>
 <body>
-        <nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
+        <header th:replace="~{fragmentos/fragmentosNav::nav}"></header>
 
         <main id="login" class="container">
-            <br><br>
+            <br><br><br><br>
             <div class="row">
                 <div class="col-4"></div>
                 <div class="col-4">
@@ -27,9 +27,23 @@
                 </div>
                 <div class="col-4"></div>
             </div>
-            <br><br><br><br><br><br>
         </main>
 
-    <footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
+    <footer th:replace="~{fragmentos/fragmentoFooter::footer}" >
+    </footer>
+<script>
+
+    jQuery(window).load(function(){
+//Cuando se carga todo el contenido.
+jQuery("#main").css("min-height", (jQuery(window).height()-jQuery("footer").outerHeight()-jQuery("header").outerHeight()+"px"));
+}).resize(function(){
+//Cuando se escala la pantalla.
+jQuery("#main").css("min-height", (jQuery(window).height()-jQuery("footer").outerHeight()-jQuery("header").outerHeight()+"px"));
+});
+jQuery(document).ready(function(){
+//Cuando el DOM está disponible.
+jQuery("#main").css("min-height", (jQuery(window).height()-jQuery("footer").outerHeight()-jQuery("header").outerHeight()+"px"));
+})
+</script>
 </body>
 </html>

@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
         <body>
-        <nav class="navbar navbar-expand-sm navbar-blue navbar-dark bg-info" th:fragment="nav">
+        <header class="navbar navbar-expand-sm navbar-blue navbar-dark bg-info" th:fragment="nav">
             <a href="/index" class="navbar-brand" sec:authorize="hasRole('ROLE_ADMIN')"><img alt="Logo de la página"
                                                        src="log.png" th:src="@{/img/salesianosTriana.jpg}" width="190px" height="60px"></a>
             <a href="/index" class="navbar-brand" sec:authorize="hasRole('ROLE_PROFESOR')"><img alt="Logo de la página"
@@ -58,6 +58,6 @@
                     </li>
                 </ul>
             </div>
-        </nav>
+        </header>
 </body>
 </html>

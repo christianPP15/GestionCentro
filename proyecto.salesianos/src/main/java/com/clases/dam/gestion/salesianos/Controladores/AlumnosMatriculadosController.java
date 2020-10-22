@@ -125,6 +125,10 @@ public class AlumnosMatriculadosController {
              al.getCurso().getAsignatura()) {
             if (al.getAsignaturas().contains(asig)){
                 estado.put(asig,"Aprobada");
+            }else if(situacionExcepcionalServicio.buscarExistenciaTerminadaConvalidacion(asig,al).orElse(null)!=null){
+                estado.put(asig,"Convalidada");
+            }else if (situacionExcepcionalServicio.buscarExistenciaTerminadaExcepcion(asig,al).orElse(null)!=null){
+                estado.put(asig,"Excepción");
             }else{
                 estado.put(asig,"Matriculado");
             }

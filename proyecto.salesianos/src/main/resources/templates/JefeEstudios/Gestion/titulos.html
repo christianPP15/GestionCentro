@@ -38,7 +38,9 @@
                             </tr>
                         </tbody>
                     </table>
-                    <a href="/gestion/csv/agregar"><h3 class="noEnlace h3">Introducir datos mediante csv</h3></a>
+                    <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a href="/gestion/csv/agregar"><h3 class="noEnlace h3">Introducir datos mediante csv</h3></a>
+                    </th:block>
                 </div>
                 <div class="col-2"></div>
             </div>

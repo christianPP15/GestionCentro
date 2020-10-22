@@ -29,9 +29,22 @@
                         <tr th:each=" asignatura : ${asignaturas}">
                            <td th:text="${asignatura.key.nombreAsignatura}"></td>
                             <td>
-                                <a th:href="@{/marcar/asignatura/{idAsig}/aprobada/{idAlum} (idAsig=${asignatura.key.id},idAlum=${Alumno.id})}">
+                                <th:block th:if="${asignatura.value}=='Convalidada'">
                                     <span th:text="${asignatura.value}"></span>
-                                </a>
+                                </th:block>
+                                <th:block th:if="${asignatura.value}=='Excepción'">
+                                    <span th:text="${asignatura.value}"></span>
+                                </th:block>
+                                <th:block th:if="${asignatura.value}=='Aprobada'">
+                                    <a th:href="@{/marcar/asignatura/{idAsig}/aprobada/{idAlum} (idAsig=${asignatura.key.id},idAlum=${Alumno.id})}">
+                                        <span th:text="${asignatura.value}"></span>
+                                    </a>
+                                </th:block>
+                                <th:block th:if="${asignatura.value}=='Matriculado'">
+                                    <a th:href="@{/marcar/asignatura/{idAsig}/aprobada/{idAlum} (idAsig=${asignatura.key.id},idAlum=${Alumno.id})}">
+                                        <span th:text="${asignatura.value}"></span>
+                                    </a>
+                                </th:block>
                             </td>
                         </tr>
                     </tbody>

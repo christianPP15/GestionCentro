@@ -10,10 +10,6 @@ import com.clases.dam.gestion.salesianos.Servicios.Mail;
 import com.clases.dam.gestion.salesianos.Titulo.TituloServicio;
 import com.clases.dam.gestion.salesianos.Usuario.Usuario;
 import com.clases.dam.gestion.salesianos.Usuario.UsuarioServicio;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-import org.apache.tomcat.jni.File;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -56,7 +52,7 @@ public class JefeEstudiosAltaController {
     @GetMapping("/jefeEstudio/alta/alumnos")
     public String crearNuevoAlumno(Model model){
         model.addAttribute("usuario",new NuevoAlumnoFormulario());
-        model.addAttribute("listaCursos",serviCurso.findAll());
+        model.addAttribute("listaCursos",serviCurso.encontrarCursosActivosSinDependerDeTitulo());
         return "JefeEstudios/Alta/NuevoAlumno";
     }
 
@@ -179,13 +175,13 @@ public class JefeEstudiosAltaController {
                     serviUsuario.save(usu);
                    Mail m = new Mail("Config/configuracion.properties");
 
-                   /* m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
+                    m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
                             " ingrese este código la primera vez que acceda a la web: "+usu.getCodigoSeguridad()
-                            +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());*/
+                            +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());
                 }
             }
 
-        } catch (InvalidParameterException | IOException  e) {
+        } catch (InvalidParameterException | IOException | MessagingException e) {
             System.err.println(e.getMessage());
         }
         return "redirect:/index";
