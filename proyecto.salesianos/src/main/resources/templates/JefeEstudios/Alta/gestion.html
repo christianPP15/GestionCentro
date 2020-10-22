@@ -15,12 +15,15 @@
             <div class="col-3"></div>
             <div class="col-6 cuadroFormulario">
                 <div class="row">
-                    <div class="col-12 borderInferiores" id="activo2"><h1 class="h1">CSV</h1></div>
+                    <div class="col-12 borderInferioresActivos colorLetras text-center" id="activo2"><h1 class="h1">CSV</h1></div>
                 </div>
                 <div class="row">
                     <div class="col-2"></div>
                     <div class="col-8">
-                        <h3 class="h3">Solo debe incluir el campo nombre</h3>
+                        <br>
+                        <h5 class="h5">El orden es nombre título, nombre curso, nombre asignatura,dia de la semana(1-5) y tramo horario(1-6)</h5>
+                        <br>
+                        <h5 class="h5">No hace falta que introduzcas todos los datos, pero para introducir una asignatura si debe introducir previamente a dónde pertenece</h5>
                         <form method="POST" action="#" th:action="@{/gestion/csv/agregar/final}" enctype="multipart/form-data">
                             <br>
                             <input type="file" name="file" accept="text/csv" class="mb-4">
