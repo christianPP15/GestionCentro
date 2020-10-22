@@ -204,7 +204,6 @@ public class JefeEstudiosGestionController {
         serviCurso.edit(cursoNuevo);
         return "redirect:/jefe/estudios/asignatura/"+cursoNuevo.getId();
     }
-
     @GetMapping("/jefe/estudios/horas/{id}")
     public String gestionHoras(@PathVariable ("id") Long id,Model model){
         Asignatura aux=asignaturaServicio.findById(id).get();

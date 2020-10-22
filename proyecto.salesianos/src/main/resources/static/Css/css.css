@@ -33,18 +33,9 @@ text-decoration: none;
     border: 1px solid #000000;
     text-align:center;
 }
-html {
-  min-height: 100%;
-  position: relative;
+.margenAbajoLogin{
+margin-bottom:405px;
 }
-body {
-  margin: 0;
-  margin-bottom: 40px;
-}
-footer {
-  background-color: black;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  color: white;
+main{
+margin-bottom:180px;
 }
