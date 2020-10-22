@@ -28,6 +28,8 @@ public class Horario implements Comparable<Horario>{
     @ManyToOne
     private Asignatura asignatura;
 
+    private boolean activo=true;
+
     public Horario(int dia, int tramo) {
         this.dia = dia;
         this.tramo = tramo;

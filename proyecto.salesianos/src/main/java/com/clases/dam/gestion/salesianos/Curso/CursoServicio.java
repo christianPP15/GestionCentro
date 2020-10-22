@@ -21,4 +21,8 @@ public class CursoServicio extends BaseServiceImpl<Curso,Long,CursoRepository> {
     public Optional<Curso> findFirstBynombre(String nombre, Titulo titulo) {
         return repositorio.findFirstBynombre(nombre,titulo);
     }
+
+    public List<Curso> encontrarCursosActivos(Titulo titulo){
+        return repositorio.encontrarCursosActivos(titulo);
+    }
 }

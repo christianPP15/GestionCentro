@@ -29,6 +29,8 @@ public class Curso {
     @OneToMany(mappedBy="curso",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Alumno> alumnos = new ArrayList<>();
 
+    private boolean activo=true;
+
     public void addAsignatura(Asignatura a) {
         this.asignatura.add(a);
         a.setCurso(this);

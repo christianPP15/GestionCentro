@@ -31,6 +31,8 @@ public class Asignatura {
     @OneToMany(mappedBy="asignatura")
     private List<Horario> horario=new ArrayList<>();
 
+    private boolean activo=true;
+
     public void addHorario(Horario a) {
         this.horario.add(a);
         a.setAsignatura(this);
