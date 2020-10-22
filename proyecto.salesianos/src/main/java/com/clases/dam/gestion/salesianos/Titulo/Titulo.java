@@ -19,6 +19,8 @@ public class Titulo {
     @OneToMany(mappedBy="titulos", fetch =FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Curso> cursos=new ArrayList<>();
 
+    private boolean activo=true;
+
     public void addCurso(Curso a) {
         this.cursos.add(a);
         a.setTitulos(this);
