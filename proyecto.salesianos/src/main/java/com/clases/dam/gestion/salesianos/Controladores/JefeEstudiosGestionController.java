@@ -73,16 +73,8 @@ public class JefeEstudiosGestionController {
     }
     @GetMapping("/jefe/estudios/titulo/editar/{id}")
     public String editarTitulo(@PathVariable ("id") Long id,Model model){
-        model.addAttribute("tituloAntiguo",serviTitulo.findById(id).get());
-        model.addAttribute("tituloNuevo",new Titulo());
-        return "JefeEstudios/Edicion/titulo";
-    }
-    @PostMapping("/submit/editar/titulo/final")
-    public String editarTituloFinal(@ModelAttribute("titulo") Titulo titulo){
-        Titulo aux=serviTitulo.findById(titulo.getId()).get();
-        aux.setNombre(titulo.getNombre());
-        serviTitulo.edit(aux);
-        return "redirect:/gestion";
+        model.addAttribute("nuevoTitulo",serviTitulo.findById(id).get());
+        return "JefeEstudios/Nuevo/titulo";
     }
     @GetMapping("/jefe/estudios/titulo/nuevo")
     public String agregarTitulo(Model model){
@@ -91,7 +83,13 @@ public class JefeEstudiosGestionController {
     }
     @PostMapping("/submit/nuevo/titulo")
     public String nuevoTitulo(@ModelAttribute("titulo") Titulo titulo){
-        serviTitulo.save(titulo);
+        if (serviTitulo.findById(titulo.getId()).orElse(null)!=null){
+            Titulo t=serviTitulo.findById(titulo.getId()).get();
+            t.setNombre(titulo.getNombre());
+            serviTitulo.edit(titulo);
+        }else{
+            serviTitulo.save(titulo);
+        }
        return  "redirect:/gestion";
     }
     @GetMapping("/jefe/estudios/cursos/{id}")
