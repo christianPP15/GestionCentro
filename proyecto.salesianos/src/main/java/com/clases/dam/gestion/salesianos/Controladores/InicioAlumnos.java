@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -30,6 +36,8 @@ public class InicioAlumnos {
     private AlumnoServicio alumnoServicio;
     @Autowired
     private CursoServicio cursoServicio;
+    @Autowired
+    private ServletContext context;
     @GetMapping("/index/alumno")
     public String mostrarHorario(@AuthenticationPrincipal Usuario log, Model model){
         if (!log.isPrimeraVez()){
@@ -84,5 +92,38 @@ public class InicioAlumnos {
             }
         }
         return listaHorarios;
+    }
+    @GetMapping("/createPdf/alumnos")
+    public void generarPdfPeliculas(HttpServletRequest request, HttpServletResponse response,@AuthenticationPrincipal Alumno alumno) {
+        boolean isFlag= AlumnoServicio.createPdf(alumno,request, response,context);
+
+        if(isFlag) {
+            String fullPath= request.getServletContext().getRealPath("/resources/reports/"+"alumnos"+".pdf");
+            filedownload(fullPath,response,"alumno.pdf");
+        }
+    }
+    private void filedownload(String fullPath, HttpServletResponse response, String fileName) {
+        File file= new File(fullPath);
+        final int BUFFER_SIZE =4096;
+        if(file.exists()) {
+            try {
+                FileInputStream inputStream = new FileInputStream(file);
+                String mimeType= context.getMimeType(fullPath);
+                response.setContentType(mimeType);
+                response.setHeader("content-disposition", "attachment; filename="+ fileName);
+                OutputStream outputStream = response.getOutputStream();
+                byte [] buffer = new byte [BUFFER_SIZE];
+                int bytesRead=-1;
+                while((bytesRead = inputStream.read(buffer)) != -1 ){
+                    outputStream.write(buffer,0,bytesRead);
+                }
+                inputStream.close();
+                outputStream.close();
+                file.delete();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
