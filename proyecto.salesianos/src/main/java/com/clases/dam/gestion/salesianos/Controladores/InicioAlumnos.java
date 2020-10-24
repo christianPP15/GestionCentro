@@ -98,7 +98,7 @@ public class InicioAlumnos {
         boolean isFlag= AlumnoServicio.createPdf(alumno,request, response,context);
 
         if(isFlag) {
-            String fullPath= request.getServletContext().getRealPath("/resources/reports/"+"alumnos"+".pdf");
+            String fullPath= request.getServletContext().getRealPath("/resources/reports/"+"alumno"+".pdf");
             filedownload(fullPath,response,"alumno.pdf");
         }
     }
