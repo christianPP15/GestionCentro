@@ -52,7 +52,15 @@ public class HorarioServicio extends BaseServiceImpl<Horario,Long,HorarioReposit
             }
         }
 
-
+        if (!alumno.getAsignaturas().isEmpty()){
+            for (Asignatura asig:alumno.getAsignaturas()){
+                for (int i=0;i<listaAsignaturasFinal.size();i++){
+                    if (listaAsignaturasFinal.get(i).equals(asig)){
+                        listaAsig.remove(asig);
+                    }
+                }
+            }
+        }
 
         for(SolicitudAmpliacionMatricula ampl : listaAmpliaciones){
             if(ampl.getAlumno().equals(alumno)) {

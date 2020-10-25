@@ -45,67 +45,8 @@ public class InicioAlumnos {
     @Autowired
     private HorarioServicio horarioServicio;
 
-    @GetMapping("/index/alumno")
-    public String mostrarHorario(@AuthenticationPrincipal Alumno log, Model model){
-        if (!log.isPrimeraVez()){
-            model.addAttribute("codigo",new CodigoActivacion());
-            return "PrimeraVez";
-        }else {
-            Alumno al=alumnoServicio.findById(log.getId()).get();
-            model.addAttribute("horarios",horarioServicio.ordenarFinal(horarioServicio.horariosPorAlumno(log,solicitudAmpliacionMatriculaServicio.findAll())));
-            return "IndexAlumno";
-        }
-    }
-    @PostMapping("/submit/codigo/alumno")
-    public String confirmarCódigo(@ModelAttribute("codigo") CodigoActivacion codigo,
-                                  @AuthenticationPrincipal Usuario usuarioLog, BCryptPasswordEncoder encode){
-        if(usuarioLog.getCodigoSeguridad().contentEquals(codigo.getCodigo())){
-            usuarioLog.setPrimeraVez(true);
-            usuarioLog.setPassword(encode.encode(codigo.getContra()));
-            usuarioLog.setCodigoSeguridad(null);
-            usuarioServicio.edit(usuarioLog);
-        }
-        return "redirect:/index/alumno";
-    }
-    @GetMapping("/pruebas")
-    public void generarHorarioAlumno(@AuthenticationPrincipal Alumno al){
-        for (Asignatura asig:
-             al.getCurso().getAsignatura()) {
-            asig.getHorario().stream().sorted(Comparator.comparingInt(Horario::getDia)).collect(Collectors.toList());
-        }
-    }
 
-    @GetMapping("/createPdf/alumnos")
-    public void generarPdfPeliculas(HttpServletRequest request, HttpServletResponse response,@AuthenticationPrincipal Alumno alumno) {
-        boolean isFlag= AlumnoServicio.createPdf(alumno,request, response,context);
 
-        if(isFlag) {
-            String fullPath= request.getServletContext().getRealPath("/resources/reports/"+"alumno"+".pdf");
-            filedownload(fullPath,response,"alumno.pdf");
-        }
-    }
-    private void filedownload(String fullPath, HttpServletResponse response, String fileName) {
-        File file= new File(fullPath);
-        final int BUFFER_SIZE =4096;
-        if(file.exists()) {
-            try {
-                FileInputStream inputStream = new FileInputStream(file);
-                String mimeType= context.getMimeType(fullPath);
-                response.setContentType(mimeType);
-                response.setHeader("content-disposition", "attachment; filename="+ fileName);
-                OutputStream outputStream = response.getOutputStream();
-                byte [] buffer = new byte [BUFFER_SIZE];
-                int bytesRead=-1;
-                while((bytesRead = inputStream.read(buffer)) != -1 ){
-                    outputStream.write(buffer,0,bytesRead);
-                }
-                inputStream.close();
-                outputStream.close();
-                file.delete();
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+
 }
