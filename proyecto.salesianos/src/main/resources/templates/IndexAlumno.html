@@ -11,10 +11,10 @@
     <div class="container">
         <div class="col-2"></div>
         <div class="col-8">
-            <a th:href="@{/createPdf/alumnos}">Descargar</a>
             <table class="table mb-5" id="horario">
                 <thead>
                 <tr>
+                    <th></th>
                     <th scope="col">Lunes</th>
                     <th scope="col">Martes</th>
                     <th scope="col">Miércoles</th>
@@ -22,11 +22,17 @@
                     <th scope="col">Viernes</th>
                 </tr>
                 </thead>
-                <tbody th:each="horario : ${horarios}">
-                <tr>
-                    <th:bloch th:each="clase: ${horario}">
-                        <td th:text="${clase.asignatura.nombreAsignatura}"></td>
-                    </th:bloch>
+                <tbody>
+                <tr th:each="horario : ${horarios}">
+                    <td></td>
+                    <th:block th:each="clase : ${horario}">
+                        <th:block th:if="${clase.asignatura!=null}">
+                            <td th:text="${clase.asignatura.nombreAsignatura}"> X </td>
+                        </th:block>
+                        <th:block th:if="${clase.asignatura==null}">
+                            <td> X </td>
+                        </th:block>
+                    </th:block>
                 </tr>
                 </tbody>
             </table>
@@ -35,5 +41,18 @@
     </div>
 </main>
 <footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
+<script>
+
+            $(document).ready(function() {
+
+                $('table tbody').children("tr:nth-child(1)").children("td:nth-child(1)").html("8:00 - 9:00")
+                $('table tbody').children("tr:nth-child(2)").children("td:nth-child(1)").html("9:00 - 10:00")
+                $('table tbody').children("tr:nth-child(3)").children("td:nth-child(1)").html("10:00 - 11:00")
+                $('table tbody').children("tr:nth-child(4)").children("td:nth-child(1)").html("11:30 - 12:30")
+                $('table tbody').children("tr:nth-child(5)").children("td:nth-child(1)").html("12:30 - 13:30")
+                $('table tbody').children("tr:nth-child(6)").children("td:nth-child(1)").html("13:30 - 14:30")
+            });
+
+        </script>
 </body>
 </html>

@@ -7,6 +7,8 @@ import com.clases.dam.gestion.salesianos.Curso.Curso;
 import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
 import com.clases.dam.gestion.salesianos.Formularios.CodigoActivacion;
 import com.clases.dam.gestion.salesianos.Horario.Horario;
+import com.clases.dam.gestion.salesianos.Horario.HorarioServicio;
+import com.clases.dam.gestion.salesianos.SolicitudAmpliacionMatricula.SolicitudAmpliacionMatriculaServicio;
 import com.clases.dam.gestion.salesianos.Usuario.Usuario;
 import com.clases.dam.gestion.salesianos.Usuario.UsuarioServicio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +40,19 @@ public class InicioAlumnos {
     private CursoServicio cursoServicio;
     @Autowired
     private ServletContext context;
+    @Autowired
+    private SolicitudAmpliacionMatriculaServicio solicitudAmpliacionMatriculaServicio;
+    @Autowired
+    private HorarioServicio horarioServicio;
+
     @GetMapping("/index/alumno")
-    public String mostrarHorario(@AuthenticationPrincipal Usuario log, Model model){
+    public String mostrarHorario(@AuthenticationPrincipal Alumno log, Model model){
         if (!log.isPrimeraVez()){
             model.addAttribute("codigo",new CodigoActivacion());
             return "PrimeraVez";
         }else {
             Alumno al=alumnoServicio.findById(log.getId()).get();
-            model.addAttribute("horarios",ordenarFinalmente(listaHorariosDevolver(cursoServicio.findById(al.getCurso().getId()).get())));
+            model.addAttribute("horarios",horarioServicio.ordenarFinal(horarioServicio.horariosPorAlumno(log,solicitudAmpliacionMatriculaServicio.findAll())));
             return "IndexAlumno";
         }
     }
@@ -60,39 +67,14 @@ public class InicioAlumnos {
         }
         return "redirect:/index/alumno";
     }
-    public List<Horario> ordenar(List<Horario> lista){
-        lista=lista.stream()
-                .sorted(Comparator.comparingInt(Horario::getDia))
-                .collect(Collectors.toList());
-        return lista;
-    }
-    public List<Horario> tramo(List<Horario> lista,int dia){
-        List<Horario> listaF=new ArrayList<>();
-        for(Horario h:lista){
-            if (h.getTramo()==dia){
-                listaF.add(h);
-            }
-        }
-        return listaF;
-    }
-    public List<List<Horario>> ordenarFinalmente(List<Horario> lista){
-        List<List<Horario>> listF=new ArrayList<>();
-        for (int i=1;i<7;i++){
-            listF.add(this.ordenar(this.tramo(lista,i)));
-        }
-        return listF;
-    }
-    public List<Horario> listaHorariosDevolver(Curso curso){
-        List<Horario> listaHorarios=new ArrayList<>();
+    @GetMapping("/pruebas")
+    public void generarHorarioAlumno(@AuthenticationPrincipal Alumno al){
         for (Asignatura asig:
-             curso.getAsignatura()) {
-            for (Horario hora:
-                 asig.getHorario()) {
-                listaHorarios.add(hora);
-            }
+             al.getCurso().getAsignatura()) {
+            asig.getHorario().stream().sorted(Comparator.comparingInt(Horario::getDia)).collect(Collectors.toList());
         }
-        return listaHorarios;
     }
+
     @GetMapping("/createPdf/alumnos")
     public void generarPdfPeliculas(HttpServletRequest request, HttpServletResponse response,@AuthenticationPrincipal Alumno alumno) {
         boolean isFlag= AlumnoServicio.createPdf(alumno,request, response,context);

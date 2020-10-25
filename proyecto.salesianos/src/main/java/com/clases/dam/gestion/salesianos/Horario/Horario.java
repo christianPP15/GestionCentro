@@ -45,5 +45,7 @@ public class Horario implements Comparable<Horario>{
         }
     }
 
-
+    public Horario(int dia) {
+        this.dia = dia;
+    }
 }
