@@ -2,6 +2,7 @@ package com.clases.dam.gestion.salesianos.Controladores;
 
 import com.clases.dam.gestion.salesianos.Alumno.Alumno;
 import com.clases.dam.gestion.salesianos.Alumno.AlumnoServicio;
+import com.clases.dam.gestion.salesianos.Asignatura.Asignatura;
 import com.clases.dam.gestion.salesianos.Asignatura.AsignaturaServicio;
 import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
 import com.clases.dam.gestion.salesianos.Formularios.InformacionRechazoAceptacion;
@@ -38,6 +39,8 @@ import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 public class ConvalidacionesExcepcionesController {
@@ -63,7 +66,9 @@ public class ConvalidacionesExcepcionesController {
     @GetMapping("/solicitarCambio")
     public String convalidacionesExepciones(Model model, @AuthenticationPrincipal Alumno alumno){
             model.addAttribute("NuevaConvi",new SituacionExcepcionalFormulario());
-            model.addAttribute("asignaturas",alumno.getCurso().getAsignatura());
+            Set<Asignatura> asignaturas=new HashSet<>();
+            asignaturas.addAll(alumno.getCurso().getAsignatura());
+            model.addAttribute("asignaturas",asignaturas);
         return "Alumno/convalidacion";
     }
     @PostMapping("/nueva/solicitud/cambio")

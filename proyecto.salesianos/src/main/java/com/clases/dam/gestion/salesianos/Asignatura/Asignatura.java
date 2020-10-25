@@ -28,7 +28,7 @@ public class Asignatura {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy="asignatura")
+    @OneToMany(mappedBy="asignatura",fetch = FetchType.EAGER)
     private List<Horario> horario=new ArrayList<>();
 
     private boolean activo=true;

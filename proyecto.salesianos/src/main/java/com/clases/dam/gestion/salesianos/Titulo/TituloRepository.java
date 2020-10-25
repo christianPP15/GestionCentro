@@ -12,4 +12,6 @@ public interface TituloRepository extends JpaRepository<Titulo,Long> {
 
     @Query("Select e From Titulo e Where e.activo=true")
     List<Titulo> listaTituloActivos();
+
+
 }

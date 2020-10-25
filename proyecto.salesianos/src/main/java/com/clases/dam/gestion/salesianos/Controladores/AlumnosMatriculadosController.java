@@ -13,11 +13,18 @@ import com.clases.dam.gestion.salesianos.SolicitudAmpliacionMatricula.SolicitudA
 import com.clases.dam.gestion.salesianos.Titulo.TituloServicio;
 import com.clases.dam.gestion.salesianos.Usuario.UsuarioServicio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,6 +39,8 @@ public class AlumnosMatriculadosController {
     private CursoServicio serviCurso;
     @Autowired
     private AsignaturaServicio asignaturaServicio;
+    @Autowired
+    private ServletContext context;
     @Autowired
     private AlumnoServicio alumnoServicio;
     @Autowired
@@ -51,9 +60,12 @@ public class AlumnosMatriculadosController {
     }
 
     private List<Asignatura> ordenarListaDeAsignaturas(Curso curso) {
-        List<Asignatura> lista=curso.getAsignatura();
-        Collections.sort(lista,new AsignaturaOrdenar());
-        return lista;
+        Set<Asignatura> lista=new HashSet<>();
+        lista.addAll(curso.getAsignatura());
+        List<Asignatura> asignaturas=new ArrayList<>();
+        asignaturas.addAll(lista);
+        Collections.sort(asignaturas,new AsignaturaOrdenar());
+        return asignaturas;
     }
 
     public Map <Alumno,List<String>> agregarAlListadoElTipo(Curso curso){
@@ -102,8 +114,10 @@ public class AlumnosMatriculadosController {
     public String gestionDeUnAlumnoAprobarSuspender
             (@PathVariable("idAsig") Long idAsig,@PathVariable("idAlum") Long idAlum){
         Alumno al=alumnoServicio.findById(idAlum).get();
+        Set <Asignatura> listaAsignaturas=new HashSet<>();
+        listaAsignaturas.addAll(al.getCurso().getAsignatura());
         for (Asignatura asig:
-             al.getCurso().getAsignatura()) {
+                listaAsignaturas) {
             if(asig.getId()==idAsig){
                 if (al.getAsignaturas().contains(asig)){
                     al.removeAsignatura(asig);
@@ -121,8 +135,10 @@ public class AlumnosMatriculadosController {
 
     private Map<Asignatura,String> recorrerListaConResultados(Alumno al){
         Map<Asignatura,String> estado=new HashMap<>();
+        Set<Asignatura> asignaturas=new HashSet<>();
+        asignaturas.addAll(al.getCurso().getAsignatura());
         for (Asignatura asig:
-             al.getCurso().getAsignatura()) {
+             asignaturas) {
             if (al.getAsignaturas().contains(asig)){
                 estado.put(asig,"Aprobada");
             }else if(situacionExcepcionalServicio.buscarExistenciaTerminadaConvalidacion(asig,al).orElse(null)!=null){
@@ -134,5 +150,40 @@ public class AlumnosMatriculadosController {
             }
         }
         return estado;
+    }
+
+    @GetMapping("/createPdf/alumnos/{idAlum}")
+    public void generarPdfPeliculas(@PathVariable("idAlum") Long id,  HttpServletRequest request, HttpServletResponse response) {
+        Alumno alumno=alumnoServicio.findById(id).get();
+        boolean isFlag= AlumnoServicio.createPdf(alumno,request, response,context);
+
+        if(isFlag) {
+            String fullPath= request.getServletContext().getRealPath("/resources/reports/"+"alumno"+".pdf");
+            filedownload(fullPath,response,"alumno.pdf");
+        }
+    }
+    private void filedownload(String fullPath, HttpServletResponse response, String fileName) {
+        File file= new File(fullPath);
+        final int BUFFER_SIZE =4096;
+        if(file.exists()) {
+            try {
+                FileInputStream inputStream = new FileInputStream(file);
+                String mimeType= context.getMimeType(fullPath);
+                response.setContentType(mimeType);
+                response.setHeader("content-disposition", "attachment; filename="+ fileName);
+                OutputStream outputStream = response.getOutputStream();
+                byte [] buffer = new byte [BUFFER_SIZE];
+                int bytesRead=-1;
+                while((bytesRead = inputStream.read(buffer)) != -1 ){
+                    outputStream.write(buffer,0,bytesRead);
+                }
+                inputStream.close();
+                outputStream.close();
+                file.delete();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

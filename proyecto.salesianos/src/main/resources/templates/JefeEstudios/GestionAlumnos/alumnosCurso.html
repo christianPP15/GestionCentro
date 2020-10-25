@@ -15,8 +15,9 @@
                         <tr>
                             <th></th>
                         <div th:each="asignaturas :${listaAsignatura}">
-                                <th th:text="${asignaturas.nombreAsignatura}"></th>
+                                <th th:text="${asignaturas.nombreAsignatura}" class="textoCentradp"></th>
                         </div>
+                            <th>Generar Carnet</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -26,6 +27,7 @@
                                 <th:block th:each=" valores :${alumnos.value}">
                                     <td th:text="${valores}" class="textoCentradp"></td>
                                 </th:block>
+                                <td><a th:href="@{/createPdf/alumnos/{idAlum}(idAlum=${alumnos.key.id})}">Generar</a></td>
                             </tr>
                         </div>
                     </tbody>
