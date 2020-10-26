@@ -54,53 +54,9 @@ public class AlumnosMatriculadosController {
         //Ordenamos las asignaturas de cada alumno por orden alfabetico, y vamos mirando una a una si existe Convalidada y demás
         //Las vamos metiendo en un map que sea asignatura ordenada y resultado
         //Doble map
-        model.addAttribute("listaAsignatura",ordenarListaDeAsignaturas(serviCurso.findById(id).get()));
-        model.addAttribute("listadoAlumnos",agregarAlListadoElTipo(serviCurso.findById(id).get()));
+        model.addAttribute("listaAsignatura",asignaturaServicio.ordenarListaDeAsignaturas(serviCurso.findById(id).get()));
+        model.addAttribute("listadoAlumnos",asignaturaServicio.agregarAlListadoElTipo(serviCurso.findById(id).get()));
         return "JefeEstudios/GestionAlumnos/alumnosCurso";
-    }
-
-    private List<Asignatura> ordenarListaDeAsignaturas(Curso curso) {
-        Set<Asignatura> lista=new HashSet<>();
-        lista.addAll(curso.getAsignatura());
-        List<Asignatura> asignaturas=new ArrayList<>();
-        asignaturas.addAll(lista);
-        Collections.sort(asignaturas,new AsignaturaOrdenar());
-        return asignaturas;
-    }
-
-    public Map <Alumno,List<String>> agregarAlListadoElTipo(Curso curso){
-        List<String> resultados=new ArrayList<>();
-        int iNuevo=0;
-        int contador=0;
-        Map<Alumno,List<String>> listadoCompuesto=new HashMap<>();
-        List<String> listaAux=new ArrayList<>();
-        for (Alumno al:
-             curso.getAlumnos()) {
-            resultados.clear();
-            for (Asignatura asig:
-                 ordenarListaDeAsignaturas(curso)) {
-                if (situacionExcepcionalServicio.buscarExistenciaTerminadaConvalidacion(asig,al).orElse(null)!=null){
-                    resultados.add("Convalidada");
-                }else if (situacionExcepcionalServicio.buscarExistenciaTerminadaExcepcion(asig,al).orElse(null)!=null){
-                    resultados.add("Excepción");
-                }else if(al.getAsignaturas().contains(asig)){
-                    resultados.add("Aprob. del curso anterior");
-                }else{
-                    resultados.add("Matriculado");
-                }
-            }
-            iNuevo=resultados.size();
-            for (String componente:
-                 resultados) {
-                listaAux.add(componente);
-            }
-        }
-        for (Alumno al:
-             curso.getAlumnos()) {
-            listadoCompuesto.put(al,listaAux.subList(contador,contador+iNuevo));
-            contador+=iNuevo;
-        }
-        return listadoCompuesto;
     }
     @GetMapping("/gestion/alumno/asignaturas/{id}")
     public String gestionDeUnAlumno(@PathVariable("id") Long id,Model model){
@@ -119,7 +75,7 @@ public class AlumnosMatriculadosController {
         for (Asignatura asig:
                 listaAsignaturas) {
             if(asig.getId()==idAsig){
-                if (al.getAsignaturas().contains(asig)){
+                if(al.getAsignaturas().contains(asig)){
                     al.removeAsignatura(asig);
                     asignaturaServicio.edit(asig);
                     alumnoServicio.edit(al);
@@ -156,7 +112,6 @@ public class AlumnosMatriculadosController {
     public void generarPdfPeliculas(@PathVariable("idAlum") Long id,  HttpServletRequest request, HttpServletResponse response) {
         Alumno alumno=alumnoServicio.findById(id).get();
         boolean isFlag= AlumnoServicio.createPdf(alumno,request, response,context);
-
         if(isFlag) {
             String fullPath= request.getServletContext().getRealPath("/resources/reports/"+"alumno"+".pdf");
             filedownload(fullPath,response,"alumno.pdf");

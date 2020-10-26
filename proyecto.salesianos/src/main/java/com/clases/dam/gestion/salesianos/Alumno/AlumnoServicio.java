@@ -1,11 +1,14 @@
 package com.clases.dam.gestion.salesianos.Alumno;
 
+import com.clases.dam.gestion.salesianos.Horario.HorarioServicio;
 import com.clases.dam.gestion.salesianos.Servicios.BaseServiceImpl;
+import com.clases.dam.gestion.salesianos.SolicitudAmpliacionMatricula.SolicitudAmpliacionMatriculaServicio;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfDiv;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletContext;
@@ -20,6 +23,11 @@ import java.util.List;
 @Service
 @Transactional
 public class AlumnoServicio extends BaseServiceImpl<Alumno,Long,AlumnoRepository> {
+
+    @Autowired
+    private  static HorarioServicio horarioServicio;
+    @Autowired
+    private static SolicitudAmpliacionMatriculaServicio solicitudAmpliacionMatriculaServicio;
 
     public AlumnoServicio(AlumnoRepository repo) {
         super(repo);
@@ -74,6 +82,52 @@ public class AlumnoServicio extends BaseServiceImpl<Alumno,Long,AlumnoRepository
             div.addElement(newParagraph1);
             div.addElement(newParagraph2);
             document.add(div);
+            /*Font tableHeader = FontFactory.getFont("Arial",10,BaseColor.BLACK);
+            Font tableBody = FontFactory.getFont("Arial",9,BaseColor.BLACK);
+            PdfPTable table =new PdfPTable(5);
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(10f);
+            table.setSpacingAfter(10);
+            float [] columWidth = {3f,3f,3f,3f,3f};
+            table.setWidths(columWidth);
+            PdfPCell lunes= new PdfPCell(new Paragraph("Lunes",tableHeader));
+            lunes.setBorderColor(BaseColor.BLACK);
+            lunes.setPaddingLeft(10);
+            lunes.setHorizontalAlignment(Element.ALIGN_CENTER);
+            lunes.setVerticalAlignment(Element.ALIGN_CENTER);
+            lunes.setBackgroundColor(BaseColor.GRAY);
+            table.addCell(lunes);
+            PdfPCell martes= new PdfPCell(new Paragraph("Martes",tableHeader));
+            martes.setBorderColor(BaseColor.BLACK);
+            martes.setPaddingLeft(10);
+            martes.setHorizontalAlignment(Element.ALIGN_CENTER);
+            martes.setVerticalAlignment(Element.ALIGN_CENTER);
+            martes.setBackgroundColor(BaseColor.GRAY);
+            table.addCell(martes);
+            PdfPCell miercoles= new PdfPCell(new Paragraph("Miércoles",tableHeader));
+            miercoles.setBorderColor(BaseColor.BLACK);
+            miercoles.setPaddingLeft(10);
+            miercoles.setHorizontalAlignment(Element.ALIGN_CENTER);
+            miercoles.setVerticalAlignment(Element.ALIGN_CENTER);
+            miercoles.setBackgroundColor(BaseColor.GRAY);
+            table.addCell(miercoles);
+            PdfPCell jueves= new PdfPCell(new Paragraph("Jueves",tableHeader));
+            jueves.setBorderColor(BaseColor.BLACK);
+            jueves.setPaddingLeft(10);
+            jueves.setHorizontalAlignment(Element.ALIGN_CENTER);
+            jueves.setVerticalAlignment(Element.ALIGN_CENTER);
+            jueves.setBackgroundColor(BaseColor.GRAY);
+            table.addCell(jueves);
+            PdfPCell viernes= new PdfPCell(new Paragraph("Viernes",tableHeader));
+            viernes.setBorderColor(BaseColor.BLACK);
+            viernes.setPaddingLeft(10);
+            viernes.setHorizontalAlignment(Element.ALIGN_CENTER);
+            viernes.setVerticalAlignment(Element.ALIGN_CENTER);
+            viernes.setBackgroundColor(BaseColor.GRAY);
+            table.addCell(viernes);
+
+            System.out.println(horarioServicio.ordenarFinal(horarioServicio.horariosPorAlumno(al,solicitudAmpliacionMatriculaServicio.findAll())));*/
+
             document.close();
             writer.close();
             return true;
