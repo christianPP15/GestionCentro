@@ -111,10 +111,10 @@ public class AlumnosMatriculadosController {
     @GetMapping("/createPdf/alumnos/{idAlum}")
     public void generarPdfPeliculas(@PathVariable("idAlum") Long id,  HttpServletRequest request, HttpServletResponse response) {
         Alumno alumno=alumnoServicio.findById(id).get();
-        boolean isFlag= AlumnoServicio.createPdf(alumno,request, response,context);
+        boolean isFlag= AlumnoServicio.createPdf(alumno,horarioServicio,solicitudAmpliacionMatriculaServicio,request, response,context);
         if(isFlag) {
-            String fullPath= request.getServletContext().getRealPath("/resources/reports/"+"alumno"+".pdf");
-            filedownload(fullPath,response,"alumno.pdf");
+            String fullPath= request.getServletContext().getRealPath("/resources/reports/"+alumno.getNombre()+"_"+alumno.getApellidos()+".pdf");
+            filedownload(fullPath,response,alumno.getNombre()+"_"+alumno.getApellidos()+".pdf");
         }
     }
     private void filedownload(String fullPath, HttpServletResponse response, String fileName) {

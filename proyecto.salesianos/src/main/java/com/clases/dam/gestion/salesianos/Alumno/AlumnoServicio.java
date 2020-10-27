@@ -1,5 +1,6 @@
 package com.clases.dam.gestion.salesianos.Alumno;
 
+import com.clases.dam.gestion.salesianos.Horario.Horario;
 import com.clases.dam.gestion.salesianos.Horario.HorarioServicio;
 import com.clases.dam.gestion.salesianos.Servicios.BaseServiceImpl;
 import com.clases.dam.gestion.salesianos.SolicitudAmpliacionMatricula.SolicitudAmpliacionMatriculaServicio;
@@ -24,10 +25,7 @@ import java.util.List;
 @Transactional
 public class AlumnoServicio extends BaseServiceImpl<Alumno,Long,AlumnoRepository> {
 
-    @Autowired
-    private  static HorarioServicio horarioServicio;
-    @Autowired
-    private static SolicitudAmpliacionMatriculaServicio solicitudAmpliacionMatriculaServicio;
+
 
     public AlumnoServicio(AlumnoRepository repo) {
         super(repo);
@@ -37,7 +35,7 @@ public class AlumnoServicio extends BaseServiceImpl<Alumno,Long,AlumnoRepository
     return this.repositorio.alumnos();
     }
 
-    public static boolean createPdf(Alumno al, HttpServletRequest request,
+    public static boolean createPdf(Alumno al, HorarioServicio horarioServicio, SolicitudAmpliacionMatriculaServicio solicitudAmpliacionMatriculaServicio, HttpServletRequest request,
                                     HttpServletResponse response, ServletContext context) {
         Document document = new Document(PageSize.A4,15,15,45,30);
         try {
@@ -47,7 +45,7 @@ public class AlumnoServicio extends BaseServiceImpl<Alumno,Long,AlumnoRepository
             if(!exists) {
                 new File(filePath).mkdirs();
             }
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file+"/"+"alumno"+".pdf"));
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file+"/"+al.getNombre()+"_"+al.getApellidos()+".pdf"));
             document.open();
 
             Font mainFont = FontFactory.getFont("Arial",10, BaseColor.BLACK);
@@ -82,7 +80,7 @@ public class AlumnoServicio extends BaseServiceImpl<Alumno,Long,AlumnoRepository
             div.addElement(newParagraph1);
             div.addElement(newParagraph2);
             document.add(div);
-            /*Font tableHeader = FontFactory.getFont("Arial",10,BaseColor.BLACK);
+            Font tableHeader = FontFactory.getFont("Arial",10,BaseColor.BLACK);
             Font tableBody = FontFactory.getFont("Arial",9,BaseColor.BLACK);
             PdfPTable table =new PdfPTable(5);
             table.setWidthPercentage(100);
@@ -125,9 +123,35 @@ public class AlumnoServicio extends BaseServiceImpl<Alumno,Long,AlumnoRepository
             viernes.setVerticalAlignment(Element.ALIGN_CENTER);
             viernes.setBackgroundColor(BaseColor.GRAY);
             table.addCell(viernes);
-
-            System.out.println(horarioServicio.ordenarFinal(horarioServicio.horariosPorAlumno(al,solicitudAmpliacionMatriculaServicio.findAll())));*/
-
+            PdfDiv div2=new PdfDiv();
+            div2.setBackgroundColor(BaseColor.CYAN);
+            div2.setBorderTopStyle(PdfDiv.BorderTopStyle.SOLID);
+            div2.setWidth(400f);
+            div2.setPaddingTop(30f);
+            div2.setTextAlignment(Element.ALIGN_CENTER);
+            for (List<Horario> lista:
+            horarioServicio.ordenarFinal(horarioServicio.horariosPorAlumno(al,solicitudAmpliacionMatriculaServicio.findAll()))) {
+                for (Horario hora:
+                     lista) {
+                    if (hora.getAsignatura()!=null){
+                        PdfPCell lunesValue=new PdfPCell(new Paragraph(hora.getAsignatura().getNombreAsignatura(),tableBody));
+                        lunesValue.setBorderColor(BaseColor.BLACK);
+                        lunesValue.setPaddingLeft(10);
+                        lunesValue.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        lunesValue.setVerticalAlignment(Element.ALIGN_CENTER);
+                        table.addCell(lunesValue);
+                    }else {
+                        PdfPCell lunesValue=new PdfPCell(new Paragraph("X",tableBody));
+                        lunesValue.setBorderColor(BaseColor.BLACK);
+                        lunesValue.setPaddingLeft(10);
+                        lunesValue.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        lunesValue.setVerticalAlignment(Element.ALIGN_CENTER);
+                        table.addCell(lunesValue);
+                    }
+                }
+            }
+            div2.addElement(table);
+            document.add(div2);
             document.close();
             writer.close();
             return true;
