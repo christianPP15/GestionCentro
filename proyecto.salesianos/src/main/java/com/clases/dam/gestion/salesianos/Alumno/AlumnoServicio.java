@@ -45,7 +45,7 @@ public class AlumnoServicio extends BaseServiceImpl<Alumno,Long,AlumnoRepository
             if(!exists) {
                 new File(filePath).mkdirs();
             }
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file+"/"+"alumno"+".pdf"));
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(file+"/"+al.getNombre()+"_"+al.getApellidos()+".pdf"));
             document.open();
 
             Font mainFont = FontFactory.getFont("Arial",10, BaseColor.BLACK);
