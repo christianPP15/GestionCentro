@@ -50,12 +50,10 @@ public class ControladorInicio {
     @PostMapping("/submit/codigo")
     public String confirmarCódigo(@ModelAttribute("codigo") CodigoActivacion codigo,
                                   @AuthenticationPrincipal Usuario usuarioLog, BCryptPasswordEncoder encode){
-        if(usuarioLog.getCodigoSeguridad().contentEquals(codigo.getCodigo())){
+
             usuarioLog.setPrimeraVez(true);
             usuarioLog.setPassword(encode.encode(codigo.getContra()));
-            usuarioLog.setCodigoSeguridad(null);
             serviUsu.edit(usuarioLog);
-        }
             return "redirect:/index";
     }
 

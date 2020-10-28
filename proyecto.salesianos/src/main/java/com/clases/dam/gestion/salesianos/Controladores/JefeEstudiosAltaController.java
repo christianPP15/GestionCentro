@@ -58,16 +58,17 @@ public class JefeEstudiosAltaController {
 
     @PostMapping("/submit/nuevo/jefe/estudio")
     public String nuevoJefeEstudiosCompleto(@ModelAttribute("usuario") Profesor usuario, BCryptPasswordEncoder passwordEncoder) throws MessagingException {
+        String codigo=generarCódigo();
         Usuario usu= new Profesor(usuario.getNombre(),usuario.getApellidos()
-                ,usuario.getEmail(),passwordEncoder.encode("1234"),generarCódigo(),true);
+                ,usuario.getEmail(),passwordEncoder.encode(codigo),true);
         serviUsuario.save(usu);
 
         try {
             Mail m = new Mail("Config/configuracion.properties");
 
             m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
-                    " ingrese este código la primera vez que acceda a la web: "+usu.getCodigoSeguridad()
-                    +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());
+                    " ingrese este código como contraseña la primera vez que acceda a la web: "+codigo
+                    +".\nDeberá cambiarla la primera vez que acceda", usu.getEmail());
 
         } catch (InvalidParameterException | MessagingException | IOException ex) {
             System.out.println(ex.getMessage());
@@ -76,16 +77,17 @@ public class JefeEstudiosAltaController {
     }
     @PostMapping("/submit/nuevo/jefe/profesor")
     public String nuevoProfesorCompleto(@ModelAttribute("usuario") Profesor usuario, BCryptPasswordEncoder passwordEncoder) throws MessagingException {
+        String codigo=generarCódigo();
         Usuario usu= new Profesor(usuario.getNombre(),usuario.getApellidos()
-                ,usuario.getEmail(),passwordEncoder.encode("1234"),generarCódigo(),false);
+                ,usuario.getEmail(),passwordEncoder.encode(codigo),false);
         serviUsuario.save(usu);
 
         try {
             Mail m = new Mail("Config/configuracion.properties");
 
             m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
-                    " ingrese este código la primera vez que acceda a la web: "+usu.getCodigoSeguridad()
-                    +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());
+                    " ingrese este código como contraseña la primera vez que acceda a la web: "+codigo
+                    +".\nDeberá cambiarla la primera vez que accede", usu.getEmail());
 
         } catch (InvalidParameterException | MessagingException | IOException ex) {
             System.out.println(ex.getMessage());
@@ -94,8 +96,9 @@ public class JefeEstudiosAltaController {
     }
     @PostMapping("/submit/nuevo/jefe/alumno")
     public String nuevoAlumnoCompleto(@ModelAttribute("usuario") NuevoAlumnoFormulario usuario, BCryptPasswordEncoder passwordEncoder) throws MessagingException {
+        String codigo=generarCódigo();
         Alumno usu= new Alumno(usuario.getNombre(),usuario.getApellidos()
-                ,usuario.getEmail(),passwordEncoder.encode("1234"),generarCódigo());
+                ,usuario.getEmail(),passwordEncoder.encode(codigo));
         serviUsuario.save(usu);
         Curso aux=serviCurso.findById(usuario.getId()).get();
         aux.addAlumno(usu);
@@ -105,8 +108,8 @@ public class JefeEstudiosAltaController {
             Mail m = new Mail("Config/configuracion.properties");
 
             m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
-                    " ingrese este código la primera vez que acceda a la web: "+usu.getCodigoSeguridad()
-                    +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());
+                    " ingrese este código como contraseña la primera vez que acceda a la web: "+codigo
+                    +".\nDeberá cambiarla la primera vez que accede", usu.getEmail());
 
         } catch (InvalidParameterException | MessagingException | IOException ex) {
             System.out.println(ex.getMessage());
@@ -123,13 +126,14 @@ public class JefeEstudiosAltaController {
             br = new BufferedReader(new InputStreamReader(is));
             while ((line = br.readLine()) != null) {
                 String [] values=line.split(",");
-                Usuario usu=new Profesor(values[0],values[1],values[2],passwordEncoder.encode("1234"),generarCódigo(),true);
+                String codigo=generarCódigo();
+                Usuario usu=new Profesor(values[0],values[1],values[2],passwordEncoder.encode(codigo),true);
                 serviUsuario.save(usu);
                 Mail m = new Mail("Config/configuracion.properties");
 
                 m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
-                        " ingrese este código la primera vez que acceda a la web: "+usu.getCodigoSeguridad()
-                        +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());
+                        " ingrese este código como contraseña la primera vez que acceda a la web: "+codigo
+                        +".\nDeberá cambiarla la primera vez que accede", usu.getEmail());
             }
 
         } catch (InvalidParameterException | MessagingException | IOException e) {
@@ -146,13 +150,14 @@ public class JefeEstudiosAltaController {
             br = new BufferedReader(new InputStreamReader(is));
             while ((line = br.readLine()) != null) {
                 String [] values=line.split(",");
-                Usuario usu=new Profesor(values[0],values[1],values[2],passwordEncoder.encode("1234"),generarCódigo(),false);
+                String codigo=generarCódigo();
+                Usuario usu=new Profesor(values[0],values[1],values[2],passwordEncoder.encode(codigo),false);
                 serviUsuario.save(usu);
                 Mail m = new Mail("Config/configuracion.properties");
 
                 m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
-                        " ingrese este código la primera vez que acceda a la web: "+usu.getCodigoSeguridad()
-                        +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());
+                        " ingrese este código como contraseña la primera vez que acceda a la web: "+codigo
+                        +".\nDeberá cambiarla la primera vez que accede", usu.getEmail());
             }
 
         } catch (InvalidParameterException | MessagingException | IOException e) {
@@ -170,14 +175,15 @@ public class JefeEstudiosAltaController {
             br = new BufferedReader(new InputStreamReader(is));
             while ((line = br.readLine()) != null) {
                 String [] values=line.split(",");
+                String codigo=generarCódigo();
                 if(serviCurso.findFirstBynombre(values[3],serviTitulo.findFirstBynombre(values[4]).get()).get()!=null){
-                    Usuario usu=new Alumno(values[0],values[1],values[2],passwordEncoder.encode("1234"),generarCódigo(),serviCurso.findFirstBynombre(values[3],serviTitulo.findFirstBynombre(values[4]).get()).get());
+                    Usuario usu=new Alumno(values[0],values[1],values[2],passwordEncoder.encode(codigo),serviCurso.findFirstBynombre(values[3],serviTitulo.findFirstBynombre(values[4]).get()).get());
                     serviUsuario.save(usu);
                    Mail m = new Mail("Config/configuracion.properties");
 
                     m.enviarEmail("Código de acceso", "Bienvenido a la web de gestión Salesianos Triana" +
-                            " ingrese este código la primera vez que acceda a la web: "+usu.getCodigoSeguridad()
-                            +".\nLa contraseña por defecto es '1234' deberá cambiarla la primera vez que accede", usu.getEmail());
+                            " ingrese este código como contraseña la primera vez que acceda a la web: "+codigo
+                            +".\nDeberá cambiarla la primera vez que accede", usu.getEmail());
                 }
             }
 

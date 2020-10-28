@@ -37,18 +37,15 @@ public class Alumno extends Usuario {
         a.getAlumnos().remove(this);
     }
 
-    public Alumno(String nombre, String apellidos, String email, String password, String codigoSeguridad) {
-        super(nombre, apellidos, email, password, codigoSeguridad);
-    }
-
-    public Alumno(String nombre, String apellidos, String email, String password, String codigoSeguridad, Curso curso) {
-        super(nombre, apellidos, email, password, codigoSeguridad);
-        this.curso = curso;
-    }
-
     public Alumno(String nombre, String apellidos, String email, String password) {
         super(nombre, apellidos, email, password);
     }
+
+    public Alumno(String nombre, String apellidos, String email, String password, Curso curso) {
+        super(nombre, apellidos, email, password);
+        this.curso = curso;
+    }
+
 
     public Alumno(String nombre, String apellidos, String email, String password, boolean primeraVez) {
         super(nombre, apellidos, email, password, primeraVez);
