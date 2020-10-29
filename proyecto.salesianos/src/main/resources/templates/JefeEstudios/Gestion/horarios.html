@@ -8,8 +8,9 @@
 <body>
 <nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
 <main id="infoCurso">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
+            <div class="col-2"></div>
             <div class="col-3">
                 <a th:href="@{/jefe/estudios/asignatura/{id}(id=${IdAsignatura})}"> <p class="noEnlace">Volver atras</p><img th:src="@{/img/return.png}"></a>
             </div>
@@ -77,6 +78,6 @@
         </div>
     </div>
 </main>
-<footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
+
 </body>
 </html>>

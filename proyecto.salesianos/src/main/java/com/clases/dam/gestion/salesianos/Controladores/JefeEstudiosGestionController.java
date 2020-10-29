@@ -86,7 +86,7 @@ public class JefeEstudiosGestionController {
         if (serviTitulo.findById(titulo.getId()).orElse(null)!=null){
             Titulo t=serviTitulo.findById(titulo.getId()).get();
             t.setNombre(titulo.getNombre());
-            serviTitulo.edit(titulo);
+            serviTitulo.edit(t);
         }else{
             serviTitulo.save(titulo);
         }

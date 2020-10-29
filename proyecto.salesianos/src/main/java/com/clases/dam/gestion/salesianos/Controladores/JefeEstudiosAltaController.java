@@ -205,7 +205,7 @@ public class JefeEstudiosAltaController {
         forma=(int)(aleatorio.nextDouble() * alfa.length()-1+0);
         numero=(int)(aleatorio.nextDouble() * 99+100);
 
-        cadena=cadena+alfa.charAt(forma)+numero;
+        cadena=cadena+alfa.charAt(forma)+numero+alfa.charAt(forma);
 
         return cadena;
     }
