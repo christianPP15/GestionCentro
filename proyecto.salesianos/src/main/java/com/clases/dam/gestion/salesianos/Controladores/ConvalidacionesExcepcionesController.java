@@ -15,8 +15,6 @@ import com.clases.dam.gestion.salesianos.SituacionExcepcional.SituacionExcepcion
 import com.clases.dam.gestion.salesianos.SituacionExcepcional.SituacionExcepcionald;
 import com.clases.dam.gestion.salesianos.Titulo.TituloServicio;
 import com.clases.dam.gestion.salesianos.Usuario.UsuarioServicio;
-import com.clases.dam.gestion.salesianos.proveedorId.ProveedorId;
-import com.clases.dam.gestion.salesianos.proveedorId.ProveedorIdServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -59,8 +57,7 @@ public class ConvalidacionesExcepcionesController {
     private AsignaturaServicio asignaturaServicio;
     @Autowired
     private HorarioServicio horarioServicio;
-    @Autowired
-    private ProveedorIdServicio proveedorIdServicio;
+
     @Autowired
     private AlumnoServicio alumnoServicio;
     @GetMapping("/solicitarCambio")
@@ -78,13 +75,19 @@ public class ConvalidacionesExcepcionesController {
             situacionExcepcionalServicio.delete(situacionExcepcionalServicio.buscarExistencia(asignaturaServicio.findById(situacionExcepcional.getIdAsignatura()).get(),alumnoServicio.findById(alumno.getId()).get()).get());
         }
         SituacionExcepcionald id=new SituacionExcepcionald(situacionExcepcional.getIdAsignatura(),alumno.getId());
-        ProveedorId proveedorId=new ProveedorId();
-        proveedorIdServicio.save(proveedorId);
+
         SituacionExcepcional situacionExcepcional1=new SituacionExcepcional(id,asignaturaServicio.findById(situacionExcepcional.getIdAsignatura()).get()
-                ,alumno, LocalDateTime.now(),proveedorId,situacionExcepcional.isTipo(),false);
+                ,alumno, LocalDateTime.now(),situacionExcepcional.isTipo(),false);
         situacionExcepcionalServicio.save(situacionExcepcional1);
+        String valor;
+        if (situacionExcepcional1.isTipo()){
+            valor="Excepcion";
+        }else{
+             valor="Convalidacion";
+        }
+        String idArchivo=alumno.getNombre()+"_"+alumno.getApellidos()+"_"+situacionExcepcional1.getAsignatura().getNombreAsignatura()+"_"+valor;
         if (!file.isEmpty()) {
-            String avatar = storageService.store(file, situacionExcepcional1.getIdAux().getId());
+            String avatar = storageService.store(file, idArchivo);
             situacionExcepcional1.setAdjunto(MvcUriComponentsBuilder
                     .fromMethodName(ConvalidacionesExcepcionesController.class, "serveFile", avatar).build().toUriString());
             situacionExcepcionalServicio.edit(situacionExcepcional1);

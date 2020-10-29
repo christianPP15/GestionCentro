@@ -10,10 +10,12 @@
 <main>
     <div class="container">
         <div class="row">
-            <div class="col-3"></div>
-            <div class="col-6">
+            <div class="col-1"></div>
+            <div class="col-8">
+                <br><br>
                 <div>
-                    <h5 class="h5">El alumno con nombre <span th:text="${solicitudes.alumno.nombre}"></span>
+                    <h5 class="h5">El alumno con nombre <span th:text="${solicitudes.alumno.nombre}"></span> y apellidos
+                        <span th:text="${solicitudes.alumno.apellidos}"></span>
                     solicita la <span th:text="${solicitudes.tipo} ? excepción : convalidación"></span>
                         para la asignatura de <span th:text="' '+${solicitudes.asignatura.nombreAsignatura}"></span>
                         adjuntando la siguiente documentación:
@@ -25,11 +27,11 @@
                     </a>
                 </div>
             </div>
-            <div class="col-3"></div>
+            <div class="col-1"></div>
         </div>
         <div class="row">
-            <div class="col-3"></div>
-            <div class="col-6">
+            <div class="col-1"></div>
+            <div class="col-8">
                 <form method="post" th:object="${informacion}" th:action="@{/descargar/completado/final}">
                     <div class="form-group">
                         <label for="mensaje">Mensaje:</label>
@@ -51,7 +53,7 @@
                     <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center"/>
                 </form>
             </div>
-            <div class="col-3"></div>
+            <div class="col-1"></div>
         </div>
     </div>
     <span th:text="${solicitudes.alumno.id}" hidden id="spanId"></span>

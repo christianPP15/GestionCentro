@@ -26,10 +26,10 @@
                             <td th:text="${asignaturas.key.nombreAsignatura}"></td>
                             <td>
                                 <th:block th:if="${asignaturas.value}== 'Cancelar'">
-                                    <span th:text="${asignaturas.value}"></span>
+                                    <a th:href="@{/convalidar/{idAsig}/completo/{idAlum}(idAsig=${asignaturas.key.id},idAlum=${alumno.id})}"><span th:text="${asignaturas.value}" class="noEnlace"></span></a>
                                 </th:block>
                                 <th:block th:if="${asignaturas.value}== 'Matriculado'">
-                                    <a th:href="@{/convalidar/{idAsig}/completo/{idAlum}(idAsig=${asignaturas.key.id},idAlum=${alumno.id})}"><span th:text="${asignaturas.value}" class="noEnlace"></span></a>
+                                    <span th:text="${asignaturas.value}" class="noEnlace"></span>
                                 </th:block>
                                 <th:block th:if="${asignaturas.value}== 'Matricular'">
                                     <a th:href="@{/convalidar/{idAsig}/completo/{idAlum}(idAsig=${asignaturas.key.id},idAlum=${alumno.id})}"><span th:text="${asignaturas.value}" class="noEnlace"></span></a>

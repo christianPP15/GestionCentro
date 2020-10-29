@@ -42,9 +42,6 @@
                     <li class="nav-item active" sec:authorize="hasRole('ROLE_ADMIN')"><a href="/aceptar/solicitudes/ampliacion/matricula" class="nav-link">Ampliaciones De Matriculas</a></li>
                 </ul>
             </div>
-            <div class="form-inline" sec:authorize="not isAuthenticated()">
-                <a href="/login" class="btn btn-dark">Iniciar Sesión</a>
-            </div>
             <div class="form-inline" sec:authorize="hasRole('ROLE_ADMIN')">
                 <a href="/login" class="btn btn-dark">Salir</a>
             </div>
