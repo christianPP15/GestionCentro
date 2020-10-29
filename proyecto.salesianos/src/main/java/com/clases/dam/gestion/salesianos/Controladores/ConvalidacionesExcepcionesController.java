@@ -125,7 +125,7 @@ public class ConvalidacionesExcepcionesController {
         try {
             Mail m = new Mail("Config/configuracion.properties");
 
-            m.enviarEmail("Desición sobre la solicitud"+tipo+" para la asignatura "+aux.getAsignatura().getNombreAsignatura()
+            m.enviarEmail("Desición sobre la solicitud "+tipo+" para la asignatura "+aux.getAsignatura().getNombreAsignatura()
                     ,"Se le comunica que la solicitud de "+ tipo+" ha sido "
                             +resolucion+"\nMensaje del centro: "+info.getMensaje()
                     ,aux.getAlumno().getEmail());
