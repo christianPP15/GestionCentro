@@ -28,7 +28,7 @@
                     <tbody>
                         <tr th:each=" asignatura : ${asignaturas}">
                            <td th:text="${asignatura.key.nombreAsignatura}"></td>
-                            <td>
+                            <td >
                                 <th:block th:if="${asignatura.value}=='Convalidada'">
                                     <span th:text="${asignatura.value}"></span>
                                 </th:block>
