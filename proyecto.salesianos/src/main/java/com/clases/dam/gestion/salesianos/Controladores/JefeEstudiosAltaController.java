@@ -73,7 +73,7 @@ public class JefeEstudiosAltaController {
         } catch (InvalidParameterException | MessagingException | IOException ex) {
             System.out.println(ex.getMessage());
         }
-        return "redirect:/index";
+        return "redirect:/gestion";
     }
     @PostMapping("/submit/nuevo/jefe/profesor")
     public String nuevoProfesorCompleto(@ModelAttribute("usuario") Profesor usuario, BCryptPasswordEncoder passwordEncoder) throws MessagingException {
@@ -92,7 +92,7 @@ public class JefeEstudiosAltaController {
         } catch (InvalidParameterException | MessagingException | IOException ex) {
             System.out.println(ex.getMessage());
         }
-        return "redirect:/index";
+        return "redirect:/gestion";
     }
     @PostMapping("/submit/nuevo/jefe/alumno")
     public String nuevoAlumnoCompleto(@ModelAttribute("usuario") NuevoAlumnoFormulario usuario, BCryptPasswordEncoder passwordEncoder) throws MessagingException {
@@ -114,7 +114,7 @@ public class JefeEstudiosAltaController {
         } catch (InvalidParameterException | MessagingException | IOException ex) {
             System.out.println(ex.getMessage());
         }
-        return "redirect:/index";
+        return "redirect:/gestion";
     }
     @PostMapping("/submit/nuevo/jefe/estudio/csv")
     public String nuevoJefeEstudiosCompletoCsv(@RequestParam("file") MultipartFile file, BCryptPasswordEncoder passwordEncoder)  throws IOException {
@@ -139,7 +139,7 @@ public class JefeEstudiosAltaController {
         } catch (InvalidParameterException | MessagingException | IOException e) {
             System.err.println(e.getMessage());
         }
-        return "redirect:/index";
+        return "redirect:/gestion";
     }
     @PostMapping("/submit/nuevo/jefe/profesor/csv")
     public String nuevoProfesorCompletoCsv(@RequestParam("file") MultipartFile file, BCryptPasswordEncoder passwordEncoder)  throws IOException {
@@ -163,7 +163,7 @@ public class JefeEstudiosAltaController {
         } catch (InvalidParameterException | MessagingException | IOException e) {
             System.err.println(e.getMessage());
         }
-        return "redirect:/index";
+        return "redirect:/gestion";
     }
 
     @PostMapping("/submit/nuevo/jefe/alumno/csv")
@@ -190,7 +190,7 @@ public class JefeEstudiosAltaController {
         } catch (InvalidParameterException | IOException | MessagingException e) {
             System.err.println(e.getMessage());
         }
-        return "redirect:/index";
+        return "redirect:/gestion";
     }
     private String generarCódigo(){
         Random aleatorio = new Random();

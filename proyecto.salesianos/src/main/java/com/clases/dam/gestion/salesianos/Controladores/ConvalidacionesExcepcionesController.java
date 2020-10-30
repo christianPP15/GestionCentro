@@ -93,7 +93,7 @@ public class ConvalidacionesExcepcionesController {
             situacionExcepcionalServicio.edit(situacionExcepcional1);
         }
 
-        return "redirect:/index";
+        return "redirect:/gestion";
     }
     @GetMapping("/aceptar/solicitudes")
     public String solicitudesAceptacion(Model model){

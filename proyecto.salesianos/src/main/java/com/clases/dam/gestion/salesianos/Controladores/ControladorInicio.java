@@ -54,7 +54,12 @@ public class ControladorInicio {
             usuarioLog.setPrimeraVez(true);
             usuarioLog.setPassword(encode.encode(codigo.getContra()));
             serviUsu.edit(usuarioLog);
-            return "redirect:/index";
+            if (usuarioLog instanceof Alumno){
+                return "redirect:/index";
+            }else{
+                return "redirect:/gestion";
+            }
+
     }
 
 }
