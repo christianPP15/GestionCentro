@@ -1,0 +1,2 @@
+Estos datos son los que están actualmente en la base de datos, para probar la subida de csv puede borrar los datos actuales e insertarlos de nuevo 
+o bien crear nuevos datos

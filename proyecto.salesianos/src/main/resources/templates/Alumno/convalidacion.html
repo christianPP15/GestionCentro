@@ -44,7 +44,7 @@
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="inputGroupSelect01">Asignatura</label>
                         </div>
-                        <select class="custom-select" id="inputGroupSelect01" th:field="*{idAsignatura}">
+                        <select class="custom-select" id="inputGroupSelect01" th:field="*{idAsignatura}" required>
                             <option value="LUN" th:value="null"  >Elegir...</option>
                             <div th:each="asignaturas :${asignaturas}">
                                 <option  th:value="${asignaturas.id}" th:text="${asignaturas.nombreAsignatura}"></option>

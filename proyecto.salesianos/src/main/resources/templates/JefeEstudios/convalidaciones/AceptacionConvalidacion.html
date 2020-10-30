@@ -23,11 +23,13 @@
                     </thead>
                     <tbody>
                     <th:block th:each="solicitudes :${convalidaciones}">
+                        <tr>
                         <td th:text="${solicitudes.alumno.nombre}"></td>
                         <td th:text="${solicitudes.alumno.apellidos}"></td>
                         <td th:text="${solicitudes.tipo} ? Excepción : Convalidación"></td>
                         <td th:text="' '+${solicitudes.asignatura.nombreAsignatura}"></td>
                         <td><a th:href="@{/descargar/{idAlumno}/info/{idAsignatura}(idAsignatura=${solicitudes.asignatura.id},idAlumno=${solicitudes.alumno.id})}"><img th:src="@{/img/flecha-right.png}"></a></td>
+                        </tr>
                     </th:block>
                     </tbody>
                 </table>
