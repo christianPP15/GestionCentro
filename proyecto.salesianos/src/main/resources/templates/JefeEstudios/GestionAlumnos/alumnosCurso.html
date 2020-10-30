@@ -7,24 +7,31 @@
 </head>
 <body>
 <nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
-<main>
-    <div class="container">
+<main class="container">
         <div class="row">
-
             <div class="col-12">
                 <table class="table">
                     <thead>
                         <tr>
                             <th></th>
                         <div th:each="asignaturas :${listaAsignatura}">
-                                <th th:text="${asignaturas.nombreAsignatura}"></th>
+                                <th th:text="${asignaturas.nombreAsignatura}" class="textoCentradp"></th>
                         </div>
+                            <th sec:authorize="hasRole('ROLE_ADMIN')">Generar Carnet</th>
                         </tr>
                     </thead>
                     <tbody>
                         <div th:each="alumnos :${listadoAlumnos}">
-                            <tr>
-                            <td><span th:text="${alumnos.key.nombre}"></span><span th:text="${alumnos.key.apellidos}"></span></td>
+                            <tr sec:authorize="hasRole('ROLE_ADMIN')">
+                            <td><a th:href="@{/gestion/alumno/asignaturas/{id} (id=${alumnos.key.id})}"><span th:text="${alumnos.key.nombre}+ ' '"></span><span th:text="${alumnos.key.apellidos}"></span></a></td>
+                                <th:block th:each=" valores :${alumnos.value}">
+                                    <td th:text="${valores}" class="textoCentradp"></td>
+                                </th:block>
+                                <td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/createPdf/alumnos/{idAlum}(idAlum=${alumnos.key.id})}">Generar</a></td>
+                            </tr>
+
+                            <tr sec:authorize="hasRole('ROLE_PROFESOR')">
+                                <td><span th:text="${alumnos.key.nombre}+ ' '"></span><span th:text="${alumnos.key.apellidos}"></span></td>
                                 <th:block th:each=" valores :${alumnos.value}">
                                     <td th:text="${valores}" class="textoCentradp"></td>
                                 </th:block>
@@ -34,8 +41,7 @@
                 </table>
             </div>
         </div>
-    </div>
 </main>
-<footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
+
 </body>
 </html>

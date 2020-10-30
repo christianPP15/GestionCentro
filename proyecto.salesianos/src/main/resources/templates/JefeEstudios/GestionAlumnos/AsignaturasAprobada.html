@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragmentos/FragmentoHead :: header_comun(~{::title},~{::link})">
+    <meta charset="UTF-8">
+    <title>Asignaturas de un alumno</title>
+    <link rel="stylesheet" href="../css/css.css" th:href="@{/css/css.css}">
+</head>
+<body>
+<nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-3">
+                <h3 class="h3"><span th:text="${Alumno.nombre}+ ' ' "></span> <span th:text="${Alumno.apellidos}"></span></h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Marcar como aprobada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each=" asignatura : ${asignaturas}">
+                           <td th:text="${asignatura.key.nombreAsignatura}"></td>
+                            <td >
+                                <th:block th:if="${asignatura.value}=='Convalidada'">
+                                    <span th:text="${asignatura.value}"></span>
+                                </th:block>
+                                <th:block th:if="${asignatura.value}=='Excepción'">
+                                    <span th:text="${asignatura.value}"></span>
+                                </th:block>
+                                <th:block th:if="${asignatura.value}=='Aprobada'">
+                                    <a th:href="@{/marcar/asignatura/{idAsig}/aprobada/{idAlum} (idAsig=${asignatura.key.id},idAlum=${Alumno.id})}">
+                                        <span>Aprobada</span>
+                                    </a>
+                                </th:block>
+                                <th:block th:if="${asignatura.value}=='Matriculado'">
+                                    <a th:href="@{/marcar/asignatura/{idAsig}/aprobada/{idAlum} (idAsig=${asignatura.key.id},idAlum=${Alumno.id})}">
+                                        <span>Matriculado</span>
+                                    </a>
+                                </th:block>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-2"></div>
+    </div>
+</main>
+
+</body>
+</html>

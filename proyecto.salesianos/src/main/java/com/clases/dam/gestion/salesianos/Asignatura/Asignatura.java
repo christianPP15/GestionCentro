@@ -21,11 +21,17 @@ public class Asignatura {
     @ManyToOne
     private Curso curso;
 
-    private boolean aprobada=false;
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy="asignatura")
+    @ManyToMany(mappedBy="asignaturas")
+    private List<Alumno> alumnos = new ArrayList<>();
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy="asignatura",fetch = FetchType.EAGER)
     private List<Horario> horario=new ArrayList<>();
+
+    private boolean activo=true;
 
     public void addHorario(Horario a) {
         this.horario.add(a);

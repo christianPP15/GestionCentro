@@ -16,8 +16,10 @@ public class Titulo {
     private String nombre;
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy="titulos", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="titulos", fetch =FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Curso> cursos=new ArrayList<>();
+
+    private boolean activo=true;
 
     public void addCurso(Curso a) {
         this.cursos.add(a);

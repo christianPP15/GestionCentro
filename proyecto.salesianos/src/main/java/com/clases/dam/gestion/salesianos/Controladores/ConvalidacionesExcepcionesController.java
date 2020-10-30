@@ -2,6 +2,7 @@ package com.clases.dam.gestion.salesianos.Controladores;
 
 import com.clases.dam.gestion.salesianos.Alumno.Alumno;
 import com.clases.dam.gestion.salesianos.Alumno.AlumnoServicio;
+import com.clases.dam.gestion.salesianos.Asignatura.Asignatura;
 import com.clases.dam.gestion.salesianos.Asignatura.AsignaturaServicio;
 import com.clases.dam.gestion.salesianos.Curso.CursoServicio;
 import com.clases.dam.gestion.salesianos.Formularios.InformacionRechazoAceptacion;
@@ -14,8 +15,6 @@ import com.clases.dam.gestion.salesianos.SituacionExcepcional.SituacionExcepcion
 import com.clases.dam.gestion.salesianos.SituacionExcepcional.SituacionExcepcionald;
 import com.clases.dam.gestion.salesianos.Titulo.TituloServicio;
 import com.clases.dam.gestion.salesianos.Usuario.UsuarioServicio;
-import com.clases.dam.gestion.salesianos.proveedorId.ProveedorId;
-import com.clases.dam.gestion.salesianos.proveedorId.ProveedorIdServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,6 +37,8 @@ import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 public class ConvalidacionesExcepcionesController {
@@ -56,14 +57,15 @@ public class ConvalidacionesExcepcionesController {
     private AsignaturaServicio asignaturaServicio;
     @Autowired
     private HorarioServicio horarioServicio;
-    @Autowired
-    private ProveedorIdServicio proveedorIdServicio;
+
     @Autowired
     private AlumnoServicio alumnoServicio;
     @GetMapping("/solicitarCambio")
     public String convalidacionesExepciones(Model model, @AuthenticationPrincipal Alumno alumno){
             model.addAttribute("NuevaConvi",new SituacionExcepcionalFormulario());
-            model.addAttribute("asignaturas",alumno.getCurso().getAsignatura());
+            Set<Asignatura> asignaturas=new HashSet<>();
+            asignaturas.addAll(alumno.getCurso().getAsignatura());
+            model.addAttribute("asignaturas",asignaturas);
         return "Alumno/convalidacion";
     }
     @PostMapping("/nueva/solicitud/cambio")
@@ -73,19 +75,25 @@ public class ConvalidacionesExcepcionesController {
             situacionExcepcionalServicio.delete(situacionExcepcionalServicio.buscarExistencia(asignaturaServicio.findById(situacionExcepcional.getIdAsignatura()).get(),alumnoServicio.findById(alumno.getId()).get()).get());
         }
         SituacionExcepcionald id=new SituacionExcepcionald(situacionExcepcional.getIdAsignatura(),alumno.getId());
-        ProveedorId proveedorId=new ProveedorId();
-        proveedorIdServicio.save(proveedorId);
+
         SituacionExcepcional situacionExcepcional1=new SituacionExcepcional(id,asignaturaServicio.findById(situacionExcepcional.getIdAsignatura()).get()
-                ,alumno, LocalDateTime.now(),proveedorId,situacionExcepcional.isTipo(),false);
+                ,alumno, LocalDateTime.now(),situacionExcepcional.isTipo(),false);
         situacionExcepcionalServicio.save(situacionExcepcional1);
+        String valor;
+        if (situacionExcepcional1.isTipo()){
+            valor="Excepcion";
+        }else{
+             valor="Convalidacion";
+        }
+        String idArchivo=alumno.getNombre()+"_"+alumno.getApellidos()+"_"+situacionExcepcional1.getAsignatura().getNombreAsignatura()+"_"+valor;
         if (!file.isEmpty()) {
-            String avatar = storageService.store(file, situacionExcepcional1.getIdAux().getId());
+            String avatar = storageService.store(file, idArchivo);
             situacionExcepcional1.setAdjunto(MvcUriComponentsBuilder
                     .fromMethodName(ConvalidacionesExcepcionesController.class, "serveFile", avatar).build().toUriString());
             situacionExcepcionalServicio.edit(situacionExcepcional1);
         }
 
-        return "redirect:/index";
+        return "redirect:/gestion";
     }
     @GetMapping("/aceptar/solicitudes")
     public String solicitudesAceptacion(Model model){
@@ -120,7 +128,7 @@ public class ConvalidacionesExcepcionesController {
         try {
             Mail m = new Mail("Config/configuracion.properties");
 
-            m.enviarEmail("Desición sobre la solicitud"+tipo+" para la asignatura "+aux.getAsignatura().getNombreAsignatura()
+            m.enviarEmail("Desición sobre la solicitud "+tipo+" para la asignatura "+aux.getAsignatura().getNombreAsignatura()
                     ,"Se le comunica que la solicitud de "+ tipo+" ha sido "
                             +resolucion+"\nMensaje del centro: "+info.getMensaje()
                     ,aux.getAlumno().getEmail());

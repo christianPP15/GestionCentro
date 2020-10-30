@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragmentos/FragmentoHead :: header_comun(~{::title},~{::link})">
+    <meta charset="UTF-8">
+    <title>Aceptacion Ampliación Matricula</title>
+    <link rel="stylesheet" href="../css/css.css" th:href="@{/css/css.css}">
+</head>
+<body>
+<nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
+<main>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8">
+                <br><br>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Alumno</th>
+                            <th>Título</th>
+                            <th>Curso</th>
+                            <th>Asignatura</th>
+                            <th>Aceptar</th>
+                            <th>Denegar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <th:block th:each="convalidar :${convalidaciones}">
+                            <tr>
+                                <td><span th:text="${convalidar.alumno.nombre}+' '"></span><span th:text="${convalidar.alumno.apellidos}"></span></td>
+                                <td th:text="${convalidar.asignatura.curso.titulos.nombre}"></td>
+                                <td th:text="${convalidar.asignatura.curso.nombre}"></td>
+                                <td th:text="${convalidar.asignatura.nombreAsignatura}"></td>
+                                <td><a th:href="@{/aceptar/{idAlum}/convalidacion/{idAsig} (idAsig=${convalidar.asignatura.id},idAlum=${convalidar.alumno.id})}"><img th:src="@{/img/check.png}"></a></img></td>
+                                <td><a th:href="@{/denegar/{idAlum}/convalidacion/{idAsig} (idAsig=${convalidar.asignatura.id},idAlum=${convalidar.alumno.id})}"><img th:src="@{/img/borrar.png}"></a></td>
+                            </tr>
+                        </th:block>
+                    </tbody>
+                </table>
+                <br>
+            </div>
+            <div class="col-8"></div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

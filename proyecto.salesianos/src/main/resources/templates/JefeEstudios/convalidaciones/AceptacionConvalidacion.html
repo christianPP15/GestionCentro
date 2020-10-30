@@ -8,29 +8,37 @@
 <body>
 <nav th:replace="~{fragmentos/fragmentosNav::nav}"></nav>
 <main>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-4"></div>
-            <div class="col-4">
+            <div class="col-2"></div>
+            <div class="col-8">
                 <br><br>
-                <div th:each="solicitudes :${convalidaciones}">
-                    <a  th:href="@{/descargar/{idAlumno}/info/{idAsignatura}(idAsignatura=${solicitudes.asignatura.id},idAlumno=${solicitudes.alumno.id})}">
-                        <div class="cajonAceptacion">
-                            <p class="pt-3 noEnlace">
-                                <span th:text="${solicitudes.alumno.nombre}+' '">
-                                </span> <span th:text="${solicitudes.alumno.apellidos}+ ' '">
-                            </span> <span th:text="${solicitudes.tipo} ? Excepción : Convalidación"></span>
-                            <span th:text="' '+${solicitudes.asignatura.nombreAsignatura}"></span>
-                            </p>
-                        </div>
-                    </a>
-                </div>
+                <table class="table">
+                    <thead>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Tipo</th>
+                        <th>Asignatura</th>
+                        <th>Informacion</th>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="solicitudes :${convalidaciones}">
+                        <tr>
+                        <td th:text="${solicitudes.alumno.nombre}"></td>
+                        <td th:text="${solicitudes.alumno.apellidos}"></td>
+                        <td th:text="${solicitudes.tipo} ? Excepción : Convalidación"></td>
+                        <td th:text="' '+${solicitudes.asignatura.nombreAsignatura}"></td>
+                        <td><a th:href="@{/descargar/{idAlumno}/info/{idAsignatura}(idAsignatura=${solicitudes.asignatura.id},idAlumno=${solicitudes.alumno.id})}"><img th:src="@{/img/flecha-right.png}"></a></td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
                 <br>
             </div>
-            <div class="col-4"></div>
+            <div class="col-2"></div>
         </div>
     </div>
 </main>
-<footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
+
 </body>
 </html>

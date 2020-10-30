@@ -43,38 +43,38 @@ public class JefeEstudiosGestionController {
     private HorarioServicio horarioServicio;
     @GetMapping("/gestion")
     public String gestionTítulos(Model model){
-        model.addAttribute("titulos",serviTitulo.findAll());
+        model.addAttribute("titulos",serviTitulo.listaTituloActivos());
         return "JefeEstudios/Gestion/titulos";
     }
     @GetMapping("/jefe/estudios/titulo/eliminar/{id}")
-    public String aliminarTitulo(@PathVariable ("id") Long id){
+    public String desactivarTitulo(@PathVariable ("id") Long id){
         for (Curso curso:
              serviTitulo.findById(id).get().getCursos()) {
             for (Asignatura asig:
                  curso.getAsignatura()) {
                 for (Horario hora:
                      asig.getHorario()) {
-                    horarioServicio.delete(hora);
+                    Horario horario=horarioServicio.findById(hora.getId()).get();
+                    horario.setActivo(!horario.isActivo());
+                    horarioServicio.edit(horario);
                 }
-                asignaturaServicio.delete(asig);
+                Asignatura asignatura=asignaturaServicio.findById(asig.getId()).get();
+                asignatura.setActivo(!asignatura.isActivo());
+                asignaturaServicio.edit(asignatura);
             }
-            serviCurso.delete(curso);
+            Curso curso1=serviCurso.findById(curso.getId()).get();
+            curso1.setActivo(!curso1.isActivo());
+            serviCurso.edit(curso1);
         }
-        serviTitulo.delete(serviTitulo.findById(id).orElse(null));
+        Titulo titulo=serviTitulo.findById(id).get();
+        titulo.setActivo(!titulo.isActivo());
+        serviTitulo.edit(titulo);
         return "redirect:/gestion";
     }
     @GetMapping("/jefe/estudios/titulo/editar/{id}")
     public String editarTitulo(@PathVariable ("id") Long id,Model model){
-        model.addAttribute("tituloAntiguo",serviTitulo.findById(id).get());
-        model.addAttribute("tituloNuevo",new Titulo());
-        return "JefeEstudios/Edicion/titulo";
-    }
-    @PostMapping("/submit/editar/titulo/final")
-    public String editarTituloFinal(@ModelAttribute("titulo") Titulo titulo){
-        Titulo aux=serviTitulo.findById(titulo.getId()).get();
-        aux.setNombre(titulo.getNombre());
-        serviTitulo.edit(aux);
-        return "redirect:/gestion";
+        model.addAttribute("nuevoTitulo",serviTitulo.findById(id).get());
+        return "JefeEstudios/Nuevo/titulo";
     }
     @GetMapping("/jefe/estudios/titulo/nuevo")
     public String agregarTitulo(Model model){
@@ -83,13 +83,19 @@ public class JefeEstudiosGestionController {
     }
     @PostMapping("/submit/nuevo/titulo")
     public String nuevoTitulo(@ModelAttribute("titulo") Titulo titulo){
-        serviTitulo.save(titulo);
+        if (serviTitulo.findById(titulo.getId()).orElse(null)!=null){
+            Titulo t=serviTitulo.findById(titulo.getId()).get();
+            t.setNombre(titulo.getNombre());
+            serviTitulo.edit(t);
+        }else{
+            serviTitulo.save(titulo);
+        }
        return  "redirect:/gestion";
     }
     @GetMapping("/jefe/estudios/cursos/{id}")
     public String gestionCursos(@PathVariable ("id") Long id,Model model){
         Titulo aux=serviTitulo.findById(id).get();
-        model.addAttribute("Listacursos",aux.getCursos());
+        model.addAttribute("Listacursos",serviCurso.encontrarCursosActivos(aux));
         model.addAttribute("Idtitulo",id);
         return "JefeEstudios/Gestion/cursos";
     }
@@ -100,11 +106,17 @@ public class JefeEstudiosGestionController {
              serviCurso.findById(id).get().getAsignatura()) {
             for (Horario hora:
                  asig.getHorario()) {
-                horarioServicio.delete(hora);
+                Horario horario=horarioServicio.findById(hora.getId()).get();
+                horario.setActivo(!horario.isActivo());
+                horarioServicio.edit(horario);
             }
-            asignaturaServicio.delete(asig);
+            Asignatura asignatura=asignaturaServicio.findById(asig.getId()).get();
+            asignatura.setActivo(!asignatura.isActivo());
+            asignaturaServicio.edit(asignatura);
         }
-        serviCurso.delete(serviCurso.findById(id).get());
+        Curso c=serviCurso.findById(id).get();
+        c.setActivo(!c.isActivo());
+        serviCurso.edit(c);
         return "redirect:/jefe/estudios/cursos/"+idTitulo.getId();
     }
     @GetMapping("/jefe/estudios/curso/editar/{id}")
@@ -141,7 +153,7 @@ public class JefeEstudiosGestionController {
     @GetMapping("/jefe/estudios/asignatura/{id}")
     public String gestionAsignaturas(@PathVariable ("id") Long id,Model model){
         Curso aux=serviCurso.findById(id).get();
-        model.addAttribute("ListaAsignaturas",aux.getAsignatura());
+        model.addAttribute("ListaAsignaturas",asignaturaServicio.encontrarListaAsignaturasActiva(aux));
         model.addAttribute("IdCurso",aux.getTitulos().getId());
         model.addAttribute("IdCursoNuevo",aux.getId());
         return "JefeEstudios/Gestion/asignaturas";
@@ -149,14 +161,15 @@ public class JefeEstudiosGestionController {
     @GetMapping("/jefe/estudios/asignatura/eliminar/{id}")
     public String eliminarAsignatura(@PathVariable ("id") Long id){
         Asignatura aux=asignaturaServicio.findById(id).get();
-        for (Horario hora:
+       for (Horario hora:
             aux.getHorario()) {
-            horarioServicio.delete(hora);
+            Horario horario=horarioServicio.findById(hora.getId()).get();
+            horario.setActivo(!horario.isActivo());
+            horarioServicio.edit(horario);
         }
         Curso idCurso=serviCurso.findById(aux.getCurso().getId()).get();
-        idCurso.removeAsignatura(aux);
-        serviCurso.edit(idCurso);
-        asignaturaServicio.delete(aux);
+        aux.setActivo(!aux.isActivo());
+        asignaturaServicio.edit(aux);
         return "redirect:/jefe/estudios/asignatura/"+idCurso.getId();
     }
     @GetMapping("/jefe/estudios/asignatura/editar/{id}")
@@ -189,11 +202,10 @@ public class JefeEstudiosGestionController {
         serviCurso.edit(cursoNuevo);
         return "redirect:/jefe/estudios/asignatura/"+cursoNuevo.getId();
     }
-
     @GetMapping("/jefe/estudios/horas/{id}")
     public String gestionHoras(@PathVariable ("id") Long id,Model model){
         Asignatura aux=asignaturaServicio.findById(id).get();
-        model.addAttribute("ListaHoras",aux.getHorario());
+        model.addAttribute("ListaHoras",horarioServicio.listaHorasActivas(aux));
         model.addAttribute("IdAsignatura",aux.getCurso().getId());
         model.addAttribute("IdAsignaturaNuevo",aux.getId());
         return "JefeEstudios/Gestion/horarios";
@@ -218,7 +230,8 @@ public class JefeEstudiosGestionController {
     public String eliminarHorario(@PathVariable ("id") Long id){
         Horario aux=horarioServicio.findById(id).get();
         Asignatura idAsignatura=asignaturaServicio.findById(aux.getAsignatura().getId()).get();
-        horarioServicio.delete(aux);
+        aux.setActivo(!aux.isActivo());
+        horarioServicio.edit(aux);
         return "redirect:/jefe/estudios/horas/"+idAsignatura.getId();
     }
     @GetMapping("/jefe/estudios/horario/editar/{id}")

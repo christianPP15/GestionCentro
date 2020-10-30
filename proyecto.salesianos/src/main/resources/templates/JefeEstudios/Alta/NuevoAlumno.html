@@ -35,7 +35,7 @@
                             <br>
                             <div class="form-group">
                                 <label for="Email">Email:</label>
-                                <input type="text" id="Email" name="Email" placeholder="Email..." required  class="form-control" th:field="*{email}">
+                                <input type="email" id="Email" name="Email" placeholder="Email..." required  class="form-control" th:field="*{email}">
                             </div>
                             <br>
                             <div class="input-group mb-3">
@@ -72,8 +72,10 @@
                 <div class="row">
                     <div class="col-2"></div>
                     <div class="col-8">
-                        <h3 class="h3">El orden de los campos es nombre,apellidos,email,
-                            Nombre Asignatura</h3>
+                        <br>
+                        <h3 class="h3">El orden de los campos es nombre,apellidos,email y el
+                            nombre del curso al que pertenece</h3>
+                        <br>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <label class="input-group-text" for="inputGroupSelect01">Cursos</label>
@@ -98,7 +100,7 @@
         </div>
     </div>
 </main>
-<footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
+
 <script>
 $("#registroJefeCsv").hide();
 $("#cambioCsv").click(function(){
@@ -121,6 +123,7 @@ $("#cambioCampos").click(function(){
     $("#activo1").addClass("colorLetras");
     $("#activo2").removeClass("colorLetras");
 });
+
 </script>
 </body>
 </html>

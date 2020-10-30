@@ -17,4 +17,10 @@ public interface CursoRepository extends JpaRepository<Curso,Long> {
 
     @Query("select e from Curso e Where e.nombre= :NOMBRE and e.titulos= :TITULO")
     Optional<Curso> findFirstBynombre(@Param("NOMBRE") String nombre, @Param("TITULO") Titulo titulo);
+
+    @Query("Select e from Curso e Where e.titulos= :TITULO and e.activo=true")
+    List<Curso> encontrarCursosActivos(@Param("TITULO") Titulo titulo);
+
+    @Query("Select e from Curso e Where e.activo=true")
+    List<Curso> encontrarCursosActivosSinDependerDeTitulo();
 }

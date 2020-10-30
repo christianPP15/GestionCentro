@@ -34,4 +34,12 @@ public class SolicitudAmpliacionMatricula {
     private LocalDate fechaResolucion;
 
     private boolean estado=false;
+
+    private boolean aceptada=false;
+    public SolicitudAmpliacionMatricula(SolicitudAmpliacionMatriculaId id, Asignatura asignatura, Alumno alumno, LocalDate fechaEntrega) {
+        this.id = id;
+        this.asignatura = asignatura;
+        this.alumno = alumno;
+        this.fechaEntrega = fechaEntrega;
+    }
 }

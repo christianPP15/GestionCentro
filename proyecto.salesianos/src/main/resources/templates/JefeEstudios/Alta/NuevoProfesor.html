@@ -35,7 +35,7 @@
                             <br>
                             <div class="form-group">
                                 <label for="Email">Email:</label>
-                                <input type="text" id="Email" name="Email" placeholder="Email..." required  class="form-control" th:field="*{email}">
+                                <input type="email" id="Email" name="Email" placeholder="Email..." required  class="form-control" th:field="*{email}">
                             </div>
                             <input type="submit" name="enviar" value="Enviar" class="btn btn-info mx-auto d-block align-items-center mb-4"/>
                         </form>
@@ -61,6 +61,7 @@
                 <div class="row">
                     <div class="col-2"></div>
                     <div class="col-8">
+                        <br>
                         <h3 class="h3">El orden de los campos es nombre,apellidos,email</h3>
                         <form method="POST" action="#" th:action="@{/submit/nuevo/jefe/profesor/csv}" enctype="multipart/form-data">
                             <br>
@@ -75,7 +76,7 @@
         </div>
     </div>
 </main>
-<footer th:replace="~{fragmentos/fragmentoFooter::footer}"></footer>
+
 <script>
 $("#registroJefeCsv").hide();
 $("#cambioCsv").click(function(){
@@ -98,6 +99,7 @@ $("#cambioCampos").click(function(){
     $("#activo1").addClass("colorLetras");
     $("#activo2").removeClass("colorLetras");
 });
+
 </script>
 </body>
 </html>

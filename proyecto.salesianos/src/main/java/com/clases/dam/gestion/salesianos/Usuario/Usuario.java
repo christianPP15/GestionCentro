@@ -31,23 +31,12 @@ public abstract class Usuario implements UserDetails {
 
     //private boolean esAlta;
     private boolean primeraVez=false;
-    private String codigoSeguridad;
 
-    public Usuario(String nombre, String apellidos, String email, String password, String codigoSeguridad) {
+    public Usuario(String nombre, String apellidos, String email, String password) {
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.email = email;
         this.password = password;
-        this.codigoSeguridad = codigoSeguridad;
-    }
-
-    public Usuario(String nombre, String apellidos, String email, String password, boolean primeraVez, String codigoSeguridad) {
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.email = email;
-        this.password = password;
-        this.primeraVez = primeraVez;
-        this.codigoSeguridad = codigoSeguridad;
     }
 
     public Usuario(String nombre, String apellidos, String email, String password, boolean primeraVez) {
@@ -56,13 +45,6 @@ public abstract class Usuario implements UserDetails {
         this.email = email;
         this.password = password;
         this.primeraVez = primeraVez;
-    }
-
-    public Usuario(String nombre, String apellidos, String email, String password) {
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.email = email;
-        this.password = password;
     }
 
     public Usuario(String nombre, String apellidos, String email) {

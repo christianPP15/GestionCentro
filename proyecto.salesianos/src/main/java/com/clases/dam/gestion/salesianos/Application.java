@@ -34,15 +34,9 @@ public class Application {
 			, CursoServicio cursoServicio , AsignaturaServicio asignaturaServicio
 			, HorarioServicio horarioServicio, StorageService storageService) {
 		return args -> {
-			storageService.deleteAll();
 			storageService.init();
-			Usuario u = new Alumno("Christian","Payo","cpp",passwordEncoder.encode("1234"),true);
 
-
-			servicio.save(u);
-
-
-			Usuario a = new Profesor("Luismi","Lopez",
+			/*Usuario a = new Profesor("Luismi","Lopez",
 					"Luismi@gmail.com",passwordEncoder.encode("1234"),true,false);
 
 			servicio.save(a);
@@ -50,55 +44,7 @@ public class Application {
 			Usuario angel = new Profesor("Angel","Naranjo",
 					"admin",passwordEncoder.encode("admin"),true,true);
 
-			servicio.save(angel);
-			/*Horario hora1 =new Horario(1, 1);
-			Horario hora2 =new Horario(3,2);
-			Horario hora3 =new Horario(5,1);
-			Horario hora4 =new Horario(2,2);
-			Horario hora5 =new Horario(3,3);
-			Horario hora6 =new Horario(4,3);
-			Horario hora7 =new Horario(1,6);
-			Horario hora8 =new Horario(2,1);
-			Horario hora9 =new Horario(5,6);
-			horarioServicio.save(hora1);horarioServicio.save(hora2);horarioServicio.save(hora3);horarioServicio.save(hora4);
-			horarioServicio.save(hora5);horarioServicio.save(hora6);horarioServicio.save(hora7);horarioServicio.save(hora8);
-			horarioServicio.save(hora9);
-			Asignatura asig=new Asignatura("PM y DM");
-			Asignatura asig1=new Asignatura("AD");
-			Asignatura asig2=new Asignatura("Base de datos");
-			Asignatura asig3=new Asignatura("Programacion");
-			Curso primerDam=new Curso("Primero de Dam");
-			Curso segundoDam=new Curso("Segundo de Dam");
-			Titulo ti=new Titulo("Desarrollo aplicaciones multiplataformas");
-			asignaturaServicio.save(asig);
-			asignaturaServicio.save(asig1);
-			asignaturaServicio.save(asig2);
-			asignaturaServicio.save(asig3);
-			cursoServicio.save(primerDam);
-			cursoServicio.save(segundoDam);
-			tituloServicio.save(ti);
-			asig.addHorario(hora1);asig.addHorario(hora2);asig.addHorario(hora3);
-			asig1.addHorario(hora4);asig1.addHorario(hora5);asig1.addHorario(hora6);
-			asig2.addHorario(hora7);asig2.addHorario(hora8);asig2.addHorario(hora9);
-			segundoDam.addAsignatura(asig2);
-			segundoDam.addAsignatura(asig3);
-			primerDam.addAsignatura(asig);
-			primerDam.addAsignatura(asig1);
-			ti.addCurso(primerDam);
-			ti.addCurso(segundoDam);
-			horarioServicio.edit(hora1);horarioServicio.edit(hora2);horarioServicio.edit(hora3);horarioServicio.edit(hora4);
-			horarioServicio.edit(hora5);horarioServicio.edit(hora6);horarioServicio.edit(hora7);horarioServicio.edit(hora8);
-			horarioServicio.edit(hora9);
-			asignaturaServicio.edit(asig);
-			asignaturaServicio.edit(asig1);
-			asignaturaServicio.edit(asig2);
-			asignaturaServicio.edit(asig3);
-			cursoServicio.edit(primerDam);
-			cursoServicio.edit(segundoDam);
-			tituloServicio.edit(ti);
-			primerDam.addAlumno((Alumno) u);
-			cursoServicio.edit(primerDam);
-			servicio.edit(u);*/
+			servicio.save(angel);*/
 		};
 	}
 }

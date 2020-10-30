@@ -6,24 +6,24 @@
 </head>
         <body>
         <nav class="navbar navbar-expand-sm navbar-blue navbar-dark bg-info" th:fragment="nav">
-            <a href="/index" class="navbar-brand" sec:authorize="hasRole('ROLE_ADMIN')"><img alt="Logo de la página"
+            <a href="/index" class="navbar-brand" sec:authorize="hasRole('ROLE_ALUMNO')"><img alt="Logo de la página"
                                                        src="log.png" th:src="@{/img/salesianosTriana.jpg}" width="190px" height="60px"></a>
-            <a href="/index" class="navbar-brand" sec:authorize="hasRole('ROLE_PROFESOR')"><img alt="Logo de la página"
-                                                                                             src="log.png" th:src="@{/img/salesianosTriana.jpg}" width="190px" height="60px"></a>
-            <a href="/index/alumno" class="navbar-brand" sec:authorize="hasRole('ROLE_ALUMNO')"><img alt="Logo de la página"
-                                                       src="log.png" th:src="@{/img/salesianosTriana.jpg}" width="190px" height="60px"></a>
-            <a href="/index/alumno" class="navbar-brand" sec:authorize="not isAuthenticated()"><img alt="Logo de la página"
-                                                                                                     src="log.png" th:src="@{/img/salesianosTriana.jpg}" width="190px" height="60px"></a>
+            <a href="/gestion" class="navbar-brand" sec:authorize="hasRole('ROLE_ADMIN')"><img alt="Logo de la página"
+                                                                                              src="log.png" th:src="@{/img/salesianosTriana.jpg}" width="190px" height="60px"></a>
+            <a href="/gestion" class="navbar-brand" sec:authorize="hasRole('ROLE_PROFESOR')"><img alt="Logo de la página"
+                                                                                              src="log.png" th:src="@{/img/salesianosTriana.jpg}" width="190px" height="60px"></a>
+            <a href="/login" class="navbar-brand" sec:authorize="not isAuthenticated()"><img alt="Logo de la página"
+                                                                                                src="log.png" th:src="@{/img/salesianosTriana.jpg}" width="190px" height="60px"></a>
             <button class="navbar-toggler bg-light" type="button"
                     data-toggle="collapse" data-target="#menu">
                 <span class="navbar-toogler-icon "></span>
             </button>
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav ">
-                    <li class="nav-item active" sec:authorize="hasRole('ROLE_ADMIN')"><a href="/index" class="nav-link">Inicio</a></li>
-                    <li class="nav-item active" sec:authorize="hasRole('ROLE_PROFESOR')"><a href="/index" class="nav-link">Inicio</a></li>
-                    <li class="nav-item active" sec:authorize="hasRole('ROLE_ALUMNO')"><a href="/index/alumno" class="nav-link">Inicio</a></li>
-                    <li class="nav-item active" sec:authorize="not isAuthenticated()"><a href="/index/alumno" class="nav-link">Inicio</a></li>
+                    <li class="nav-item active" sec:authorize="hasRole('ROLE_ADMIN')"><a href="/gestion" class="nav-link">Inicio</a></li>
+                    <li class="nav-item active" sec:authorize="hasRole('ROLE_PROFESOR')"><a href="/gestion" class="nav-link">Inicio</a></li>
+                    <li class="nav-item active" sec:authorize="hasRole('ROLE_ALUMNO')"><a href="/gestion" class="nav-link">Inicio</a></li>
+                    <li class="nav-item active" sec:authorize="not isAuthenticated()"><a href="/login" class="nav-link">Inicio</a></li>
                     <div sec:authorize="hasRole('ROLE_ADMIN')">
                         <div class="dropdown">
                             <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -36,25 +36,20 @@
                             </div>
                         </div>
                     </div>
-                    <li class="nav-item active" sec:authorize="hasRole('ROLE_ADMIN')"><a href="/gestion" class="nav-link">Gestión</a></li>
                     <li class="nav-item active" sec:authorize="hasRole('ROLE_ADMIN')"><a href="/aceptar/solicitudes" class="nav-link">Solicitudes</a></li>
-                    <li class="nav-item active" sec:authorize="hasRole('ROLE_PROFESOR')"><a href="/gestion" class="nav-link">Información</a></li>
                     <li class="nav-item active" sec:authorize="hasRole('ROLE_ALUMNO')"><a href="/solicitarCambio" class="nav-link">Solicitud</a></li>
-                    <li sec:authorize="hasRole('ROLE_ALUMNO')">
-                        <form th:action="@{/logout}" method="POST" id="logoutForm">
-                            <a href="javascript:document.getElementById('logoutForm').submit()">
-                                <div class="item cajaMenu">Salir</div>
-                            </a>
-                        </form>
-                    </li>
-                    <li  sec:authorize="hasRole('ROLE_ADMIN')">
-                        <form th:action="@{/logout}" method="POST" id="logoutForm">
-                            <a href="javascript:document.getElementById('logoutForm').submit()">
-                                <div class="item cajaMenu">Salir</div>
-                            </a>
-                        </form>
-                    </li>
+                    <li class="nav-item active" sec:authorize="hasRole('ROLE_ALUMNO')"><a href="/solicitarAmpliacionMatricula" class="nav-link">Ampliar Matrícula</a></li>
+                    <li class="nav-item active" sec:authorize="hasRole('ROLE_ADMIN')"><a href="/aceptar/solicitudes/ampliacion/matricula" class="nav-link">Ampliaciones De Matriculas</a></li>
                 </ul>
+            </div>
+            <div class="form-inline" sec:authorize="hasRole('ROLE_ADMIN')">
+                <a href="/login" class="btn btn-dark">Salir</a>
+            </div>
+            <div class="form-inline" sec:authorize="hasRole('ROLE_PROFESOR')">
+                <a href="/login" class="btn btn-dark">Salir</a>
+            </div>
+            <div class="form-inline" sec:authorize="hasRole('ROLE_ALUMNO')">
+                <a href="/login" class="btn btn-dark">Salir</a>
             </div>
         </nav>
 </body>
