@@ -1,4 +1,4 @@
-# ProyectoAvanzado
+# Gestión Centro Escolar 
 
 ## Proyecto encargado de la gestión del centro Salesianos Triana.
 
